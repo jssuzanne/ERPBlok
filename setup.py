@@ -4,6 +4,13 @@ version = '0.0.1'
 
 requires = [
     'anyblok',
+    'anyblok_pyramid',
+    'pyramid_mako',
+]
+
+ERPBlok = [
+    'erpblok-core=erpblok.bloks.erpblok_core:ERPBlokCore',
+    'erpblok-web-client=erpblok.bloks.erpblok_web_client:ERPBlokWebClient',
 ]
 
 setup(
@@ -23,9 +30,10 @@ setup(
     classifiers=[
     ],
     entry_points={
-        'ERPBlok': [
-            'erpblok-core=erpblok.bloks.erpblok_core:ERPBlokCore',
+        'console_scripts': [
+            'erpblok=erpblok.scripts:wsgi',
         ],
+        'ERPBlok': ERPBlok,
     },
     extras_require={},
 )
