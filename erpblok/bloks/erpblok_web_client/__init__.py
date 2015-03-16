@@ -25,6 +25,8 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/notification/notification.js',
         '#BLOK/static/menu.js',
         '#BLOK/static/hashtag-manager.js',
+        '#BLOK/static/breadcrums.js',
+        '#BLOK/static/action.js',
     ]
 
     def install_user_menu(self):

@@ -1,9 +1,17 @@
-nav#toolbar {
+body {
+    display: inline;
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
     background-color: #fff;
+    color: #888;
+}
+nav#toolbar {
     border: 1px solid #dedede;
     border-radius: 4px;
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-    color: #888;
     display: block;
     overflow: hidden;
 }
@@ -11,7 +19,8 @@ nav#toolbar ul {
     margin: 0;
     padding: 0;
 }
-nav#toolbar ul li {
+nav#toolbar ul li,
+nav#toolbar ul div li {
     display: inline-block;
     list-style-type: none;
 
@@ -21,10 +30,11 @@ nav#toolbar ul li {
     -o-transition: all 0.2s;
     transition: all 0.2s;
 }
-nav#toolbar ul li.right {
+nav#toolbar ul div.right {
     float: right;
 }
-nav#toolbar > ul > li > a {
+nav#toolbar > ul > li > a,
+nav#toolbar > ul div > li > a {
     color: #aaa;
     display: block;
     line-height: 56px;
@@ -54,13 +64,15 @@ nav#toolbar ul li a.mainmenu.selected::before{
     background: green;
     box-shadow: 0 0 2px white, 0 -1px 0 rgba(0, 0, 0, .4);
 }
-nav#toolbar > ul > li:hover {
+nav#toolbar > ul > li:hover ,
+nav#toolbar > ul div > li:hover {
     background-color: rgb( 40, 44, 47 );
 }
-nav#toolbar > ul > li:hover > a {
+nav#toolbar > ul > li:hover > a ,
+nav#toolbar > ul div > li:hover > a {
     color: rgb( 255, 255, 255 );
 }
-nav#toolbar > ul > li > a > .caret {
+nav#toolbar > ul div > li > a > .caret {
     border-top: 4px solid #aaa;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
@@ -74,10 +86,10 @@ nav#toolbar > ul > li > a > .caret {
     -o-transition: color 0.1s linear;
     transition: color 0.1s linear;
 }
-nav#toolbar > ul > li:hover > a > .caret {
+nav#toolbar > ul div > li:hover > a > .caret {
     border-top-color: rgb( 255, 255, 255 );
 }
-nav#toolbar > ul > li > div {
+nav#toolbar > ul div > li > div {
     background-color: rgb( 40, 44, 47 );
     border-top: 0;
     border-radius: 0 0 4px 4px;
@@ -97,43 +109,40 @@ nav#toolbar > ul > li > div {
     -o-transition: opacity 0.2s;
     -transition: opacity 0.2s;
 }
-nav#toolbar > ul > li > div.quickmenu {
+nav#toolbar > ul div > li > div.quickmenu {
     margin-left: -45px;
     width: 182px;
 }
-nav#toolbar > ul > li > div ul > li {
+nav#toolbar > ul div > li > div ul > li {
     display: flex;
 }
-nav#toolbar > ul > li > div.quickmenu ul > li {
+nav#toolbar > ul div > li > div.quickmenu ul > li {
     display: inline-flex;
 }
-nav#toolbar > ul > li > div ul > li > a {
+nav#toolbar > ul div > li > div ul > li > a {
     color: #fff;
     display: block;
     padding: 12px 24px;
     text-decoration: none;
     width: 200px;
 }
-nav#toolbar > ul > li > div.quickmenu ul > li > a {
+nav#toolbar > ul div > li > div.quickmenu ul > li > a {
     display: flex;
     padding: 5px;
     width: 48px;
 }
-nav#toolbar > ul > li > div ul > li:hover > a {
+nav#toolbar > ul div > li > div ul > li:hover > a {
     background-color: rgba( 255, 255, 255, 0.1);
 }
-nav#toolbar > ul > li:hover > div {
+nav#toolbar > ul div > li:hover > div {
     display: block;
     opacity: 1;
     visibility: visible;
 }
 div#body {
-    display: flex;
-    position: absolute;
-    top: 70px;
-    left: 8px;
-    bottom: 8px;
-    right: 8px;
+    position: inherit;
+    left: 0;
+    right: 0;
 }
 aside#menus {
     background-color: #fff;
@@ -142,6 +151,7 @@ aside#menus {
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
     color: #888;
     overflow: auto;
+    margin-top: 5px;
     top: 0;
     bottom: 0;
     width: 300px;
@@ -204,10 +214,47 @@ aside#menus li input:checked + ol > li:last-child {
 section#application {
     position: inherit;
     top: 0;
-    left: 310px;
-    bottom: 8px;
+    left: 300px;
+    bottom: 0;
     right: 0;
     overflow: auto;
+}
+section#application nav#breadcrums {
+    margin-top: 5px;
+    margin-left: 5px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+    display: block;
+    overflow: hidden;
+}
+section#application nav#breadcrums ul {
+    margin: 0;
+    padding: 0;
+}
+section#application nav#breadcrums ul li {
+    display: inline-block;
+    list-style-type: none;
+
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+section#application nav#breadcrums > ul > li > a{
+    color: #aaa;
+    display: block;
+    line-height: 28px;
+    padding: 0 12px;
+    text-decoration: none;
+    position: relative;
+}
+section#application nav#breadcrums > ul > li.link:hover {
+    background-color: rgb( 40, 44, 47 );
+}
+section#application nav#breadcrums > ul > li.link:hover > a {
+    color: rgb( 255, 255, 255 );
 }
 .invisible {
     display: None;

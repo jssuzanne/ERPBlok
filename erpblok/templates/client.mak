@@ -10,7 +10,7 @@
             <script type="text/javascript" src="${x}" ></script>
         % endfor
     </head>
-    <body>
+    <body id="application">
         <header>
         </header>
         <nav id="toolbar">
@@ -18,51 +18,53 @@
                 % for id, name in mainmenu:
                     <li><a class="mainmenu" id="${id}">${name}</a></li>
                 % endfor
-                <li class="right">
-                    <a>User setting <span class="caret"></span></a>
-                    <div>
-                        <ul>
-                            % for function, icon, name in usermenu:
-                                <li>
-                                    % if icon:
-                                        <img src="${icon}" width="48" height="48"></img>
-                                    % endif
-                                    <a class="usermenu"
-                                       data-function="${function}">${name}</a>
-                                </li>
-                            % endfor
-                        </ul>
-                    </div>
-                </li>
-                % if quickmenu:
-                    <li class="right">
-                        <a>Quick <span class="caret"></span></a>
-                        <div class="quickmenu">
+                <div class="right">
+                    % if quickmenu:
+                        <li>
+                            <a>Quick <span class="caret"></span></a>
+                            <div class="quickmenu">
+                                <ul>
+                                    % for function, action, menu, icon, titlelabel in quickmenu:
+                                        <li>
+                                            <a
+                                                % if function:
+                                                    data-function="${function}"
+                                                % endif
+                                                % if action:
+                                                    data-action="${action}"
+                                                % endif
+                                                % if menu:
+                                                    data-menu="${menu}"
+                                                % endif
+                                                % if title:
+                                                    title="${titlelabel}"
+                                                % endif
+                                            >
+                                               <img src="${icon}" width="48" height="48"></img>
+                                            </a>
+                                        </li>
+                                    % endfor
+                                </ul>
+                            </div>
+                        </li>
+                    % endif
+                    <li>
+                        <a>User setting <span class="caret"></span></a>
+                        <div>
                             <ul>
-                                % for function, action, menu, icon, titlelabel in quickmenu:
+                                % for function, icon, name in usermenu:
                                     <li>
-                                        <a
-                                            % if function:
-                                                data-function="${function}"
-                                            % endif
-                                            % if action:
-                                                data-action="${action}"
-                                            % endif
-                                            % if menu:
-                                                data-menu="${menu}"
-                                            % endif
-                                            % if title:
-                                                title="${titlelabel}"
-                                            % endif
-                                        >
-                                           <img src="${icon}" width="48" height="48"></img>
-                                        </a>
+                                        % if icon:
+                                            <img src="${icon}" width="48" height="48"></img>
+                                        % endif
+                                        <a class="usermenu"
+                                           data-function="${function}">${name}</a>
                                     </li>
                                 % endfor
                             </ul>
                         </div>
                     </li>
-                % endif
+                </div>
             </ul>
         </nav>
         <div id="body">
@@ -74,7 +76,16 @@
                 % endfor
             </aside>
             <section id="application">
-                TODO, next Step
+                <nav id="breadcrums">
+                    <ul>
+                        <li class="link"><a>Plop</a></li>
+                        <li class="link"><a>Plop</a></li>
+                        <li class="link"><a>Plop</a></li>
+                        <li class="link"><a>Plop</a></li>
+                        <li><label>Plop</label></li>
+                    </ul>
+                <div id="views">
+                </div>
             </section>
         </div>
         <footer>

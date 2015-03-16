@@ -15,7 +15,7 @@ ERPBlok.HashTagManager = ERPBlok.Model.extend({
         return params;
     },
     fromObject: function (paramObject){
-        return Object.keys(paramObject).map(function (k) { 
+        return Object.keys(paramObject).map(function (k) {
             return encodeURIComponent(k) + '=' + encodeURIComponent(paramObject[k]);
         });
     },
@@ -26,7 +26,7 @@ ERPBlok.HashTagManager = ERPBlok.Model.extend({
         for (var key in newh) {
             if (oldh[key] == undefined) {
                 for (var i in this.addCallback[key]) {
-                    this.changeCallback[key][i](newh[key]);
+                    this.addCallback[key][i](newh[key]);
                 }
             } else {
                 for (var i in this.changeCallback[key]) {
@@ -75,8 +75,8 @@ ERPBlok.HashTagManager = ERPBlok.Model.extend({
     offCallback: function(collection, entry, callback) {
         if (collection[entry] != undefined) {
             var index = collection[entry].indexOf(callback);
-            if (index != -1) { 
-                collection[entry].splice(index, 1); 
+            if (index != -1) {
+                collection[entry].splice(index, 1);
             }
         }
     },

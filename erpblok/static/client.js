@@ -2,6 +2,7 @@ $(document).ready(function(){
     var userMenu = new ERPBlok.UserMenu();
     var quickMenu = new ERPBlok.QuickMenu();
     var menus = new ERPBlok.Menus();
+    var actions = new ERPBlok.ActionManager();
 
     var hashTagManager = new ERPBlok.HashTagManager()
     window.addEventListener("hashchange", function(e) {
@@ -46,6 +47,7 @@ $(document).ready(function(){
         }
         if (action != undefined) {
             hash['action'] = action;
+            // clear breadcrums
         }
         if (menu != undefined) {
             hash['menu'] = menu;
@@ -70,8 +72,8 @@ $(document).ready(function(){
                     for (var i in nodemenu) {
                         var node = "aside#menus";
                         node += " nav#menu-" + mainmenu;
-                        node += " li#menu-" + nodemenu;
-                        node += " input";
+                        node += " li#menu-" + nodemenu[i];
+                        node += " input#input-" + nodemenu[i];
                         $(node)[0].checked = true;
                     }
                     if (activemenu != undefined) {
@@ -89,6 +91,9 @@ $(document).ready(function(){
     hashTagManager.onChange('menu', display_menu);
 
     // Change Action
+    hashTagManager.onAdd('action', function (newAction) {
+        actions.load(newAction);
+    });
 
     // Apply current hashTag
     hashTagManager.changed(hashTagManager.toObject(window.location.hash), {});
