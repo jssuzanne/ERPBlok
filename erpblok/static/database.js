@@ -1,23 +1,27 @@
 $(document).ready(function(){
-    function select_menu(menu) {
-        $("li a.selected").removeClass('selected');
-        $(menu).addClass('selected');
-    }
+    $(".button-collapse").sideNav();
+    var $create = $('li#create');
+    var $drop = $('li#drop');
+    var $error = $('#error');
     function goto_create () {
-        $("div#create").removeClass('invisible');
-        $("div#drop").addClass('invisible');
-        select_menu("nav li a#create");
+        $("div#create").removeClass('hide');
+        $("div#drop").addClass('hide');
+        $drop.removeClass('active');
+        $create.addClass('active');
+        $error.addClass("hide");
         $("div#create #database").val("");
         $("div#create #login").val("");
         $("div#create #password").val("");
     }
-    $("nav #create").click(function(){
+    $create.click(function (event) {
         goto_create();
     });
-    $("nav #drop").click(function(){
-        $("div#create").addClass('invisible');
-        $("div#drop").removeClass('invisible');
-        select_menu("nav li a#drop");
+    $drop.click(function (event) {
+        $("div#create").addClass('hide');
+        $("div#drop").removeClass('hide');
+        $drop.addClass('active');
+        $create.removeClass('active');
+        $error.addClass("hide");
         $.ajax({
             type: "POST",
             url:"/database/manager/list",
@@ -26,10 +30,11 @@ $(document).ready(function(){
             var $select = $("div#drop #select");
             $select.children().remove();
             $select.append(html);
+            $select.find('#database').material_select();
         });
     });
     $("#submit-create").click(function (){
-        $("div#create #error").addClass("invisible");
+        $error.addClass("hide");
         var database = $("div#create #database").val();
         var login = $("div#create #login").val();
         var password = $("div#create #password").val();
@@ -40,7 +45,7 @@ $(document).ready(function(){
                 data: {database: database, login: login, password: password}})
             .fail(function (xhr, status) {
                 if (xhr.status == 403) {
-                    $("div#create #error").removeClass("invisible");
+                    $error.removeClass("hide");
                 }
             })
             .done(function (url) {
