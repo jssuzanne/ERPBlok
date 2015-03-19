@@ -78,12 +78,8 @@
             <section id="application">
                 <nav id="breadcrums">
                     <ul>
-                        <li class="link"><a>Plop</a></li>
-                        <li class="link"><a>Plop</a></li>
-                        <li class="link"><a>Plop</a></li>
-                        <li class="link"><a>Plop</a></li>
-                        <li><label>Plop</label></li>
                     </ul>
+                </nav>
                 <div id="views">
                 </div>
             </section>

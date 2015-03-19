@@ -14,6 +14,9 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/jquery-ui-1.11.4.custom/jquery-ui.min.css',
         '#BLOK/static/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css',
         '/static/client.css',
+        '#BLOK/static/breadcrums.css',
+        '#BLOK/static/view.css',
+        '#BLOK/static/view_list.css',
     ]
 
     js = [
@@ -27,6 +30,9 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/hashtag-manager.js',
         '#BLOK/static/breadcrums.js',
         '#BLOK/static/action.js',
+        '#BLOK/static/view.js',
+        '#BLOK/static/view_list.js',
+        '#BLOK/static/view_form.js',
     ]
 
     def install_user_menu(self):
@@ -43,7 +49,7 @@ class ERPBlokWebClient(Blok):
         QuickMenu.insert(function='do_something',
                          icon='/static/login-logo.png',
                          title='Quick 1')
-        QuickMenu.insert(action=1,
+        QuickMenu.insert(action=2,
                          icon='/static/login-logo.png',
                          title='Quick 2')
         QuickMenu.insert(menu=3,

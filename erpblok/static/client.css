@@ -1,19 +1,20 @@
 body {
-    display: inline;
-    position: absolute;
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
     background-color: #fff;
+    bottom: 5px;
     color: #888;
+    display: inline;
+    left: 5px;
+    overflow: auto;
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 nav#toolbar {
     border: 1px solid #dedede;
     border-radius: 4px;
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
     display: block;
-    overflow: hidden;
+    position: relative;
 }
 nav#toolbar ul {
     margin: 0;
@@ -140,9 +141,8 @@ nav#toolbar > ul div > li:hover > div {
     visibility: visible;
 }
 div#body {
-    position: inherit;
-    left: 0;
-    right: 0;
+    height: 100%;
+    position: relative;
 }
 aside#menus {
     background-color: #fff;
@@ -151,10 +151,10 @@ aside#menus {
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
     color: #888;
     overflow: auto;
-    margin-top: 5px;
-    top: 0;
-    bottom: 0;
+    top: 5px;
+    bottom: 5px;
     width: 300px;
+    position: absolute;
 }
 aside#menus li {
     position: relative;
@@ -212,49 +212,13 @@ aside#menus li input:checked + ol > li:last-child {
     margin: 0 0 0.063em; /* 1px */
 }
 section#application {
-    position: inherit;
+    position: absolute;
     top: 0;
     left: 300px;
-    bottom: 0;
+    bottom: 5px;
     right: 0;
     overflow: auto;
-}
-section#application nav#breadcrums {
-    margin-top: 5px;
-    margin-left: 5px;
-    border: 1px solid #dedede;
-    border-radius: 4px;
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
-    display: block;
-    overflow: hidden;
-}
-section#application nav#breadcrums ul {
-    margin: 0;
-    padding: 0;
-}
-section#application nav#breadcrums ul li {
-    display: inline-block;
-    list-style-type: none;
-
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    transition: all 0.2s;
-}
-section#application nav#breadcrums > ul > li > a{
-    color: #aaa;
-    display: block;
-    line-height: 28px;
-    padding: 0 12px;
-    text-decoration: none;
-    position: relative;
-}
-section#application nav#breadcrums > ul > li.link:hover {
-    background-color: rgb( 40, 44, 47 );
-}
-section#application nav#breadcrums > ul > li.link:hover > a {
-    color: rgb( 255, 255, 255 );
+    padding-right: 5px;
 }
 .invisible {
     display: None;

@@ -2,7 +2,7 @@ $(document).ready(function(){
     var userMenu = new ERPBlok.UserMenu();
     var quickMenu = new ERPBlok.QuickMenu();
     var menus = new ERPBlok.Menus();
-    var actions = new ERPBlok.ActionManager();
+    var actionManager = new ERPBlok.ActionManager();
 
     var hashTagManager = new ERPBlok.HashTagManager()
     window.addEventListener("hashchange", function(e) {
@@ -47,7 +47,7 @@ $(document).ready(function(){
         }
         if (action != undefined) {
             hash['action'] = action;
-            // clear breadcrums
+            actionManager.clear_all();
         }
         if (menu != undefined) {
             hash['menu'] = menu;
@@ -92,7 +92,10 @@ $(document).ready(function(){
 
     // Change Action
     hashTagManager.onAdd('action', function (newAction) {
-        actions.load(newAction);
+        actionManager.load(newAction);
+    });
+    hashTagManager.onChange('action', function (newAction, oldAction) {
+        actionManager.load(newAction);
     });
 
     // Apply current hashTag
