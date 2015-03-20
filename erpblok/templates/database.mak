@@ -4,7 +4,7 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
         <link rel="stylesheet" type="text/css" href="/static/materialize-src/css/materialize.css">
-        <link rel="stylesheet" type="text/css" href="/static/database.css">
+        <link rel="stylesheet" type="text/css" href="/static/erpblok.css">
         <script type="text/javascript" src="/static/jquery-2.1.3.min.js" ></script>
         <script type="text/javascript" src="/static/materialize-src/js/bin/materialize.min.js"></script>
         <script type="text/javascript" src="/static/database.js" ></script>
@@ -46,11 +46,11 @@
                         </div>
                         <div class="section">
                             <label for="login">Login of the administrator</label>
-                            <input id="login" type="text" required/>
+                            <input id="login" type="text" class="validate" required/>
                         </div>
                         <div class="section">
                             <label for="password">Password of the administrator</label>
-                            <input id="password" type="text" required/>
+                            <input id="password" type="password" class="validate" required/>
                         </div>
                         <a id="submit-create"
                            class="waves-effect waves-light btn right">Create</a>

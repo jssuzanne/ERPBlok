@@ -18,10 +18,13 @@ Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
                                renderer='erpblok:templates/login.mak')
 def get_login(request, database=None):
     title = ArgsParseManager.get('app_name', 'ERPBlok')
+    allow_database_manager = ArgsParseManager.get('allow_database_manager',
+                                                  True)
     return {
         'title': title,
         'databases': list_databases(),
         'database': database,
+        'allow_database_manager': allow_database_manager,
     }
 
 
