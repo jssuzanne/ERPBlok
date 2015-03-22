@@ -39,15 +39,13 @@ def load_client(request):
     js = registry.Web.get_js()
     usermenu = registry.Web.get_user_menu(login)
     quickmenu = registry.Web.get_quick_menu(login)
-    mainmenu = registry.Web.get_main_menu(login)
-    menus = registry.Web.get_sub_menu(login)
+    appmenu = registry.Web.get_app_menu(login)
     title = ArgsParseManager.get('app_name', 'ERPBlok')
     return render_to_response('erpblok:templates/client.mak',
                               {'title': title,
                                'css': css,
                                'js': js,
-                               'mainmenu': mainmenu,
                                'quickmenu': quickmenu,
                                'usermenu': usermenu,
-                               'menus': menus,
+                               'appmenu': appmenu,
                                }, request=request)

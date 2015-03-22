@@ -27,7 +27,7 @@ def post_create_database(request, database=None, login=None, password=None):
         return HTTPForbidden()
 
     registry = create_database(database)
-    registry.Web.Login.create_admin(login, password)
+    registry.Web.Login.update_admin(login, password)
     registry.commit()
     login_user(request, database, login, password)
     return Response(request.route_url('web-client'))

@@ -7,22 +7,19 @@ class ERPBlokWebClient(Blok):
 
     required = [
         'anyblok-core',
+        'anyblok-io',
         'pyramid',
     ]
 
     css = [
-        '#BLOK/static/jquery-ui-1.11.4.custom/jquery-ui.min.css',
-        '#BLOK/static/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css',
-        '/static/client.css',
-        '#BLOK/static/breadcrums.css',
-        '#BLOK/static/view.css',
-        '#BLOK/static/view_list.css',
+        '/static/materialize-src/css/materialize.css',
+        '/static/erpblok.css',
     ]
 
     js = [
         '/static/jquery-2.1.3.min.js',
+        '/static/materialize-src/js/bin/materialize.min.js',
         '/static/client.js',
-        '#BLOK/static/jquery-ui-1.11.4.custom/jquery-ui.min.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',
         '#BLOK/static/notification/notification.js',
@@ -34,6 +31,17 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_list.js',
         '#BLOK/static/view_form.js',
     ]
+
+    def install_access_groups(self):
+        Group = self.registry.Access.Group
+        return Group.insert(name='administration', label='Administration')
+
+    def install_admin_user(self, group):
+        login = self.registry.Web.Login.insert(login='admin', password='admin')
+        user = self.registry.Access.User.insert(last_name='Administrator',
+                                                login=login)
+        user.groups.append(group)
+        self.registry.IO.Mapping.set('main_admin_user', user)
 
     def install_user_menu(self):
         UserMenu = self.registry.Web.UserMenu
@@ -77,6 +85,8 @@ class ERPBlokWebClient(Blok):
                             parent=menuz)
 
     def install(self):
+        group = self.install_access_groups()
+        self.install_admin_user(group)
         self.install_user_menu()
         self.install_menus()
         self.install_quick_menu()
@@ -88,11 +98,14 @@ class ERPBlokWebClient(Blok):
     @classmethod
     def import_declaration_module(cls):
         from . import web  # noqa
+        from . import access  # noqa
         from . import controllers  # noqa
 
     @classmethod
     def reload_declaration_module(cls, reload):
         from . import web
         reload(web)
+        from . import access
+        reload(access)
         from . import controllers
         reload(controllers)

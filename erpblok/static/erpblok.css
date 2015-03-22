@@ -1,3 +1,16 @@
+body.application header,
+body.application main,
+body.application footer {
+    padding-left: 240px;
+}
+
+@media only screen and (max-width : 992px) {
+    body.application header,
+    body.application main,
+    body.application footer {
+        padding-left: 0;
+    }
+}
 .hide {
     display: None;
 }

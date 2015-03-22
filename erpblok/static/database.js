@@ -3,15 +3,18 @@ $(document).ready(function(){
     var $create = $('li#create');
     var $drop = $('li#drop');
     var $error = $('#error');
+    var $error2 = $('#error2');
     function goto_create () {
         $("div#create").removeClass('hide');
         $("div#drop").addClass('hide');
         $drop.removeClass('active');
         $create.addClass('active');
         $error.addClass("hide");
+        $error2.addClass("hide");
         $("div#create #database").val("");
-        $("div#create #login").val("");
+        $("div#create #login").val("admin");
         $("div#create #password").val("");
+        $("div#create #password2").val("");
     }
     $create.click(function (event) {
         goto_create();
@@ -22,6 +25,7 @@ $(document).ready(function(){
         $drop.addClass('active');
         $create.removeClass('active');
         $error.addClass("hide");
+        $error2.addClass("hide");
         $.ajax({
             type: "POST",
             url:"/database/manager/list",
@@ -35,10 +39,14 @@ $(document).ready(function(){
     });
     $("#submit-create").click(function (){
         $error.addClass("hide");
+        $error2.addClass('hide');
         var database = $("div#create #database").val();
         var login = $("div#create #login").val();
         var password = $("div#create #password").val();
-        if (database && login && password) {
+        var password2 = $("div#create #password2").val();
+        if (password != password2) {
+            $error2.removeClass('hide');
+        } else if (database && login && password) {
             $.ajax({
                 type: "POST",
                 url:"/database/manager/create",

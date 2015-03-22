@@ -49,16 +49,7 @@ class Web:
         return query.all()
 
     @classmethod
-    def get_main_menu(cls, login):
-        Menu = cls.registry.Web.Menu
-        query = Menu.query('id', 'label')
-        query = query.filter(Menu.web_menu_id.is_(None))
-        query = query.filter(Menu.with_login(login))
-        query = query.order_by(Menu.order)
-        return query.all()
-
-    @classmethod
-    def get_sub_menu(cls, login):
+    def get_app_menu(cls, login):
         res = []
         Menu = cls.registry.Web.Menu
         query = Menu.query()
@@ -66,16 +57,17 @@ class Web:
         query = query.filter(Menu.with_login(login))
         query = query.order_by(Menu.order)
         for m in query.all():
-            res.append((m.id, cls.get_recurse_sub_menu(m)))
+            res.append((m.function, m.action, m.id, m.label,
+                        cls.get_recurse_app_menu(m)))
 
         return res
 
     @classmethod
-    def get_recurse_sub_menu(cls, node):
+    def get_recurse_app_menu(cls, node):
         res = []
         for m in node.children:
             res.append((m.function, m.action, m.id, m.label,
-                        cls.get_recurse_sub_menu(m)))
+                        cls.get_recurse_app_menu(m)))
 
         return res
 

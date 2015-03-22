@@ -1,4 +1,12 @@
 $(document).ready(function(){
+    $("header nav div.nav-wrapper .dropdown-button").dropdown({
+        hover: false,
+        constrain_width: true,
+        alignment: 'right',
+        belowOrigin: true,
+    });
+
+    /*
     var userMenu = new ERPBlok.UserMenu();
     var quickMenu = new ERPBlok.QuickMenu();
     var menus = new ERPBlok.Menus();
@@ -100,4 +108,5 @@ $(document).ready(function(){
 
     // Apply current hashTag
     hashTagManager.changed(hashTagManager.toObject(window.location.hash), {});
+    */
 });
