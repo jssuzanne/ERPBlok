@@ -43,10 +43,10 @@ def post_login_connect(request, database=None, login=None, password=None):
     authentificated = registry.Web.Login.check_authentification(
         login, password)
     if authentificated:
-        login_user(request, database, login, password)
-        return Response(request.route_url('web-client'))
-    else:
-        return HTTPUnauthorized()
+        if login_user(request, database, login, password):
+            return Response(request.route_url('web-client'))
+
+    return HTTPUnauthorized()
 
 
 @Declarations.Pyramid.add_view('login-disconnect')

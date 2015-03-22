@@ -1,6 +1,7 @@
 import anyblok
 from anyblok._argsparse import ArgsParseManager
 from anyblok.registry import RegistryManager
+from anyblok.environment import EnvironmentManager
 
 
 def list_databases():
@@ -30,7 +31,17 @@ def login_user(request, database, login, password):
     request.session['login'] = login
     request.session['password'] = password
     request.session['state'] = "connected"
+    registry = RegistryManager.get(database)
+    User = registry.Access.User
+    Login = registry.Web.Login
+    query = User.query().join(Login)
+    query = query.filter(Login.login == login)
+    if not query.count():
+        return False
+
+    EnvironmentManager.set('user', query.first())
     request.session.save()
+    return True
 
 
 def logout(request):
