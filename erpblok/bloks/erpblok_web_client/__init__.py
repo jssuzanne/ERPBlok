@@ -44,7 +44,7 @@ class ERPBlokWebClient(Blok):
         self.registry.IO.Mapping.set('main_admin_user', user)
 
     def install_user_menu(self):
-        UserMenu = self.registry.Web.UserMenu
+        UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
                         icon='/static/login-logo.png',
                         label='About')
@@ -53,7 +53,7 @@ class ERPBlokWebClient(Blok):
                         label='Log out')
 
     def install_quick_menu(self):
-        QuickMenu = self.registry.Web.QuickMenu
+        QuickMenu = self.registry.UI.QuickMenu
         QuickMenu.insert(function='do_something',
                          icon='/static/login-logo.png',
                          title='Quick 1')
@@ -68,7 +68,7 @@ class ERPBlokWebClient(Blok):
                          title='Quick 4')
 
     def install_menus(self):
-        Menu = self.registry.Web.Menu
+        Menu = self.registry.UI.Menu
         for x in range(5):
             menux = Menu.insert(label="Menu %d" % x)
             for y in range(5):
@@ -99,6 +99,7 @@ class ERPBlokWebClient(Blok):
     def import_declaration_module(cls):
         from . import web  # noqa
         from . import access  # noqa
+        from . import ui  # noqa
         from . import controllers  # noqa
 
     @classmethod
@@ -107,5 +108,7 @@ class ERPBlokWebClient(Blok):
         reload(web)
         from . import access
         reload(access)
+        from . import ui
+        reload(ui)
         from . import controllers
         reload(controllers)

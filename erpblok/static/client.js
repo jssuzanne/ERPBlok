@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $(".button-collapse").sideNav();
     $("header nav div.nav-wrapper .dropdown-button").dropdown({
         hover: false,
         constrain_width: true,

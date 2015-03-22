@@ -11,7 +11,7 @@
             <script type="text/javascript" src="${x}" ></script>
         % endfor
     </head>
-    <body id="application">
+    <body id="application" class="application">
         <header>
             <div class="navbar-fixed">
                 <ul id="dropdown-quickmenu" class="dropdown-content">
@@ -49,7 +49,14 @@
                 </ul>
                 <nav>
                     <div class="nav-wrapper">
-                        <ul class="right">
+                        <ul class="left">
+                            <li>
+                                <a href="#" data-activates="slide-out" class="button-collapse">
+                                    <i class="mdi-navigation-menu"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="left"> <!-- FIXME class="right" wait fix from materializecss -->
                             <li>
                                 <a class="dropdown-button" data-activates="dropdown-quickmenu">
                                     <i class="mdi-action-view-module"></i>
@@ -62,22 +69,52 @@
                             </li>
                         </ul>
                     </div>
+                    <ul id="slide-out" class="side-nav fixed">
+                        <img class="responsive-img" src="/login/logo"/>
+                        ${add_menus(appmenu)}
+                    </ul>
                 </nav>
             </div>
         </header>
         <main>
-                <div class="row">
-                    <div class="col l2 hide-on-med-and-down">
-                        <ul class="left">
-                            ${add_menus(appmenu)}
-                        </ul>
-                    </div>
-                    <div class="col s12 m12 l10">
-                            <div class="section">
-                                Plop
-                            </div>
-                        </div>
-                    </div>
+            Plop
+            <div class="row">
+                <div class="col s1 m1 l1">
+                    1
+                </div>
+                <div class="col s1 m1 l1">
+                    2
+                </div>
+                <div class="col s1 m1 l1">
+                    3
+                </div>
+                <div class="col s1 m1 l1">
+                    4
+                </div>
+                <div class="col s1 m1 l1">
+                    5
+                </div>
+                <div class="col s1 m1 l1">
+                    6
+                </div>
+                <div class="col s1 m1 l1">
+                    7
+                </div>
+                <div class="col s1 m1 l1">
+                    8
+                </div>
+                <div class="col s1 m1 l1">
+                    9
+                </div>
+                <div class="col s1 m1 l1">
+                    10
+                </div>
+                <div class="col s1 m1 l1">
+                    11
+                </div>
+                <div class="col s1 m1 l1">
+                    12
+                </div>
             </div>
         </main>
         <footer></footer>

@@ -33,28 +33,34 @@ class Web:
         return cls.get_static('js')
 
     @Declarations.classmethod_cache()
-    def get_user_menu(cls, login):
-        UserMenu = cls.registry.Web.UserMenu
-        query = UserMenu.query('function', 'icon', 'label')
-        query = query.filter(UserMenu.with_login(login))
+    def get_user_menu(cls):
+        UserMenu = cls.registry.UI.UserMenu
+        query = query2 = UserMenu.query('function', 'icon', 'label')
+        query = query.filter(UserMenu.with_user())
+        query2 = query2.filter(UserMenu.without_group())
+        query.union_all(query2)
         query = query.order_by(UserMenu.order)
         return query.all()
 
     @classmethod
-    def get_quick_menu(cls, login):
-        QuickMenu = cls.registry.Web.QuickMenu
-        query = QuickMenu.query('function', 'action', 'menu', 'icon', 'title')
-        query = query.filter(QuickMenu.with_login(login))
+    def get_quick_menu(cls):
+        QuickMenu = cls.registry.UI.QuickMenu
+        query = query2 = QuickMenu.query('function', 'action', 'menu', 'icon', 'title')
+        query = query.filter(QuickMenu.with_user())
+        query2 = query2.filter(QuickMenu.without_group())
+        query.union_all(query2)
         query = query.order_by(QuickMenu.order)
         return query.all()
 
     @classmethod
-    def get_app_menu(cls, login):
+    def get_app_menu(cls):
         res = []
-        Menu = cls.registry.Web.Menu
+        Menu = cls.registry.UI.Menu
         query = Menu.query()
-        query = query.filter(Menu.web_menu_id.is_(None))
-        query = query.filter(Menu.with_login(login))
+        query = query2 = query.filter(Menu.ui_menu_id.is_(None))
+        query = query.filter(Menu.with_user())
+        query2 = query2.filter(Menu.without_group())
+        query.union_all(query2)
         query = query.order_by(Menu.order)
         for m in query.all():
             res.append((m.function, m.action, m.id, m.label,
@@ -72,4 +78,3 @@ class Web:
         return res
 
 from . import login  # noqa
-from . import menu  # noqa
