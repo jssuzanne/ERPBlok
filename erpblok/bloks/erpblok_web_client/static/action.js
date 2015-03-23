@@ -1,4 +1,4 @@
-ERPBlok.ActionManager = ERPBlok.Model.extend(ERPBlok.RPC.prototype, {
+ERPBlok.ActionManager = ERPBlok.Model.extend({
     'rpc_url': '/web/client/action',
     init: function() {
         this.breadcrums = new ERPBlok.BreadCrums(this);

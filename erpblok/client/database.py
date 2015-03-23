@@ -17,12 +17,14 @@ Declarations.Pyramid.add_route('database-dropdb', '/database/manager/drop',
 @Declarations.Pyramid.add_view('database',
                                renderer='erpblok:templates/database.mak')
 def get_database(request, database=None):
+    # FIXME don't display the page if allow-database-manger is False
     title = ArgsParseManager.get('app_name', 'ERPBlok')
     return {'title': title}
 
 
 @Declarations.Pyramid.add_view('database-createdb')
 def post_create_database(request, database=None, login=None, password=None):
+    # FIXME don't display the page if allow-database-manger is False
     if database in list_databases():
         return HTTPForbidden()
 
@@ -35,6 +37,7 @@ def post_create_database(request, database=None, login=None, password=None):
 
 @Declarations.Pyramid.add_view('database-dropdb')
 def post_drop_database(request, database):
+    # FIXME don't display the page if allow-database-manger is False
     drop_database(database)
     return HTTPFound(location=request.route_url('database'))
 

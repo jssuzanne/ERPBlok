@@ -1,4 +1,4 @@
-ERPBlok.RPC = ERPBlok.Model.extend({
+ERPBlok.Model.include({
     requestID: 0,
     getRequestID: function () {
         this.requestID += 1;
@@ -24,6 +24,8 @@ ERPBlok.RPC = ERPBlok.Model.extend({
         }, "json");
     },
     rpc: function(method, param, done, fail) {
-        this.send_json_rpc_request(this.rpc_url, method, param, done, fail);
+        if (this.rpc_url) {
+            this.send_json_rpc_request(this.rpc_url, method, param, done, fail);
+        }
     },
 });

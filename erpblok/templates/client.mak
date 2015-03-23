@@ -15,7 +15,33 @@
         <header>
             <div class="navbar-fixed">
                 <ul id="dropdown-quickmenu" class="dropdown-content">
-                    % for function, action, menu, icon, titlelabel in quickmenu:
+                    <div class="row">
+                        % for function, action, menu, icon, titlelabel in quickmenu:
+                            <li>
+                                <div class="col s4 m4 l4">
+                                    <a
+                                        % if function:
+                                            data-function="${function}"
+                                        % endif
+                                        % if menu:
+                                            data-menu="${menu}"
+                                        % endif
+                                        % if action:
+                                            data-action="${action}"
+                                        % endif
+                                        % if title:
+                                            title="${titlelabel}"
+                                        % endif
+                                    >
+                                        <i class="${icon}"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        % endfor
+                    </div>
+                </ul>
+                <ul id="dropdown-usermenu" class="dropdown-content">
+                    % for function, action, icon, name in usermenu:
                         <li>
                             <a
                                 % if function:
@@ -24,26 +50,11 @@
                                 % if action:
                                     data-action="${action}"
                                 % endif
-                                % if menu:
-                                    data-menu="${menu}"
+                            >${name}
+                                % if icon:
+                                    <i class="left ${icon}"></i>
                                 % endif
-                                % if title:
-                                    title="${titlelabel}"
-                                % endif
-                            >
-                                <img class="responsive-img" src="${icon}"></img>
                             </a>
-                        </li>
-                    % endfor
-                </ul>
-                <ul id="dropdown-usermenu" class="dropdown-content">
-                    % for function, icon, name in usermenu:
-                        <li>
-                            % if icon:
-                                <img src="${icon}" class="left responsive-img"></img>
-                            % endif
-                                <a class="usermenu"
-                                   data-function="${function}">${name}</a>
                         </li>
                     % endfor
                 </ul>
@@ -56,10 +67,10 @@
                                 </a>
                             </li>
                         </ul>
-                        <ul class="left"> <!-- FIXME class="right" wait fix from materializecss -->
+                        <ul class="right"> <!-- FIXME class="right" wait fix from materializecss -->
                             <li>
                                 <a class="dropdown-button" data-activates="dropdown-quickmenu">
-                                    <i class="mdi-action-view-module"></i>
+                                    <i class="mdi-navigation-apps"></i>
                                 </a>
                             </li>
                             <li>

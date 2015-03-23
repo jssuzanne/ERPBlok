@@ -7,23 +7,13 @@ $(document).ready(function(){
         belowOrigin: true,
     });
 
+    ERPBlok.hashTagManager = new ERPBlok.HashTagManager();
+    ERPBlok.menuManager = new ERPBlok.MenuManager();
+
     /*
-    var userMenu = new ERPBlok.UserMenu();
-    var quickMenu = new ERPBlok.QuickMenu();
     var menus = new ERPBlok.Menus();
     var actionManager = new ERPBlok.ActionManager();
 
-    var hashTagManager = new ERPBlok.HashTagManager()
-    window.addEventListener("hashchange", function(e) {
-        hashTagManager.changed(
-            hashTagManager.toObject(e.newURL),
-            hashTagManager.toObject(e.oldURL));
-    });
-
-    $("#toolbar li a.usermenu").click(function(e) {
-        var func = e.currentTarget.dataset.function;
-        userMenu.call_function(func);
-    });
     $("#toolbar div.quickmenu a").click(function (e) {
         var func = e.currentTarget.dataset.function;
         var action = e.currentTarget.dataset.action;

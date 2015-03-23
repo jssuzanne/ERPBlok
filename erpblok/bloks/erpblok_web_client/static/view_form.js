@@ -1,4 +1,4 @@
-ERPBlok.View.Form = ERPBlok.View.extend(ERPBlok.RPC.prototype, {
+ERPBlok.View.Form = ERPBlok.View.extend({
     'rpc_url': '/web/client/view',
     icon_url_selector: '/static/menus/toggle-small.gif',  // TODO replace by other
     title_selector: 'Form view',

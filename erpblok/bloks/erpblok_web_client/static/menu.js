@@ -1,4 +1,26 @@
-ERPBlok.Menu = ERPBlok.Model.extend({
+ERPBlok.MenuManager = ERPBlok.Model.extend({
+    init: function() {
+        this.define_user_menu();
+        this.define_quick_menu();
+    },
+    define_user_menu: function() {
+        var self = this;
+        this.userMenu = new ERPBlok.UserMenu();
+        $("#dropdown-usermenu a").click(function(e) {
+            var func = e.currentTarget.dataset.function;
+            self.userMenu.call_function(func);
+        });
+    },
+    define_quick_menu: function() {
+        var self = this;
+        this.quickMenu = new ERPBlok.QuickMenu();
+        $("#dropdown-quickmenu a").click(function(e) {
+            var func = e.currentTarget.dataset.function;
+            self.userMenu.call_function(func);
+        });
+    },
+});
+ERPBlok.MixinMenu = ERPBlok.Model.extend({
     call_function: function(function_name) {
         if (this[function_name] != undefined) {
             this[function_name]();
@@ -7,7 +29,7 @@ ERPBlok.Menu = ERPBlok.Model.extend({
         }
     },
 });
-ERPBlok.UserMenu = ERPBlok.Menu.extend({
+ERPBlok.UserMenu = ERPBlok.MixinMenu.extend({
     do_about: function() {
         $.ajax({type: "POST",
                 url: "/about",
@@ -37,7 +59,7 @@ ERPBlok.UserMenu = ERPBlok.Menu.extend({
         });
     },
 });
-ERPBlok.QuickMenu = ERPBlok.Menu.extend({});
-ERPBlok.Menus = ERPBlok.Menu.extend(ERPBlok.RPC.prototype, {
+ERPBlok.QuickMenu = ERPBlok.MixinMenu.extend({});
+ERPBlok.Menu = ERPBlok.MixinMenu.extend({
     'rpc_url': '/web/client/menus',
 });

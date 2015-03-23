@@ -16,6 +16,5 @@ class User:
     id = Integer(primary_key=True)
     first_name = String()
     last_name = String(nullable=False)
-    # FIXME Update AnyBlok to next version 0.2.4 Issue #2
-    login = Many2One(model=Login, nullable=False)
+    login = Many2One(model=Login, nullable=False, unique=True)
     groups = Many2Many(model=Access.Group)

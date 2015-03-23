@@ -46,7 +46,7 @@ class ERPBlokWebClient(Blok):
     def install_user_menu(self):
         UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
-                        icon='/static/login-logo.png',
+                        icon='mdi-social-public',
                         label='About')
         UserMenu.insert(function='do_logout',
                         order=1000,
@@ -55,16 +55,16 @@ class ERPBlokWebClient(Blok):
     def install_quick_menu(self):
         QuickMenu = self.registry.UI.QuickMenu
         QuickMenu.insert(function='do_something',
-                         icon='/static/login-logo.png',
+                         icon='mdi-communication-email',
                          title='Quick 1')
         QuickMenu.insert(action=2,
-                         icon='/static/login-logo.png',
+                         icon='mdi-notification-mms',
                          title='Quick 2')
         QuickMenu.insert(menu=3,
-                         icon='/static/login-logo.png',
+                         icon='mdi-social-cake',
                          title='Quick 3')
         QuickMenu.insert(function='do_something',
-                         icon='/static/login-logo.png',
+                         icon='mdi-social-person',
                          title='Quick 4')
 
     def install_menus(self):

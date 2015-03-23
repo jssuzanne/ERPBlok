@@ -13,20 +13,18 @@ Many2Many = Declarations.RelationShip.Many2Many
 
 @register(Mixin)
 class MixinMenu:
-    id = Integer(primary_key=True)  # Must be the alone, wait anyblok-0.2.4
+    id = Integer(primary_key=True)
     order = Integer(nullable=False, default=10)
     function = String()
-    groups = Many2Many(model=Group)  # FIXME Many2Many could be work in mixin
+    groups = Many2Many(model=Group)
 
 
 @register(UI)
 class Menu(MixinMenu):
 
-    id = Integer(primary_key=True)
     action = Integer()
     parent = Many2One(model='Model.UI.Menu', one2many='children')
     label = String(nullable=False)
-    groups = Many2Many(model=Group)
 
     @Declarations.hybrid_method()
     def with_user(self):
@@ -42,11 +40,9 @@ class Menu(MixinMenu):
 @register(UI)
 class UserMenu(MixinMenu):
 
-    id = Integer(primary_key=True)
-    function = String(nullable=False)
     icon = String()
     label = String(nullable=False)
-    groups = Many2Many(model=Group)
+    action = Integer()
 
     @Declarations.hybrid_method()
     def with_user(self):
@@ -62,12 +58,10 @@ class UserMenu(MixinMenu):
 @register(UI)
 class QuickMenu(MixinMenu):
 
-    id = Integer(primary_key=True)
     action = Integer()
     menu = Integer(foreign_key=(UI.Menu, 'id'))
     icon = String(nullable=False)
     title = String()
-    groups = Many2Many(model=Group)
 
     @Declarations.hybrid_method()
     def with_user(self):

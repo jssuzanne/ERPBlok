@@ -35,7 +35,7 @@ class Web:
     @Declarations.classmethod_cache()
     def get_user_menu(cls):
         UserMenu = cls.registry.UI.UserMenu
-        query = query2 = UserMenu.query('function', 'icon', 'label')
+        query = query2 = UserMenu.query('function', 'action', 'icon', 'label')
         query = query.filter(UserMenu.with_user())
         query2 = query2.filter(UserMenu.without_group())
         query.union_all(query2)
