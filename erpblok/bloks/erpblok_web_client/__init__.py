@@ -22,14 +22,15 @@ class ERPBlokWebClient(Blok):
         '/static/client.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',
-        '#BLOK/static/notification/notification.js',
-        '#BLOK/static/menu.js',
         '#BLOK/static/hashtag-manager.js',
-        '#BLOK/static/breadcrums.js',
-        '#BLOK/static/action.js',
-        '#BLOK/static/view.js',
-        '#BLOK/static/view_list.js',
-        '#BLOK/static/view_form.js',
+        '#BLOK/static/menu.js',
+        '#BLOK/static/dialog.js',
+        #'#BLOK/static/notification/notification.js',
+        #'#BLOK/static/breadcrums.js',
+        #'#BLOK/static/action.js',
+        #'#BLOK/static/view.js',
+        #'#BLOK/static/view_list.js',
+        #'#BLOK/static/view_form.js',
     ]
 
     def install_access_groups(self):

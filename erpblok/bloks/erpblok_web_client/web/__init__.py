@@ -63,8 +63,7 @@ class Web:
         query.union_all(query2)
         query = query.order_by(Menu.order)
         for m in query.all():
-            res.append((m.function, m.action, m.id, m.label,
-                        cls.get_recurse_app_menu(m)))
+            res.append((m.id, m.label, cls.get_recurse_app_menu(m)))
 
         return res
 
@@ -72,8 +71,7 @@ class Web:
     def get_recurse_app_menu(cls, node):
         res = []
         for m in node.children:
-            res.append((m.function, m.action, m.id, m.label,
-                        cls.get_recurse_app_menu(m)))
+            res.append((m.id, m.label, cls.get_recurse_app_menu(m)))
 
         return res
 

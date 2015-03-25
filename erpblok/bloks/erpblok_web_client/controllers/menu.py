@@ -6,32 +6,34 @@ PyramidJsonRPC = Declarations.PyramidJsonRPC
 
 
 @register(PyramidJsonRPC)
-class Menus:
+class SideMenu:
 
     @PyramidJsonRPC.rpc_method()
-    def menusTree(self, menu=None, **kwargs):
-        res = {'mainmenu': None, 'nodemenu': [], 'activemenu': None}
-        Menu = self.registry.Web.Menu
+    def openMenu(self, menu=None, **kwargs):
+        res = dict(nodemenu=[], activemenu=None, action=None, function=None)
+        Menu = self.registry.UI.Menu
 
         def recurse_parent(node):
+            res['nodemenu'].append(node.id)
             if node.parent:
-                res['nodemenu'].append(node.id)
                 recurse_parent(node.parent)
-            else:
-                res['mainmenu'] = node.id
 
         query = Menu.query().filter(Menu.id == menu)
         if query.count():
             m = query.first()
             if m.function or m.action:
                 res['activemenu'] = m.id
+                if m.function:
+                    res['function'] = m.function
 
-            if m.parent:
-                recurse_parent(m.parent)
-            else:
-                res['mainmenu'] = m.id
+                if m.action:
+                    #res['action'] = m.action.render()
+                    res['action'] = m.action
+
+                if m.parent:
+                    recurse_parent(m.parent)
 
         return res
 
 
-PyramidJsonRPC.add_route(PyramidJsonRPC.Menus, '/web/client/menus')
+PyramidJsonRPC.add_route(PyramidJsonRPC.SideMenu, '/web/client/side/menu')
