@@ -11,7 +11,7 @@
             <script type="text/javascript" src="${x}" ></script>
         % endfor
     </head>
-    <body id="application" class="application">
+    <body class="application">
         <header>
             <ul id="dropdown-quickmenu" class="dropdown-content">
                 <div class="row">
@@ -88,6 +88,12 @@
             </nav>
         </header>
         <main>
+            <div id="breadcrumb">
+                <ul>
+                </ul>
+            </div>
+            <div id="action-manager">
+            </div>
         </main>
         <footer></footer>
     </body>

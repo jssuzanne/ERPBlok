@@ -1,0 +1,36 @@
+#breadcrumb ul {
+    list-style: none;
+    overflow: hidden;
+}
+#breadcrumb ul li {
+    float: left;
+}
+#breadcrumb ul li a {
+    //color: white;  /* use sass */
+    text-decoration: none;
+    padding: 0px 15px 0px 15px;
+    background: brown; /* use sass */
+    background: hsla(34,85%,35%,1);
+    position: relative;
+    display: block;
+    float: left;
+    border-right: 1px solid white; /* use sass */
+    border-bottom: 1px solid white; /* use sass */
+}
+#breadcrumb ul li:first-child a {
+    padding-left: 10px;
+}
+#breadcrumb ul li:last-child a {
+    background: transparent !important;
+    color: black;  /* user sass */
+    pointer-events: none;
+    cursor: default;
+    border-left: 0;
+    border-bottom: 0;
+}
+#breadcrumb ul li a:hover {
+    background: hsla(34,85%,25%,1);
+}
+#breadcrumb ul li a:hover:after {
+    border-left-color: hsla(34,85%,25%,1) !important;
+}

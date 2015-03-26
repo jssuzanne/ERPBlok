@@ -34,7 +34,9 @@ ERPBlok.HashTagManager = ERPBlok.Model.extend({
                 }
             } else {
                 for (var i in this.changeCallback[key]) {
-                    this.changeCallback[key][i](newh[key], oldh[key]);
+                    if(newh[key] != oldh[key]) {
+                        this.changeCallback[key][i](newh[key], oldh[key]);
+                    }
                 }
             }
         }
@@ -54,11 +56,26 @@ ERPBlok.HashTagManager = ERPBlok.Model.extend({
             hash = {};
         }
         for (var key in hashs) {
-            hash[key] = hashs[key];
+            if (hashs[key] == undefined) {
+                if (hash[key]) {
+                    delete hash[key];
+                }
+            } else {
+                hash[key] = hashs[key];
+            }
         }
         hash = this.fromObject(hash);
         hash = '#' + hash.join('&');
         window.location.hash = hash;
+    },
+    get: function(tag) {
+        var hash = window.location.hash;
+        if (hash) {
+            hash = this.toObject(hash);
+        } else {
+            hash = {};
+        }
+        return hash[tag];
     },
     onCallback: function(collection, entry, callback) {
         if (collection[entry] == undefined) {

@@ -14,6 +14,7 @@ class ERPBlokWebClient(Blok):
     css = [
         '/static/materialize-src/css/materialize.css',
         '/static/erpblok.css',
+        '#BLOK/static/breadcrumb.css',
     ]
 
     js = [
@@ -24,10 +25,10 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/rpc.js',
         '#BLOK/static/hashtag-manager.js',
         '#BLOK/static/menu.js',
+        '#BLOK/static/breadcrumb.js',
+        '#BLOK/static/action.js',
         '#BLOK/static/dialog.js',
         #'#BLOK/static/notification/notification.js',
-        #'#BLOK/static/breadcrums.js',
-        #'#BLOK/static/action.js',
         #'#BLOK/static/view.js',
         #'#BLOK/static/view_list.js',
         #'#BLOK/static/view_form.js',

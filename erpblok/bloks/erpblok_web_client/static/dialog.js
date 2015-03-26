@@ -3,7 +3,7 @@ function get_dialog_id() {
     dialog_id ++;
     return dialog_id;
 }
-ERPBlok.Dialog = ERPBlok.Model.extend({
+ERPBlok.Dialog = ERPBlok.ActionInterface.extend({
     init: function() {
         var id = get_dialog_id();
         var modal = '<div id="modal' + id + '" class="modal">';

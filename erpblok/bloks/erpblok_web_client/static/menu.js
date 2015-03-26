@@ -22,6 +22,7 @@ ERPBlok.MenuManager = ERPBlok.Model.extend({
         var self = this;
         this.sideMenu = new ERPBlok.SideMenu();
         $("#slide-out a").click(function(e) {
+            ERPBlok.actionManager.clear_all();
             self.on_click(e, self.sideMenu);
         });
         ERPBlok.hashTagManager.onAdd('menu', function(newMenu) {
@@ -47,8 +48,9 @@ ERPBlok.MixinMenu = ERPBlok.Model.extend({
         }
     },
     call_action: function(action_id) {
-        var actionManager = new ERPBlok.ActionManager();
-        actionManager.load(action_id);
+        // FIXME action will be taken some args
+        var action = new ERPBlok.Action();
+        action.load(action_id);
     },
 });
 ERPBlok.UserMenu = ERPBlok.MixinMenu.extend({
@@ -81,6 +83,10 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
     },
     openMenu: function(newMenu) {
         var self = this;
+        if (ERPBlok.hashTagManager.get('breadcrumb')) {
+            ERPBlok.hashTagManager.update({breadcrumb: undefined});
+            return;
+        }
         this.rpc('openMenu', {menu: newMenu}, function (res) {
             self.uncollapse_menus(res.nodemenu);
             self.active_menu(res.nodemenu);

@@ -1,8 +1,30 @@
-ERPBlok.ActionManager = ERPBlok.Model.extend({
+ERPBlok.ActionInterface = ERPBlok.Model.extend({
+    appendTo: function (action) {
+        console.error('appendTo function must be overloaded');
+    },
+});
+ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
+    init: function() {
+        this.breadcrumb = new ERPBlok.BreadCrumb(this);
+        this.$el = $('#action-manager');
+    },
+    load: function(action) {
+        var action = new ERPBlok.Action();
+        action.load(action_id);
+    },
+    clear_all: function() {
+        this.breadcrumb.clear_all();
+    },
+    appendTo: function (action) {
+        action.$el.appendTo(this.$el);
+        this.breadcrumb.add(action.value.id, action.value.label, action.$el);
+    },
+});
+ERPBlok.Action = ERPBlok.Model.extend({
     'rpc_url': '/web/client/action',
     init: function() {
-        this.breadcrums = new ERPBlok.BreadCrums(this);
-        this.$views = $("section#application div#views");
+        this.actionManager = ERPBlok.actionManager;
+        this.Dialog = ERPBlok.Dialog;
     },
     load: function(action) {
         var self = this;
@@ -15,53 +37,13 @@ ERPBlok.ActionManager = ERPBlok.Model.extend({
         if (!action.views.length) {
             return;
         }
+        this.value = action;
+        this.$el = $('<div id="action-' + action.id + '" class="row"></div>');
         if (action.dialog) {
-            var $node = this.new_dialog(action.id, action.label, action.dialog_properties || {});
+            var parent = new this.Dialog();
         } else {
-            var $node = this.new_action(action.id, action.label);
+            var parent = this.actionManager;
         }
-        var viewManager = new ERPBlok.ViewManager(action.model);
-        viewManager.appendTo($node);
-        for (var i in action.views) {
-            viewManager.add(action.views[i]);
-        }
-        viewManager.select_view(action.views[0].id);
-    },
-    fill_template: function($node) {
-    },
-    clear_all: function() {
-        this.breadcrums.clear_all();
-    },
-    new_action: function(id, label) {
-        var $node = $('<section id="' + id + '" class="action-manager"></section>');
-        this.fill_template($node);
-        $node.appendTo(this.$views);
-        this.breadcrums.add(id, label, $node);
-        return $node;
-    },
-    new_dialog: function (id, label, dialog_properties) {
-        var $node = $('<div id="' + id + '"></div>');
-        this.fill_template($node);
-        var conf = {
-            appendTo: "body",
-            dialogClass: dialog_properties.dialogClass || "no-close",
-            model: dialog_properties.model || true,
-            closeOnEscape: dialog_properties.model || false,
-            draggable: dialog_properties.draggable || false,
-            width: dialog_properties.width || 800,
-            maxHeight: dialog_properties.maxHeight || 640,
-            title: label,
-            close: function( event, ui ) {
-                // TODO add the possibility to do another action
-                $(this).dialog('destroy').remove()
-            },
-            buttons: [
-            //    {text: "Close",
-            //     click: function() {$(this).dialog( "close" );}
-            //    },
-            ],
-        };
-        $node.dialog(conf);
-        return $node
+        parent.appendTo(this);
     },
 });

@@ -47,15 +47,15 @@ class Action:
             },
         ]
         res = {
-            '1': {
-                'model': 'Model.Web.Login',
+            1: {
+                'model': 'Model.UI.Login',
                 'id': 1,
                 'label': 'Super Plop',
                 'dialog': False,
                 'views': views,
             },
-            '2': {
-                'model': 'Model.Web.Login',
+            2: {
+                'model': 'Model.UI.Login',
                 'id': 3,
                 'label': "Mr Titi",
                 'dialog': True,
