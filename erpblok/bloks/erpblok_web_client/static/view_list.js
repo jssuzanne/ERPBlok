@@ -1,6 +1,4 @@
 ERPBlok.View.List = ERPBlok.View.extend({
-    'rpc_url': '/web/client/view',
-    icon_url_selector: '/static/menus/toggle-small-expand.gif',  // TODO replace by other
     title_selector: 'List view',
     class_name: 'view-list',
     lines: [],

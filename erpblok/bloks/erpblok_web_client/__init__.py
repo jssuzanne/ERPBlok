@@ -28,10 +28,10 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/breadcrumb.js',
         '#BLOK/static/action.js',
         '#BLOK/static/dialog.js',
+        '#BLOK/static/view.js',
+        '#BLOK/static/view_list.js',
+        '#BLOK/static/view_form.js',
         #'#BLOK/static/notification/notification.js',
-        #'#BLOK/static/view.js',
-        #'#BLOK/static/view_list.js',
-        #'#BLOK/static/view_form.js',
     ]
 
     def install_access_groups(self):

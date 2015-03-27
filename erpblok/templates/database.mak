@@ -20,7 +20,7 @@
                     <a href="#" class="brand-logo center">Database manager</a>
                 </div>
                 <ul id="slide-out" class="side-nav fixed">
-                    <img class="responsive-img" src="/login/logo"/>
+                    <img class="responsive-img hide-on-med-and-down" src="/login/logo"/>
                     <li class="active" id="create">
                         <a class="waves-effect waves-teal">Create a new database</a>
                     </li>

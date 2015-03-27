@@ -11,7 +11,7 @@ class Action:
     @PyramidJsonRPC.rpc_method()
     def load(self, action=None, **kwargs):
         list_ = """
-            <table>
+            <table class="striped responsive-table">
                 <thead>
                     <tr>
                         <th>Login</th>

@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    $('#database').material_select();
     $("#submit").click(function (){
         var $error = $("#error")
         $error.addClass("hide");

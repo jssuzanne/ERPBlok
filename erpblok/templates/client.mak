@@ -81,7 +81,7 @@
                 </div>
                 <ul id="slide-out" class="side-nav fixed">
                     <li>
-                        <img class="responsive-img" src="/login/logo"><img>
+                        <img class="responsive-img hide-on-med-and-down" src="/login/logo"><img>
                     </li>
                     ${add_menus(appmenu)}
                 </ul>

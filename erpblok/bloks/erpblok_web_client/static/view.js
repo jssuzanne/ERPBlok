@@ -1,14 +1,15 @@
 ERPBlok.ViewManager = ERPBlok.Model.extend({
-    init: function(model) {
-        this.model = model;
-    },
-    appendTo: function ($node) {
-        this.$action = $node;
-        this.$selector = $('<header><nav class="view-selector"><ul></ul></nav></header>');
-        this.$selector.appendTo($node);
-        this.$selector = this.$selector.find('ul');
+    init: function(action) {
+        this.action = action;
+        this.$action = action.$el;
+        this.$selector = $('<ul class="view-selector"></ul>');
+        this.$selector.appendTo(action.$el);
         this.views = {};
         this.active_view = undefined;
+        for (var i in action.value.views) {
+            this.add(action.value.views[i]);
+        }
+        this.select_view(action.value.views[0].id);
     },
     add: function(view) {
         var self = this;
@@ -19,7 +20,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         });
         $navEl.appendTo(this.$selector);
         var $viewEl = view.getViewEl();
-        $viewEl.addClass('invisible');
+        $viewEl.addClass('hide');
         $viewEl.appendTo(this.$action);
         this.views[view.id] = {'$nav': $navEl, '$view': $viewEl, 'view': view};
     },
@@ -32,17 +33,18 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         if (view_id == this.active_view) return;
         if (this.active_view) {
             this.views[this.active_view].$nav.removeClass('selected');
-            this.views[this.active_view].$view.addClass('invisible');
+            this.views[this.active_view].$view.addClass('hide');
         }
         if (view_id) {
             this.active_view = view_id;
             this.views[view_id].$nav.addClass('selected');
-            this.views[view_id].$view.removeClass('invisible');
+            this.views[view_id].$view.removeClass('hide');
             this.views[view_id].view.render();
         }
     },
 });
 ERPBlok.View = ERPBlok.Model.extend({
+    rpc_url: '/web/client/view',
     icon_url_selector: '/static/login-logo.png',  // TODO replace by other
     title_selector: 'undefined',
     class_name: 'view-undefined',
@@ -60,7 +62,7 @@ ERPBlok.View = ERPBlok.Model.extend({
         return $(el);
     },
     getViewEl: function() {
-        var $el = $('<section id="' + this.id + '" class="view ' + this.class_name + '"></section>');
+        var $el = $('<div id="' + this.id + '" class="view ' + this.class_name + '"></div>');
         this.$template.appendTo($el);
         this.$el = $el;
         return $el;

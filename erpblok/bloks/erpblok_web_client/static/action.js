@@ -45,5 +45,6 @@ ERPBlok.Action = ERPBlok.Model.extend({
             var parent = this.actionManager;
         }
         parent.appendTo(this);
+        var viewManager = new ERPBlok.ViewManager(this);
     },
 });
