@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    $(".button-collapse").sideNav();
     var $create = $('li#create');
     var $drop = $('li#drop');
     var $error = $('#error');
@@ -34,7 +33,6 @@ $(document).ready(function(){
             var $select = $("div#drop #select");
             $select.children().remove();
             $select.append(html);
-            $select.find('#database').material_select();
         });
     });
     $("#submit-create").click(function (){
