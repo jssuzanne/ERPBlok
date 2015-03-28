@@ -11,7 +11,8 @@
             <script type="text/javascript" src="${x}" ></script>
         % endfor
     </head>
-    <body class="application">
+    <body>
+        <!--
         <header>
             <ul id="dropdown-quickmenu" class="dropdown-content">
                 <div class="row">
@@ -96,8 +97,10 @@
             </div>
         </main>
         <footer></footer>
+        -->
     </body>
 </html>
+<!--
 <%def name="add_menus(menus)">
     % for menu, name, submenus, in menus:
         % if submenus:
@@ -115,3 +118,4 @@
         % endif
     % endfor
 </%def>
+-->
