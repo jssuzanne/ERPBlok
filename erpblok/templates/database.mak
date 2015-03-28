@@ -18,31 +18,25 @@
                         <a>Database manager</a>
                     </h1>
                 </li>
-                <li class="toggle-topbar menu-icon"><a><span>Menu</span></a></li>
+                <li class="toggle-topbar menu-icon"><a><span></span></a></li>
             </ul>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li class="divider"/>
+                    <li class="active" id="create">
+                        <a>Create a new database</a>
+                    </li>
+                    <li id="drop">
+                        <a>Drop an existing database</a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="/">Close</a>
+                    </li>
+                </ul>
+            </section>
         </nav>
         <div class="row">
-            <div class="columns large-3 medium-4">
-                <div class="hide-for-small">
-                    <div class="sidebar">
-                        <img src="/login/logo"/>
-                        <nav>
-                            <ul class="side-nav" role="navigation">
-                                <li role="menuitem" class="active" id="create">
-                                    <a>Create a new database</a>
-                                </li>
-                                <li role="menuitem" id="drop">
-                                    <a>Drop an existing database</a>
-                                </li>
-                                <li role="menuitem">
-                                    <a href="/">Close</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            <div class="columns large-9 medium-8">
+            <div class="columns large-offset-2 large-8 medium-offset-1 medium-10">
                 <div id="error" data-alert class="hide alert-box alert round">
                     The database already exist
                 </div>

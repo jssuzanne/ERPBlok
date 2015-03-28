@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $(document).foundation();
     var $create = $('li#create');
     var $drop = $('li#drop');
     var $error = $('#error');
