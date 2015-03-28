@@ -31,17 +31,7 @@
                     </section>
                 </nav>
                 <aside class="left-off-canvas-menu">
-                    <ul>
-                        <li class="active" id="create">
-                            <a>Create a new database</a>
-                        </li>
-                        <li id="drop">
-                            <a>Drop an existing database</a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="/">Close</a>
-                        </li>
-                    </ul>
+                    ${display_menu()}
                 </aside>
                 <a class="exit-off-canvas" href="#"/>
                 <section role="main" class="scroll-container">
@@ -50,19 +40,7 @@
                             <div class="hide-for-small">
                                 <div class="sidebar">
                                     <img src="/login/logo"/>
-                                    <nav>
-                                        <ul class="side-nav" role="navigation">
-                                            <li role="menuitem" class="active" id="create">
-                                                <a>Create a new database</a>
-                                            </li>
-                                            <li role="menuitem" id="drop">
-                                                <a>Drop an existing database</a>
-                                            </li>
-                                            <li role="menuitem" role="menuitem">
-                                                <a href="/">Close</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                    ${display_menu()}
                                 </div>
                             </div>
                         </div>
@@ -96,3 +74,18 @@
         </div>
     </body>
 </html>
+<%def name="display_menu()">
+    <nav>
+        <ul class="side-nav" role="navigation">
+            <li role="menuitem" class="active" id="create">
+                <a>Create a new database</a>
+            </li>
+            <li role="menuitem" id="drop">
+                <a>Drop an existing database</a>
+            </li>
+            <li role="menuitem" role="menuitem">
+                <a href="/">Close</a>
+            </li>
+        </ul>
+    </nav>
+</%def>
