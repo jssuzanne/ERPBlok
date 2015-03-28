@@ -1,6 +1,6 @@
 from anyblok import Declarations
 from anyblok._argsparse import ArgsParseManager
-from pyramid.httpexceptions import HTTPForbidden, HTTPFound
+from pyramid.httpexceptions import HTTPForbidden, HTTPFound, HTTPNotFound
 from pyramid.response import Response
 from .common import list_databases, create_database, drop_database, login_user
 
@@ -14,17 +14,24 @@ Declarations.Pyramid.add_route('database-dropdb', '/database/manager/drop',
                                request_method='POST')
 
 
+def check_allow_database_manager():
+    allow_database_manager = ArgsParseManager.get('allow_database_manager',
+                                                  True)
+    if not allow_database_manager:
+        raise HTTPNotFound()
+
+
 @Declarations.Pyramid.add_view('database',
                                renderer='erpblok:templates/database.mak')
 def get_database(request, database=None):
-    # FIXME don't display the page if allow-database-manger is False
+    check_allow_database_manager()
     title = ArgsParseManager.get('app_name', 'ERPBlok')
     return {'title': title}
 
 
 @Declarations.Pyramid.add_view('database-createdb')
 def post_create_database(request, database=None, login=None, password=None):
-    # FIXME don't display the page if allow-database-manger is False
+    check_allow_database_manager()
     if database in list_databases():
         return HTTPForbidden()
 
@@ -37,7 +44,7 @@ def post_create_database(request, database=None, login=None, password=None):
 
 @Declarations.Pyramid.add_view('database-dropdb')
 def post_drop_database(request, database):
-    # FIXME don't display the page if allow-database-manger is False
+    check_allow_database_manager()
     drop_database(database)
     return HTTPFound(location=request.route_url('database'))
 
