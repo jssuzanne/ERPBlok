@@ -12,110 +12,147 @@
         % endfor
     </head>
     <body>
-        <!--
-        <header>
-            <ul id="dropdown-quickmenu" class="dropdown-content">
-                <div class="row">
-                    % for function, action, menu, icon, titlelabel in quickmenu:
-                            <div class="col s4 m4 l4">
-                        <li>
-                                <a
-                                    % if function:
-                                        data-function="${function}"
-                                    % endif
-                                    % if menu:
-                                        href="#menu=${menu}"
-                                    % endif
-                                    % if action:
-                                        data-action="${action}"
-                                    % endif
-                                    % if title:
-                                        title="${titlelabel}"
-                                    % endif
-                                >
-                                    <i class="${icon}"></i>
-                                </a>
+        <div class="off-canvas-wrap" data-offcanvas="">
+            <div class="inner-wrap">
+                <nav class="top-bar hide-for-small" data-topbar role="navigation" data-options="is_hover: false">
+                    <ul class="title-area">
+                        <li class="name">
+                            <h1><a href="#">${title}</a></h1>
                         </li>
+                    </ul>
+                    <section class="top-bar-section">
+                        <ul class="right">
+                            <li class="divider"></li>
+                            <li class="has-dropdown">
+                                <a class="menu-icon">Plop</a>
+                                <ul id="dropdown-quickmenu" class="dropdown">
+                                    % for function, action, menu, icon, titlelabel in quickmenu:
+                                        <li>
+                                            <a
+                                                % if function:
+                                                    data-function="${function}"
+                                                % endif
+                                                % if menu:
+                                                    href="#menu=${menu}"
+                                                % endif
+                                                % if action:
+                                                    data-action="${action}"
+                                                % endif
+                                                % if title:
+                                                    title="${titlelabel}"
+                                                % endif
+                                            >
+                                                <img class="menu-img" src="${icon}"/>
+                                            </a>
+                                        </li>
+                                    % endfor
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">User setting</a>
+                                <ul id="dropdown-usermenu" class="dropdown">
+                                    % for function, action, icon, name in usermenu:
+                                        <li>
+                                            <a
+                                                % if function:
+                                                    data-function="${function}"
+                                                % endif
+                                                % if action:
+                                                    data-action="${action}"
+                                                % endif
+                                                % if icon:
+                                                    ><img src="${icon}" class="menu-img"/>${name}
+                                                % else:
+                                                    >${name}
+                                                % endif
+                                            </a>
+                                        </li>
+                                    % endfor
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                </nav>
+                <nav class="tab-bar show-for-small">
+                    <section class="left-small">
+                        <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+                    </section>
+                    <section class="middle tab-bar-section">
+                        <h1 class="title">${title}</h1>
+                    </section>
+                    <section class="right-small">
+                        <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
+                    </section>
+                </nav>
+                <aside class="left-off-canvas-menu">
+                    <nav>
+                        <ul id="slide-out">
+                            ${add_side_menus(appmenu)}
+                        </ul>
+                    </nav>
+                </aside>
+                <aside class="right-off-canvas-menu">
+                    <li class="has-dropdown">
+                        <a href="#">User setting</a>
+                        <ul id="dropdown-usermenu" class="dropdown">
+                            % for function, action, icon, name in usermenu:
+                                <li>
+                                    <a
+                                        % if function:
+                                            data-function="${function}"
+                                        % endif
+                                        % if action:
+                                            data-action="${action}"
+                                        % endif
+                                    >${name}
+                                        % if icon:
+                                            <i class="left ${icon}"></i>
+                                        % endif
+                                    </a>
+                                </li>
+                            % endfor
+                        </ul>
+                    </li>
+                </aside>
+                <a class="exit-off-canvas" href="#"/>
+                <section role="main" class="scroll-container">
+                    <div class="row">
+                         <div class="columns large-3 medium-4">
+                            <div class="hide-for-small">
+                                <div class="sidebar">
+                                    <img src="/login/logo"/>
+                                    <nav>
+                                        <ul id="slide-out">
+                                            ${add_side_menus(appmenu)}
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
-                    % endfor
-                </div>
-            </ul>
-            <ul id="dropdown-usermenu" class="dropdown-content">
-                % for function, action, icon, name in usermenu:
-                    <li>
-                        <a
-                            % if function:
-                                data-function="${function}"
-                            % endif
-                            % if action:
-                                data-action="${action}"
-                            % endif
-                        >${name}
-                            % if icon:
-                                <i class="left ${icon}"></i>
-                            % endif
-                        </a>
-                    </li>
-                % endfor
-            </ul>
-            <nav>
-                <div class="nav-wrapper">
-                    <ul class="left">
-                        <li>
-                            <a href="#" data-activates="slide-out" class="button-collapse">
-                                <i class="mdi-navigation-menu"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="right">
-                        <li>
-                            <a class="dropdown-button" data-activates="dropdown-quickmenu">
-                                <i class="mdi-navigation-apps left"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-button" data-activates="dropdown-usermenu">User setting
-                                <i class="mdi-navigation-arrow-drop-down right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <ul id="slide-out" class="side-nav fixed">
-                    <li>
-                        <img class="responsive-img hide-on-med-and-down" src="/login/logo"><img>
-                    </li>
-                    ${add_menus(appmenu)}
-                </ul>
-            </nav>
-        </header>
-        <main>
-            <div id="breadcrumb">
-                <ul>
-                </ul>
+                        </div>
+                        <div class="columns large-9 medium-8">
+                            <div id="breadcrumb" class="breadcrumbs">
+                            </div>
+                            <div id="action-manager">
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div id="action-manager">
-            </div>
-        </main>
-        <footer></footer>
-        -->
+        </div>
     </body>
 </html>
-<!--
-<%def name="add_menus(menus)">
+<%def name="add_side_menus(menus)">
     % for menu, name, submenus, in menus:
         % if submenus:
-            <li>
-                <label for="input-${menu}">${name}</label>
-                <input type="checkbox" id="input-${menu}" />
-                    <ul>
-                        ${add_menus(submenus)}
-                    </ul>
+            <li class="has-dropdown">${name}
+                <ul class="dropdown">
+                    ${add_side_menus(submenus)}
+                </ul>
             </li>
         % else:
             <li>
-                <a id="menu-${menu}" href="#menu=${menu}"><label>${name}<label></a>
+                <a id="menu-${menu}" href="#menu=${menu}">${name}</a>
             </li>
         % endif
     % endfor
 </%def>
--->

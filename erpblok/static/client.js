@@ -1,12 +1,5 @@
 $(document).ready(function(){
-    $(".button-collapse").sideNav();
-    $("header nav div.nav-wrapper .dropdown-button").dropdown({
-        hover: false,
-        constrain_width: true,
-        alignment: 'right',
-        belowOrigin: true,
-    });
-
+    $(document).foundation();
     ERPBlok.hashTagManager = new ERPBlok.HashTagManager();
     ERPBlok.menuManager = new ERPBlok.MenuManager();
     ERPBlok.actionManager = new ERPBlok.ActionManager();

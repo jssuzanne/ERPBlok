@@ -12,14 +12,13 @@ class ERPBlokWebClient(Blok):
     ]
 
     css = [
-        '/static/materialize-src/css/materialize.css',
+        '/static/foundation-5/css/foundation.min.css',
         '/static/erpblok.css',
-        '#BLOK/static/breadcrumb.css',
     ]
 
     js = [
         '/static/jquery-2.1.3.min.js',
-        '/static/materialize-src/js/bin/materialize.min.js',
+        '/static/foundation-5/js/foundation.min.js',
         '/static/client.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',
@@ -48,7 +47,7 @@ class ERPBlokWebClient(Blok):
     def install_user_menu(self):
         UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
-                        icon='mdi-social-public',
+                        icon='/login/logo',
                         label='About')
         UserMenu.insert(function='do_logout',
                         order=1000,
@@ -57,16 +56,16 @@ class ERPBlokWebClient(Blok):
     def install_quick_menu(self):
         QuickMenu = self.registry.UI.QuickMenu
         QuickMenu.insert(function='do_something',
-                         icon='mdi-communication-email',
+                         icon='/login/logo',
                          title='Quick 1')
         QuickMenu.insert(action=2,
-                         icon='mdi-notification-mms',
+                         icon='/login/logo',
                          title='Quick 2')
         QuickMenu.insert(menu=3,
-                         icon='mdi-social-cake',
+                         icon='/login/logo',
                          title='Quick 3')
         QuickMenu.insert(function='do_something',
-                         icon='mdi-social-person',
+                         icon='/login/logo',
                          title='Quick 4')
 
     def install_menus(self):

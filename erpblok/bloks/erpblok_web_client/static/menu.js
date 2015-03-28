@@ -89,7 +89,7 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
         }
         this.rpc('openMenu', {menu: newMenu}, function (res) {
             self.uncollapse_menus(res.nodemenu);
-            self.active_menu(res.nodemenu);
+            self.active_menu(res.activemenu);
             var func = res.function;
             var action = res.action;
             if (func) self.call_function(func);
