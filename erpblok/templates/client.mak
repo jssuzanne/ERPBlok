@@ -39,7 +39,7 @@
                     </section>
                 </nav>
                 <aside class="left-off-canvas-menu">
-                    <ul id="slide-out" class="off-canvas-list">
+                    <ul id="slide-out" class="off-canvas-list accordion" data-accordion>
                         ${add_side_menus(appmenu)}
                     </ul>
                 </aside>
@@ -55,11 +55,9 @@
                             <div class="hide-for-small">
                                 <div class="sidebar">
                                     <img src="/login/logo"/>
-                                    <nav>
-                                        <ul id="slide-out">
-                                            ${add_side_menus(appmenu)}
-                                        </ul>
-                                    </nav>
+                                    <ul id="slide-out" class="accordion" data-accordion>
+                                        ${add_side_menus(appmenu)}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -76,18 +74,19 @@
     </body>
 </html>
 <%def name="add_side_menus(menus)">
-    % for menu, name, submenus, in menus:
-        % if submenus:
-            <li class="has-dropdown">${name}
-                <ul class="dropdown">
-                    ${add_side_menus(submenus)}
-                </ul>
-            </li>
-        % else:
-            <li>
-                <a id="menu-${menu}" href="#menu=${menu}">${name}</a>
-            </li>
-        % endif
+     % for menu, name, submenus, in menus:
+        <li class="accordion-navigation">
+            % if submenus:
+                <a href="#menu${menu}">${name}</a>
+                <div id="menu${menu}" class="content">
+                    <ul class="accordion" data-accordion>
+                        ${add_side_menus(submenus)}
+                    </ul>
+                </div>
+            % else:
+                <a href="#menu=${menu}" class="side-menu">${name}</a>
+            % endif
+        </li>
     % endfor
 </%def>
 <%def name="top_nav_menus()">

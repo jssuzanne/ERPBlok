@@ -21,7 +21,7 @@ ERPBlok.MenuManager = ERPBlok.Model.extend({
     define_side_menu: function() {
         var self = this;
         this.sideMenu = new ERPBlok.SideMenu();
-        $("#slide-out a").click(function(e) {
+        $("#slide-out a.side-menu").click(function(e) {
             ERPBlok.actionManager.clear_all();
             self.on_click(e, self.sideMenu);
         });
