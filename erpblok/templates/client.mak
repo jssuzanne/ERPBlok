@@ -93,7 +93,7 @@
     % if quickmenu:
         <li class="has-dropdown">
             <a class="menu-icon">Plop</a>
-            <ul id="dropdown-quickmenu" class="dropdown">
+            <ul id="dropdown-quickmenu" class="dropdown small-block-grid-3 medium-block-grid-3 large-block-grid-3">
                 % for function, action, menu, icon, titlelabel in quickmenu:
                     <li>
                         <a
