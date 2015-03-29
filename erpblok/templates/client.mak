@@ -23,53 +23,7 @@
                     <section class="top-bar-section">
                         <ul class="right">
                             <li class="divider"></li>
-                            <li class="has-dropdown">
-                                <a class="menu-icon">Plop</a>
-                                <ul id="dropdown-quickmenu" class="dropdown">
-                                    % for function, action, menu, icon, titlelabel in quickmenu:
-                                        <li>
-                                            <a
-                                                % if function:
-                                                    data-function="${function}"
-                                                % endif
-                                                % if menu:
-                                                    href="#menu=${menu}"
-                                                % endif
-                                                % if action:
-                                                    data-action="${action}"
-                                                % endif
-                                                % if title:
-                                                    title="${titlelabel}"
-                                                % endif
-                                            >
-                                                <img class="menu-img" src="${icon}"/>
-                                            </a>
-                                        </li>
-                                    % endfor
-                                </ul>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="#">User setting</a>
-                                <ul id="dropdown-usermenu" class="dropdown">
-                                    % for function, action, icon, name in usermenu:
-                                        <li>
-                                            <a
-                                                % if function:
-                                                    data-function="${function}"
-                                                % endif
-                                                % if action:
-                                                    data-action="${action}"
-                                                % endif
-                                                % if icon:
-                                                    ><img src="${icon}" class="menu-img"/>${name}
-                                                % else:
-                                                    >${name}
-                                                % endif
-                                            </a>
-                                        </li>
-                                    % endfor
-                                </ul>
-                            </li>
+                            ${top_nav_menus()}
                         </ul>
                     </section>
                 </nav>
@@ -85,34 +39,14 @@
                     </section>
                 </nav>
                 <aside class="left-off-canvas-menu">
-                    <nav>
-                        <ul id="slide-out">
-                            ${add_side_menus(appmenu)}
-                        </ul>
-                    </nav>
+                    <ul id="slide-out" class="off-canvas-list">
+                        ${add_side_menus(appmenu)}
+                    </ul>
                 </aside>
                 <aside class="right-off-canvas-menu">
-                    <li class="has-dropdown">
-                        <a href="#">User setting</a>
-                        <ul id="dropdown-usermenu" class="dropdown">
-                            % for function, action, icon, name in usermenu:
-                                <li>
-                                    <a
-                                        % if function:
-                                            data-function="${function}"
-                                        % endif
-                                        % if action:
-                                            data-action="${action}"
-                                        % endif
-                                    >${name}
-                                        % if icon:
-                                            <i class="left ${icon}"></i>
-                                        % endif
-                                    </a>
-                                </li>
-                            % endfor
-                        </ul>
-                    </li>
+                    <ul class="off-canvas-list">
+                        ${top_nav_menus()}
+                    </ul>
                 </aside>
                 <a class="exit-off-canvas" href="#"/>
                 <section role="main" class="scroll-container">
@@ -155,4 +89,55 @@
             </li>
         % endif
     % endfor
+</%def>
+<%def name="top_nav_menus()">
+    % if quickmenu:
+        <li class="has-dropdown">
+            <a class="menu-icon">Plop</a>
+            <ul id="dropdown-quickmenu" class="dropdown">
+                % for function, action, menu, icon, titlelabel in quickmenu:
+                    <li>
+                        <a
+                            % if function:
+                                data-function="${function}"
+                            % endif
+                            % if menu:
+                                href="#menu=${menu}"
+                            % endif
+                            % if action:
+                                data-action="${action}"
+                            % endif
+                            % if title:
+                                title="${titlelabel}"
+                            % endif
+                        >
+                            <img class="menu-img" src="${icon}"/>
+                        </a>
+                    </li>
+                % endfor
+            </ul>
+        </li>
+    % endif
+    <li class="has-dropdown">
+        <a href="#">User setting</a>
+        <ul id="dropdown-usermenu" class="dropdown">
+            % for function, action, icon, name in usermenu:
+                <li>
+                    <a
+                        % if function:
+                            data-function="${function}"
+                        % endif
+                        % if action:
+                            data-action="${action}"
+                        % endif
+                        % if icon:
+                            ><img src="${icon}" class="menu-img"/>${name}
+                        % else:
+                            >${name}
+                        % endif
+                    </a>
+                </li>
+            % endfor
+        </ul>
+    </li>
 </%def>
