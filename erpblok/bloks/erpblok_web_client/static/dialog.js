@@ -6,32 +6,38 @@ function get_dialog_id() {
 ERPBlok.Dialog = ERPBlok.ActionInterface.extend({
     init: function() {
         var id = get_dialog_id();
-        var modal = '<div id="modal' + id + '" class="modal">';
-        modal += '<div class="modal-content">';
-        modal += '<h4 class="dialog-title"></h4>';
+        var modal = '<div id="modal' + id + '" class="reveal-modal">';
+        modal += '<h2 class="dialog-title"></h2>';
         modal += '<div class="dialog-content"></div>';
-        modal += '<div class="modal-footer"></div>';
         modal += '</div>';
         this.$el = $(modal);
         this.$el.appendTo($('body'));
+        this.$el.foundation('reveal', {
+            opened: function () {
+                alert('The couch was stolen!');
+            },
+            closed: function () {
+                alert("Now it's yours again");
+            }
+        });
     },
     set_title: function(title) {
-        this.$el.find('h4.dialog-title').text(title);
+        this.$el.find('h2.dialog-title').text(title);
     },
     set_html: function(html) {
         this.$el.find('div.dialog-content').html(html);
     },
+
     add_close_button: function() {
-        var $button = $('<a class="waves-effect waves-green btn-flat modal-action modal-close">Close</a>');
-        $button.appendTo(this.$el.find('div.modal-footer'));
+        var self = this;
+        var $button = $('<a class="button">Close</a>');
+        $button.appendTo(this.$el.find('div.dialog-content'));
+        $button.click(function (e) {
+            self.$el.foundation('reveal', 'close');
+            self.$el.remove();
+        });
     },
     open: function() {
-        var self = this;
-        this.$el.openModal({
-            dismissible: false,
-            complete: function () {
-                self.$el.remove();
-            },
-        });
+        this.$el.foundation('reveal', 'open');
     },
 });

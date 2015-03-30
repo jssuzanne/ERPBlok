@@ -10,6 +10,7 @@ class Action:
 
     @PyramidJsonRPC.rpc_method()
     def load(self, action=None, **kwargs):
+        action = int(action)
         list_ = """
             <table class="striped responsive-table">
                 <thead>
