@@ -21,7 +21,7 @@ ERPBlok.MenuManager = ERPBlok.Model.extend({
     define_side_menu: function() {
         var self = this;
         this.sideMenu = new ERPBlok.SideMenu();
-        $("#slide-out a.side-menu").click(function(e) {
+        this.sideMenu.$el.find("a.side-menu").click(function(e) {
             ERPBlok.actionManager.clear_all();
             self.on_click(e, self.sideMenu);
         });
@@ -79,7 +79,7 @@ ERPBlok.QuickMenu = ERPBlok.MixinMenu.extend({});
 ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
     'rpc_url': '/web/client/side/menu',
     init: function () {
-        this.$el = $('#slide-out');
+        this.$el = $('.slide-out');
     },
     openMenu: function(newMenu) {
         var self = this;
@@ -88,6 +88,7 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
             return;
         }
         this.rpc('openMenu', {menu: newMenu}, function (res) {
+            self.$el.find('.active').removeClass('active');
             self.uncollapse_menus(res.nodemenu);
             self.active_menu(res.activemenu);
             var func = res.function;
@@ -97,9 +98,12 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
         });
     },
     uncollapse_menus: function(nodemenus) {
-        // TODO wait fix on multi collapse level
+        for (var i in nodemenus) {
+            this.$el.find('div#menu' + nodemenus[i] + '.content').addClass('active');
+            this.$el.find('a#amenu' + nodemenus[i]).addClass('active');
+        }
     },
     active_menu: function(menu_id) {
-        // TODO wait fix on multi collapse level
+        this.$el.find('a#menu' + menu_id + '.side-menu').addClass('active');
     },
 });

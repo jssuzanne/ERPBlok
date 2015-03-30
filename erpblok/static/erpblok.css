@@ -5,3 +5,31 @@ img.menu-img {
     width: 32px;
     height: 32px;
 }
+/* FIXME apply this in the sass of foundation */
+.row {
+    max-width: 100%;
+}
+aside.left-off-canvas-menu ul.accordion,
+.sidebar ul.accordion {
+    margin-left: 0px;
+}
+aside.left-off-canvas-menu .accordion .accordion-navigation > a, 
+.sidebar .accordion .accordion-navigation > a { 
+    background: none repeat scroll 0 0 #333;
+    color: rgba(255, 255, 255, 0.7);
+}
+aside.left-off-canvas-menu .accordion .accordion-navigation > .content,
+.sidebar .accordion .accordion-navigation > .content {
+    background: none repeat scroll 0 0 #333;
+    padding: 0;
+    padding-left: 0.9375rem;
+}
+aside.left-off-canvas-menu .accordion .accordion-navigation > .active,
+.sidebar .accordion .accordion-navigation .active {
+    color: green;
+}
+aside.left-off-canvas-menu .accordion .accordion-navigation > a:hover, 
+.sidebar .accordion .accordion-navigation > a:hover { 
+    background: none repeat scroll 0 0 #222;
+}
+/* end override foundation */

@@ -20,6 +20,7 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
             $node.addClass('hide')
             this.links.push(this.$last);
         }
+        // FIXME get the active menu and save it in last
         this.$last = {
             link: $('<a class="current" id="' + id + '">' + label + '</a>'),
             node: $node,
@@ -43,6 +44,7 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
                 var delta = this.links.length - i;
                 this.links.slice(i, delta);
                 ERPBlok.hashTagManager.update(hash);
+                // FIXME reactive the good menus
                 break;
             } else {
                 this.links[i].link.remove();

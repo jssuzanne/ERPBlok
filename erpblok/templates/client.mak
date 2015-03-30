@@ -39,7 +39,7 @@
                     </section>
                 </nav>
                 <aside class="left-off-canvas-menu">
-                    <ul id="slide-out" class="off-canvas-list accordion" data-accordion>
+                    <ul class="off-canvas-list accordion slide-out" data-accordion>
                         ${add_side_menus(appmenu)}
                     </ul>
                 </aside>
@@ -55,7 +55,7 @@
                             <div class="hide-for-small">
                                 <div class="sidebar">
                                     <img src="/login/logo"/>
-                                    <ul id="slide-out" class="accordion" data-accordion>
+                                    <ul class="accordion slide-out" data-accordion>
                                         ${add_side_menus(appmenu)}
                                     </ul>
                                 </div>
@@ -77,14 +77,14 @@
      % for menu, name, submenus, in menus:
         <li class="accordion-navigation">
             % if submenus:
-                <a href="#menu${menu}">${name}</a>
+                <a id="amenu${menu}" href="#menu${menu}">${name}</a>
                 <div id="menu${menu}" class="content">
                     <ul class="accordion" data-accordion>
                         ${add_side_menus(submenus)}
                     </ul>
                 </div>
             % else:
-                <a href="#menu=${menu}" class="side-menu">${name}</a>
+                <a id="menu${menu}" href="#menu=${menu}" class="side-menu">${name}</a>
             % endif
         </li>
     % endfor
