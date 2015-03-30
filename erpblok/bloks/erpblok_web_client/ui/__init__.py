@@ -6,4 +6,5 @@ class UI:
     pass
 
 
+from . import template  # noqa
 from . import menu  # noqa

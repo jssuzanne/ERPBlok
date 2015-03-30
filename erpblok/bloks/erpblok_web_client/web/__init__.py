@@ -75,4 +75,20 @@ class Web:
 
         return res
 
+    @classmethod
+    def get_templates(cls):
+        from os.path import join
+        tmpl = cls.registry.UI.Template()
+        Blok = cls.registry.System.Blok
+        for blok in Blok.list_by_state('installed'):
+            b = BlokManager.get(blok)
+            if hasattr(b, 'template'):
+                bpath = BlokManager.getPath(blok)
+                for template in b.template:
+                    with open(join(bpath, template), 'r') as fp:
+                        tmpl.load_file(fp)
+
+        tmpl.compile()
+        return tmpl.get_all_template()
+
 from . import login  # noqa

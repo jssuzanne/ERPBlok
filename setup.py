@@ -6,6 +6,7 @@ requires = [
     'anyblok',
     'anyblok_pyramid',
     'pyramid_mako',
+    'lxml',
 ]
 
 ERPBlok = [

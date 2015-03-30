@@ -10,11 +10,9 @@
         % for x in js:
             <script type="text/javascript" src="${x}" ></script>
         % endfor
-        % for id, tmpl in templates:
-            <script type="text/html" id="${id}">
-                ${tmpl | n}
-            </script>
-        % endfor
+        % if templates:
+            ${templates | n}
+        % endif
     </head>
     <body>
         <div class="off-canvas-wrap" data-offcanvas="">

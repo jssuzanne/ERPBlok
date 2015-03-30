@@ -34,6 +34,10 @@ class ERPBlokWebClient(Blok):
         #'#BLOK/static/notification/notification.js',
     ]
 
+    template = [
+        'templates.tmpl',
+    ]
+
     def install_access_groups(self):
         Group = self.registry.Access.Group
         return Group.insert(name='administration', label='Administration')
