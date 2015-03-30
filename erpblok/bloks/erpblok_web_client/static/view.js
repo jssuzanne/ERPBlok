@@ -62,7 +62,7 @@ ERPBlok.View = ERPBlok.Model.extend({
         return $(el);
     },
     getViewEl: function() {
-        var $el = $('<div id="' + this.id + '" class="view ' + this.class_name + '"></div>');
+        var $el = $(tmpl('view', {id: this.id, class_name: this.class_name}));
         this.$template.appendTo($el);
         this.$el = $el;
         return $el;

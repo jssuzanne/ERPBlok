@@ -41,6 +41,9 @@ def load_client(request):
     quickmenu = registry.Web.get_quick_menu()
     appmenu = registry.Web.get_app_menu()
     title = ArgsParseManager.get('app_name', 'ERPBlok')
+    templates = [
+        ('view', '<div id="<%=id%>" class="view <%=class_name%>"/>'),
+    ]
     return render_to_response('erpblok:templates/client.mak',
                               {'title': title,
                                'css': css,
@@ -48,4 +51,5 @@ def load_client(request):
                                'quickmenu': quickmenu,
                                'usermenu': usermenu,
                                'appmenu': appmenu,
+                               'templates': templates,
                                }, request=request)
