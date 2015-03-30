@@ -91,7 +91,30 @@
 </%def>
 <%def name="top_nav_menus()">
     % if quickmenu:
-        <li class="has-dropdown">
+        <li class="hide-for-small">
+            <div id="dropdown-quickmenu" class="icon-bar menu-icon">
+                % for function, action, menu, icon, titlelabel in quickmenu:
+                    <a class="item"
+                        % if function:
+                            data-function="${function}"
+                        % endif
+                        % if menu:
+                            href="#menu=${menu}"
+                        % endif
+                        % if action:
+                            data-action="${action}"
+                        % endif
+                        % if title:
+                            title="${titlelabel}"
+                        % endif
+                    >
+                        <img src="${icon}"/>
+                    </a>
+                % endfor
+            </div>
+        </li>
+        <li class="hide-for-small divider"/>
+        <li class="has-dropdown show-for-small">
             <a class="menu-icon">Plop</a>
             <ul id="dropdown-quickmenu" class="dropdown small-block-grid-3 medium-block-grid-3 large-block-grid-3">
                 % for function, action, menu, icon, titlelabel in quickmenu:

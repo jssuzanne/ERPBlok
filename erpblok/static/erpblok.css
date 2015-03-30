@@ -5,6 +5,9 @@ img.menu-img {
     width: 32px;
     height: 32px;
 }
+.icon-bar.menu-icon {
+    margin-top: 7px;
+}
 /* FIXME apply this in the sass of foundation */
 .row {
     max-width: 100%;
