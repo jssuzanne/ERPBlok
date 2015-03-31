@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from lxml import html
+from lxml import html, etree
 from copy import deepcopy
 from logging import getLogger
 
@@ -67,7 +67,11 @@ class Template:
             self.load_template(element)
         elif element.tag.lower() == 'templates':
             for _element in element.getchildren():
-                if _element.tag.lower() == 'template':
+                if _element.tag is etree.Comment:
+                    continue
+                elif _element.tag is html.HtmlComment:
+                    continue
+                elif _element.tag.lower() == 'template':
                     self.load_template(_element)
                 else:
                     raise TemplateException(
