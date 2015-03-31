@@ -78,7 +78,7 @@ class Web:
     @classmethod
     def get_templates(cls):
         from os.path import join
-        tmpl = cls.registry.UI.Template()
+        tmpl = cls.registry.UI.Template(forclient=True)
         Blok = cls.registry.System.Blok
         for blok in Blok.list_by_state('installed'):
             b = BlokManager.get(blok)

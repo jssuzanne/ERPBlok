@@ -15,6 +15,11 @@ class TemplateException(Exception):
 class Template:
 
     def __init__(self, *args, **kwargs):
+        if 'forclient' in kwargs:
+            self.forclient = kwargs.pop('forclient')
+        else:
+            self.forclient = False
+
         super(Template, self).__init__(*args, **kwargs)
         self.clean()
 
@@ -27,21 +32,33 @@ class Template:
         for tmpl in self.compiled.keys():
             res.append(self.get_template(tmpl))
 
-        res = '<templates>%s</templates>' % ''.join(res)
+        res = ''.join(res)
         return res.strip()
 
     def get_template(self, name):
-        tmpl = self.compiled[name]
+        tmpl = deepcopy(self.compiled[name])
+        if self.forclient:
+            tmpl.tag = 'script'
+            tmpl.set('type', 'text/html')
         res = html.tostring(tmpl)
-        return res.decode("utf-8").replace('__request_operator__=', '?=')
+        return self.decode(res.decode("utf-8"))
+
+    def decode(self, element):
+        element = element.replace('__start_value_operator__', '<%=')
+        element = element.replace('__end_value_operator__', '%>')
+        return element
+
+    def encode(self, element):
+        element = element.replace('<%=', '__start_value_operator__')
+        element = element.replace('%>', '__end_value_operator__')
+        return element
 
     def load_file(self, openedfile):
         try:
             el = openedfile.read()
             # the operator ?= are cut, then I replace them before
             # to save the operator in get_template
-            el = el.replace('?=', '__request_operator__=')
-            element = html.fromstring(el)
+            element = html.fromstring(self.encode(el))
         except Exception:
             logger.error('error durring load of %r' % openedfile)
             raise
@@ -50,7 +67,6 @@ class Template:
             self.load_template(element)
         elif element.tag.lower() == 'templates':
             for _element in element.getchildren():
-                print(_element)
                 if _element.tag.lower() == 'template':
                     self.load_template(_element)
                 else:

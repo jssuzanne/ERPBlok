@@ -22,7 +22,7 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
         }
         // FIXME get the active menu and save it in last
         this.$last = {
-            link: $('ERPBlokBreadCrumb', {'id': id, 'label': label}),
+            link: $(tmpl('ERPBlokBreadCrumb', {'id': id, 'label': label})),
             node: $node,
             hash: this.get_hashTag(),
         };

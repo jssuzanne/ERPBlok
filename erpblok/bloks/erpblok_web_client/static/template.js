@@ -8,10 +8,7 @@
  // load the template - and be sure to cache the result.
  var fn = !/\W/.test(str) ?
  cache[str] = cache[str] ||
- // Change the current value
- //     tmpl(document.getElementById(str).innerHTML) :
- // because we wante find the template only in templates aera
- tmpl($('templates template#' + str).html()) :
+ tmpl(document.getElementById(str).innerHTML) :
 
  // Generate a reusable function that will serve as a template
  // generator (and which will be cached).
