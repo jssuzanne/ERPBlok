@@ -1,5 +1,28 @@
 <templates>
-    <template id="view">
+    <template id="ERPBlokAction">
+        <div id="action" class="row"/>
+    </template>
+    <template id="ERPBlokBreadCrumb">
+        <div id="<%=id%>" class="current"><%=label%></div>
+    </template>
+    <template id="ERPBlokDialog">
+        <div id="modal<%=id%>" class="reveal-modal" data-reveal>
+            <h2 class="dialog-title"></h2>
+            <div class="dialog-content"></div>
+        </div>
+    </template>
+    <template id="ERPBlokDialogClose">
+        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </template>
+    <template id="ERPBlokViewManagerSelector">
+        <ul class="view-selector"></ul>
+    </template>
+    <template id="ERPBlokView">
         <div id="<%=id%>" class="view <%=class_name%>"/>
+    </template>
+    <template id="ERPBlokViewSelector">
+        <li id="<%=id%>" title="<%=title_selector%>">
+            <img width="24" height="24" src="<%=icon_url_selector%>"/>
+        </li>
     </template>
 </templates>

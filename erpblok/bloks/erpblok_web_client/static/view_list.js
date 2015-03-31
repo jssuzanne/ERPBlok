@@ -42,7 +42,6 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         this.record = record;
     },
     render: function () {
-        var id = "plop";
         var el = '<tr>';
         for (var i in this.view.fields) {
             // TODO replace by field

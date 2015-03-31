@@ -38,7 +38,7 @@ ERPBlok.Action = ERPBlok.Model.extend({
             return;
         }
         this.value = action;
-        this.$el = $('<div id="action-' + action.id + '" class="row"></div>');
+        this.$el = $(tmpl('ERPBlokAction', {'id': action.id}));
         if (action.dialog) {
             var parent = new this.Dialog();
         } else {

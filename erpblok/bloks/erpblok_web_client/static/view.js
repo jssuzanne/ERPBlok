@@ -2,7 +2,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
     init: function(action) {
         this.action = action;
         this.$action = action.$el;
-        this.$selector = $('<ul class="view-selector"></ul>');
+        this.$selector = $(tmpl('ERPBlokViewManagerSelector', {}));
         this.$selector.appendTo(action.$el);
         this.views = {};
         this.active_view = undefined;
@@ -56,13 +56,14 @@ ERPBlok.View = ERPBlok.Model.extend({
         this.fields = options.fields;
     },
     getNavEl: function(view_id) {
-        var el = '<li id="' + this.id + '" title="' + this.title_selector + '">';
-        el += '<img width="24" height="24" src="' + this.icon_url_selector + '">';
-        el += '</img></li>';
-        return $(el);
+        return $(tmpl('ERPBlokViewSelector', 
+                      {'id': this.id, 
+                       'title_selector': this.title_selector,
+                       'icon_url_selector': this.icon_url_selector}));
     },
     getViewEl: function() {
-        var $el = $(tmpl('view', {id: this.id, class_name: this.class_name}));
+        var $el = $(tmpl('ERPBlokView', 
+                    {id: this.id, class_name: this.class_name}));
         this.$template.appendTo($el);
         this.$el = $el;
         return $el;

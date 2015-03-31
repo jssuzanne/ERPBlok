@@ -5,12 +5,7 @@ function get_dialog_id() {
 }
 ERPBlok.Dialog = ERPBlok.ActionInterface.extend({
     init: function() {
-        var id = get_dialog_id();
-        var modal = '<div id="modal' + id + '" class="reveal-modal" data-reveal>';
-        modal += '<h2 class="dialog-title"></h2>';
-        modal += '<div class="dialog-content"></div>';
-        modal += '</div>';
-        this.$el = $(modal);
+        this.$el = $(tmpl('ERPBlokDialog', {'id': get_dialog_id()}));
         this.$el.appendTo($('body'));
     },
     set_title: function(title) {
@@ -22,7 +17,7 @@ ERPBlok.Dialog = ERPBlok.ActionInterface.extend({
 
     add_close_button: function() {
         var self = this;
-        var $button = $('<a class="close-reveal-modal" aria-label="Close">&#215;</a>');
+        var $button = $(tmpl('ERPBlokDialogClose', {}));
         $button.appendTo(this.$el.find('div.dialog-content'));
         $button.click(function (e) {
             self.$el.foundation('reveal', 'close');
