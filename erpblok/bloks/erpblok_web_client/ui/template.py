@@ -46,7 +46,22 @@ class Template:
             logger.error('error durring load of %r' % openedfile)
             raise
 
-        self.load_template(element)
+        if element.tag.lower() == 'template':
+            self.load_template(element)
+        elif element.tag.lower() == 'templates':
+            for _element in element.getchildren():
+                print(_element)
+                if _element.tag.lower() == 'template':
+                    self.load_template(_element)
+                else:
+                    raise TemplateException(
+                        "Only 'template' can be loaded not %r in file %r" % (
+                            _element.tag, openedfile))
+
+        else:
+            raise TemplateException(
+                "Only 'template' or 'templates' can be loaded not %r in %r"
+                % (element.tag, openedfile))
 
     def load_template(self, element):
         name = element.attrib.get('id')
