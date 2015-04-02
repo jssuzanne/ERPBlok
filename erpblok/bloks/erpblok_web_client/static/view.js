@@ -2,7 +2,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
     init: function(action) {
         this.action = action;
         this.$action = action.$el;
-        this.$selector = $(tmpl('ERPBlokViewManagerSelector', {}));
+        this.$selector = $(tmpl('ERPBlokViewManager', {}));
         this.$selector.appendTo(action.$el);
         this.views = {};
         this.active_view = undefined;
@@ -18,7 +18,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         $navEl.click(function (event) {
             self.select_view(event.currentTarget.id);
         });
-        $navEl.appendTo(this.$selector);
+        $navEl.appendTo(this.$selector.find('ul'));
         var $viewEl = view.getViewEl();
         $viewEl.addClass('hide');
         $viewEl.appendTo(this.$action);
@@ -32,12 +32,12 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
     select_view: function (view_id) {
         if (view_id == this.active_view) return;
         if (this.active_view) {
-            this.views[this.active_view].$nav.removeClass('selected');
+            this.views[this.active_view].$nav.removeClass('active');
             this.views[this.active_view].$view.addClass('hide');
         }
         if (view_id) {
             this.active_view = view_id;
-            this.views[view_id].$nav.addClass('selected');
+            this.views[view_id].$nav.addClass('active');
             this.views[view_id].$view.removeClass('hide');
             this.views[view_id].view.render();
         }

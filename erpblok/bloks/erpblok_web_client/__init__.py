@@ -14,6 +14,7 @@ class ERPBlokWebClient(Blok):
     css = [
         '/static/foundation-5/css/foundation.min.css',
         '/static/erpblok.css',
+        '#BLOK/static/view.css',
     ]
 
     js = [

@@ -21,15 +21,21 @@
     <template id="ERPBlokDialogClose">
         <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </template>
-    <template id="ERPBlokViewManagerSelector">
-        <ul class="view-selector"></ul>
+    <template id="ERPBlokViewManager">
+        <div class="row view-manager">
+            <nav class="view-selector">
+                <ul/>
+            </nav>
+        </div>
     </template>
     <template id="ERPBlokView">
-        <div id="<%=id%>" class="view <%=class_name%>"/>
+        <div id="<%=id%>" class="row view <%=class_name%>"/>
     </template>
     <template id="ERPBlokViewSelector">
-        <li id="<%=id%>" title="<%=title_selector%>">
-            <img width="24" height="24" src="<%=icon_url_selector%>"/>
+        <li id="<%=id%>" title="<%=title_selector%>" class="item">
+            <a>
+                <img class="menu-img" src="<%=icon_url_selector%>"/>
+            </a>
         </li>
     </template>
 </templates>

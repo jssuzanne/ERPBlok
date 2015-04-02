@@ -1,6 +1,7 @@
 .hide {
     display: None;
 }
+/* FIXME apply this in the sass of foundation */
 img.menu-img {
     width: 32px;
     height: 32px;
@@ -8,7 +9,6 @@ img.menu-img {
 .icon-bar.menu-icon {
     margin-top: 7px;
 }
-/* FIXME apply this in the sass of foundation */
 .row {
     max-width: 100%;
 }
