@@ -44,12 +44,44 @@ class Template:
         return self.decode(res.decode("utf-8"))
 
     def decode(self, element):
-        element = element.replace('__start_value_operator__', '<%=')
+        element = element.replace('__start_value_operator__', '<%')
         element = element.replace('__end_value_operator__', '%>')
+        element = element.replace('__less_than_operator__', '<')
+        element = element.replace('__more_than_operator__', '>')
+        return element
+
+    def encode_blok(self, element):
+        last = 0
+        while True:
+            start = element.find('<%', last)
+            stop = element.find('%>', last)
+            if start == -1 or stop == -1:
+                break
+
+            begin = element[:start + 1]
+            el = element[start + 1: stop]
+            end = element[stop:]
+
+            less_counter = 0
+            while el.find('<') != -1:
+                el = el.replace('<', '__less_than_operator__', 1)
+                less_counter += 1
+
+            more_counter = 0
+            while el.find('>') != -1:
+                el = el.replace('>', '__more_than_operator__', 1)
+                more_counter += 1
+
+            element = begin + el + end
+            last = stop + 1
+            last += less_counter * len('__less_than_operator__')
+            last += more_counter * len('__more_than_operator__')
+
         return element
 
     def encode(self, element):
-        element = element.replace('<%=', '__start_value_operator__')
+        element = self.encode_blok(element)
+        element = element.replace('<%', '__start_value_operator__')
         element = element.replace('%>', '__end_value_operator__')
         return element
 
@@ -85,7 +117,7 @@ class Template:
 
     def load_template(self, element):
         name = element.attrib.get('id')
-        extend = element.attrib.get('t-extend')
+        extend = element.attrib.get('extend')
         rewrite = bool(eval(element.attrib.get('rewrite', "False")))
 
         if name:
@@ -203,6 +235,7 @@ class Template:
 
         if extend:
             tmpl = deepcopy(self.compile_template(extend))
+            tmpl.set('id', name)
             elements = self.known[name]['tmpl']
         else:
             tmpl = self.known[name]['tmpl'][0]

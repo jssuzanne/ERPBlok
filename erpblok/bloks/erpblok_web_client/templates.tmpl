@@ -2,7 +2,7 @@
     <!--
         It is the templating for client
 
-        The client templating come from 
+        The client templating come from
         http://ejohn.org/blog/javascript-micro-templating/
 
     -->
@@ -37,5 +37,32 @@
                 <img class="menu-img" src="<%=icon_url_selector%>"/>
             </a>
         </li>
+    </template>
+    <template id="ERPBlokViewList" extend="ERPBlokView">
+        <xpath action="insert" expression="./div">
+            <table>
+                <thead>
+                    <% for ( var i = 0; i < headers.length; i++ ) { %>
+                        <tr>
+                            <% for ( var j = 0; j < headers[i].length; j++ ) { %>
+                                <th id="<%=headers[i][j].id%>"
+                                    colspan="<%=headers[i][j].colspan%>"
+                                    rowspan="<%=headers[i][j].rowspan%>"
+                                ><%=headers[i][j].label%></th>
+                            <% } %>
+                        </tr>
+                    <% } %>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+    <template id="ERPBlokViewListLine">
+        <tr>
+            <% for ( var i = 0; i < fields.length; i++) { %>
+                <td id="<%=fields[i]%>"><%=record[fields[i]]%></td>
+            <% } %>
+        </tr>
     </template>
 </templates>

@@ -22,7 +22,11 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         var $viewEl = view.getViewEl();
         $viewEl.addClass('hide');
         $viewEl.appendTo(this.$action);
-        this.views[view.id] = {'$nav': $navEl, '$view': $viewEl, 'view': view};
+        this.views[view.options.id] = {
+            '$nav': $navEl,
+            '$view': $viewEl,
+            'view': view
+        };
     },
     get_view_cls: function(view) {
         if (ERPBlok.View[view.mode])
@@ -50,21 +54,18 @@ ERPBlok.View = ERPBlok.Model.extend({
     class_name: 'view-undefined',
     init: function(viewManager, options) {
         this.viewManager = viewManager;
-        this.id = options.id;
-        this.$template = $(options.template);
-        this.pks = options.primary_keys;
-        this.fields = options.fields;
+        this.options = options;
     },
     getNavEl: function(view_id) {
-        return $(tmpl('ERPBlokViewSelector', 
-                      {'id': this.id, 
-                       'title_selector': this.title_selector,
-                       'icon_url_selector': this.icon_url_selector}));
+        return $(tmpl('ERPBlokViewSelector',
+                      {'id': this.options.id,
+                       'title_selector': this.options.title_selector,
+                       'icon_url_selector': this.options.icon_url_selector}));
     },
     getViewEl: function() {
-        var $el = $(tmpl('ERPBlokView', 
-                    {id: this.id, class_name: this.class_name}));
-        this.$template.appendTo($el);
+        var $el = $(tmpl('ERPBlokView',
+                    {id: this.options.id, class_name: this.options.class_name}));
+        if (this.options.template) $(this.options.template).appendTo($el);
         this.$el = $el;
         return $el;
     },

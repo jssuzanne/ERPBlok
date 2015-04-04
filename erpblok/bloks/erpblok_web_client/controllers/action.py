@@ -11,18 +11,6 @@ class Action:
     @PyramidJsonRPC.rpc_method()
     def load(self, action=None, **kwargs):
         action = int(action)
-        list_ = """
-            <table class="striped responsive-table">
-                <thead>
-                    <tr>
-                        <th>Login</th>
-                        <th>Password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        """
         form = """
             <div>
                 <label for="login">Login</label>
@@ -35,9 +23,19 @@ class Action:
             {
                 'id': 1,
                 'mode': 'List',
-                'template': list_,
                 'primary_keys': ['login'],
                 'fields': ['login', 'password'],
+                'fields2display': ['login', 'password'],
+                'headers': [
+                    [{'id': 'login',
+                      'label': 'Login',
+                      'colspan': 1,
+                      'rowspan': 1},
+                     {'id': 'password',
+                      'label': 'Password',
+                      'colspan': 1,
+                      'rowspan': 1}],
+                ],
             },
             {
                 'id': 2,

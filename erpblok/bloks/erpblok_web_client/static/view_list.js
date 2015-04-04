@@ -2,6 +2,15 @@ ERPBlok.View.List = ERPBlok.View.extend({
     title_selector: 'List view',
     class_name: 'view-list',
     lines: [],
+    getViewEl: function() {
+        var $el = $(tmpl('ERPBlokViewList', {
+            id: this.options.id,
+            class_name: this.options.class_name,
+            headers: this.options.headers,
+        }));
+        this.$el = $el;
+        return $el;
+    },
     render: function () {
         this.do_search();
     },
@@ -42,14 +51,9 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         this.record = record;
     },
     render: function () {
-        var el = '<tr>';
-        for (var i in this.view.fields) {
-            // TODO replace by field
-            el += '<td id="' + this.view.fields[i] + '">';
-            el += this.record[this.view.fields[i]];
-            el += '</td>';
-        }
-        el += '</tr>';
-        this.$el = $(el);
+        this.$el = $(tmpl('ERPBlokViewListLine', {
+            'fields': this.view.options.fields2display,
+            'record': this.record,
+        }));
     },
 });
