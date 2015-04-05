@@ -13,8 +13,9 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         });
     },
     render_record: function(record) {
-        for (var i in this.fields) {
-            this.$el.find('#' + this.fields[i]).text(record[this.fields[i]]);
+        var fields = this.options.fields;
+        for (var i in fields) {
+            this.$el.find('#' + fields[i]).text(record[fields[i]]);
         }
     }
 });

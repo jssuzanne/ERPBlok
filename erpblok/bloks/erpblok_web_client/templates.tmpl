@@ -40,7 +40,7 @@
     </template>
     <template id="ERPBlokViewList" extend="ERPBlokView">
         <xpath action="insert" expression="./div">
-            <table>
+            <table role="grid">
                 <thead>
                     <% for ( var i = 0; i < headers.length; i++ ) { %>
                         <tr>
@@ -59,7 +59,7 @@
         </xpath>
     </template>
     <template id="ERPBlokViewListLine">
-        <tr>
+        <tr id="<%=id%>">
             <% for ( var i = 0; i < fields.length; i++) { %>
                 <td id="<%=fields[i]%>"><%=record[fields[i]]%></td>
             <% } %>

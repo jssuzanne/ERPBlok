@@ -5,7 +5,7 @@ ERPBlok.View.List = ERPBlok.View.extend({
     getViewEl: function() {
         var $el = $(tmpl('ERPBlokViewList', {
             id: this.options.id,
-            class_name: this.options.class_name,
+            class_name: this.class_name,
             headers: this.options.headers,
         }));
         this.$el = $el;
@@ -49,11 +49,21 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
     init: function(view, record) {
         this.view = view;
         this.record = record;
+        this.id = ':'
+        var primary_keys = view.options.primary_keys;
+        for (var i in primary_keys) {
+            this.id += primary_keys[i] + ':' + record[primary_keys[i]] + ',';
+        }
     },
     render: function () {
+        var self = this;
         this.$el = $(tmpl('ERPBlokViewListLine', {
+            'id': this.id,
             'fields': this.view.options.fields2display,
             'record': this.record,
         }));
+        this.$el.click(function () {
+            alert(self.id);
+        });
     },
 });

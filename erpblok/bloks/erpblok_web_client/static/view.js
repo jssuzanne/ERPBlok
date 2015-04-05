@@ -59,12 +59,12 @@ ERPBlok.View = ERPBlok.Model.extend({
     getNavEl: function(view_id) {
         return $(tmpl('ERPBlokViewSelector',
                       {'id': this.options.id,
-                       'title_selector': this.options.title_selector,
-                       'icon_url_selector': this.options.icon_url_selector}));
+                       'title_selector': this.title_selector,
+                       'icon_url_selector': this.icon_url_selector}));
     },
     getViewEl: function() {
         var $el = $(tmpl('ERPBlokView',
-                    {id: this.options.id, class_name: this.options.class_name}));
+                    {id: this.options.id, class_name: this.class_name}));
         if (this.options.template) $(this.options.template).appendTo($el);
         this.$el = $el;
         return $el;
