@@ -22,6 +22,7 @@ class Action:
         views = [
             {
                 'id': 1,
+                'selectable': True,
                 'mode': 'List',
                 'primary_keys': ['login'],
                 'fields': ['login', 'password'],
@@ -36,6 +37,9 @@ class Action:
                       'colspan': 1,
                       'rowspan': 1}],
                 ],
+                'transitions': {
+                    'selectRecord': ('open_view', 2),
+                },
             },
             {
                 'id': 2,
@@ -52,6 +56,7 @@ class Action:
                 'label': 'Super Plop',
                 'dialog': False,
                 'views': views,
+                'selected': 1,
             },
             2: {
                 'model': 'Model.UI.Login',

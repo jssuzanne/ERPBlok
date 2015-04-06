@@ -32,7 +32,9 @@
         <div id="<%=id%>" class="row view <%=class_name%>"/>
     </template>
     <template id="ERPBlokViewSelector">
-        <li id="<%=id%>" title="<%=title_selector%>" class="item">
+        <li id="<%=id%>"
+            title="<%=title_selector%>"
+            class="item <%= (selectable ? '' : 'hide')%>">
             <a>
                 <img class="menu-img" src="<%=icon_url_selector%>"/>
             </a>
@@ -59,7 +61,7 @@
         </xpath>
     </template>
     <template id="ERPBlokViewListLine">
-        <tr id="<%=id%>">
+        <tr class="view-list-line">
             <% for ( var i = 0; i < fields.length; i++) { %>
                 <td id="<%=fields[i]%>"><%=record[fields[i]]%></td>
             <% } %>

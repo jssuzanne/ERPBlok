@@ -9,7 +9,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         for (var i in action.value.views) {
             this.add(action.value.views[i]);
         }
-        this.select_view(action.value.views[0].id);
+        this.select_view(action.value.selected);
     },
     add: function(view) {
         var self = this;
@@ -33,7 +33,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
             return new ERPBlok.View[view.mode](this, view);
         return new ERPBlok.View(this, view);
     },
-    select_view: function (view_id) {
+    select_view: function (view_id, kwargs) {
         if (view_id == this.active_view) return;
         if (this.active_view) {
             this.views[this.active_view].$nav.removeClass('active');
@@ -43,7 +43,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
             this.active_view = view_id;
             this.views[view_id].$nav.addClass('active');
             this.views[view_id].$view.removeClass('hide');
-            this.views[view_id].view.render();
+            this.views[view_id].view.render(kwargs);
         }
     },
 });
@@ -60,7 +60,8 @@ ERPBlok.View = ERPBlok.Model.extend({
         return $(tmpl('ERPBlokViewSelector',
                       {'id': this.options.id,
                        'title_selector': this.title_selector,
-                       'icon_url_selector': this.icon_url_selector}));
+                       'icon_url_selector': this.icon_url_selector,
+                       'selectable': this.options.selectable}));
     },
     getViewEl: function() {
         var $el = $(tmpl('ERPBlokView',
@@ -71,4 +72,13 @@ ERPBlok.View = ERPBlok.Model.extend({
     },
     render: function() {
     },
+    transition: function(name, kwargs) {
+        this['transition_' + name](kwargs);
+    },
+    transition_selectRecord: function(kwargs) {
+        var selectRecord = this.options.transitions.selectRecord;
+        if (selectRecord[0] == 'open_view') {
+            this.viewManager.select_view(selectRecord[1], kwargs);
+        }
+    }
 });

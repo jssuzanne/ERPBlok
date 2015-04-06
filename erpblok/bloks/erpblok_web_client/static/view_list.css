@@ -1,3 +1,6 @@
 div.view-list table {
     width: 100%;
 }
+tr.view-list-line {
+    cursor: pointer;
+}

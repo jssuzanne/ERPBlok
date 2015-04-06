@@ -2,15 +2,17 @@ ERPBlok.View.Form = ERPBlok.View.extend({
     title_selector: 'Form view',
     class_name: 'view-form',
     lines: [],
-    render: function () {
+    render: function (args) {
         var self = this;
-        this.rpc('get_entries', {'model': this.viewManager.model,
-                                 'primary_keys': this.pks,
-                                 'fields': this.fields}, function (records) {
-            if (records.length) {
-                self.render_record(records[0]);
-            }
-        });
+        if(args && args.id) {
+            this.rpc('get_entry', {'model': this.viewManager.model,
+                                   'primary_keys': args.id,
+                                   'fields': this.fields}, function (record) {
+                if (record) {
+                    self.render_record(record);
+                }
+            });
+        }
     },
     render_record: function(record) {
         var fields = this.options.fields;
