@@ -33,7 +33,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_list.js',
         '#BLOK/static/view_form.js',
         '#BLOK/static/template.js',
-        #'#BLOK/static/notification/notification.js',
+        '#BLOK/static/notification/notification.js',
     ]
 
     template = [
