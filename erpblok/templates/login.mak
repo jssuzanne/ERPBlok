@@ -36,7 +36,7 @@
                         % if allow_database_manager:
                             <a href="/database/manager" class="left">Database manager</a>
                         % endif
-                        <a id="submit" class="button small radius right" >Login</a>
+                        <a id="submit" class="button small radius right" href="#">Login</a>
                     </div>
                 </div>
             </div>
