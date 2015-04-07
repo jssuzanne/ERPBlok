@@ -1,8 +1,10 @@
 from anyblok import Declarations
+from lxml import etree
 
 
 register = Declarations.register
 Model = Declarations.Model
+Mixin = Declarations.Mixin
 Integer = Declarations.Column.Integer
 Boolean = Declarations.Column.Boolean
 Selection = Declarations.Column.Selection
@@ -37,8 +39,25 @@ class View:
         return _list['id'], [_list, _form]
 
 
+@register(Mixin)  # noqa
+class View:
+
+    @classmethod
+    def get_fields(cls, model):
+        Column = cls.registry.System.Column
+        RelationShip = cls.registry.System.RelationShip
+        query = Column.query('name', 'label')
+        query = query.filter(Column.model == model)
+        query = query.filter(Column.primary_key.is_(False))
+        columns = query.all()
+        query = RelationShip.query('name', 'label')
+        query = query.filter(RelationShip.model == model)
+        relationships = query.all()
+        return columns + relationships
+
+
 @register(Model.UI.View)
-class List:
+class List(Mixin.View):
 
     id = 1000001
 
@@ -49,12 +68,8 @@ class List:
     @classmethod
     def render_from_scratch(cls, action):
         Model = cls.registry.get(action.model)
-        Column = cls.registry.System.Column
-        query = Column.query('name', 'label')
-        query = query.filter(Column.model == action.model)
-        query = query.filter(Column.primary_key.is_(False))
-        columns = query.all()
-        fields = [x[0] for x in columns]
+        _fields = cls.get_fields(action.model)
+        fields = [x[0] for x in _fields]
         return {
             'id': cls.id,  # arbitrary id
             'selectable': True,
@@ -63,7 +78,7 @@ class List:
             'fields': fields,
             'fields2display': fields,
             'headers': [[{'id': x, 'label': y, 'colspan': 1, 'rowspan': 1}
-                        for x, y in columns]],
+                        for x, y in _fields]],
             'transitions': {
                 'selectRecord': ('open_view', cls.registry.UI.View.Form.id),
             },
@@ -71,7 +86,7 @@ class List:
 
 
 @register(Model.UI.View)
-class Form:
+class Form(Mixin.View):
 
     id = 1000002
 
@@ -81,18 +96,20 @@ class Form:
 
     @classmethod
     def render_from_scratch(cls, action):
-        form = """
-            <div>
-                <label for="login">Login</label>
-                <div id="login"></div>
-                <label for="password">Password</label>
-                <div id="password"></div>
-            </div>
-        """
+        Model = cls.registry.get(action.model)
+        root = etree.Element('div')
+        fields = cls.get_fields(action.model)
+        for name, label in fields:
+            _label = etree.SubElement(root, 'label')
+            _label.set('for', name)
+            _label.text = label
+            field = etree.SubElement(root, 'div')
+            field.set('id', name)
+
         return {
             'id': cls.id,
             'mode': 'Form',
-            'template': form,
-            'primary_keys': ['login'],
-            'fields': ['login', 'password'],
+            'template': etree.tostring(root).decode('utf-8'),
+            'primary_keys': Model.get_primary_keys(),
+            'fields': [x[0] for x in fields],
         }

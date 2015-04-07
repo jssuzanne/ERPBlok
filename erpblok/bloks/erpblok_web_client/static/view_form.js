@@ -5,9 +5,9 @@ ERPBlok.View.Form = ERPBlok.View.extend({
     render: function (args) {
         var self = this;
         if(args && args.id) {
-            this.rpc('get_entry', {'model': this.viewManager.model,
+            this.rpc('get_entry', {'model': this.viewManager.action.value.model,
                                    'primary_keys': args.id,
-                                   'fields': this.fields}, function (record) {
+                                   'fields': this.options.fields}, function (record) {
                 if (record) {
                     self.render_record(record);
                 }

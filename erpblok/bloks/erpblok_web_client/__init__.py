@@ -88,6 +88,7 @@ class ERPBlokWebClient(Blok):
 
     @classmethod
     def import_declaration_module(cls):
+        from . import core  # noqa
         from . import web  # noqa
         from . import access  # noqa
         from . import ui  # noqa
@@ -95,6 +96,8 @@ class ERPBlokWebClient(Blok):
 
     @classmethod
     def reload_declaration_module(cls, reload):
+        from . import core
+        reload(core)
         from . import web
         reload(web)
         from . import access

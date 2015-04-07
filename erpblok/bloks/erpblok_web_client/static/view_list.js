@@ -16,9 +16,9 @@ ERPBlok.View.List = ERPBlok.View.extend({
     },
     do_search: function () {
         var self = this;
-        this.rpc('get_entries', {'model': this.viewManager.model,
-                                 'primary_keys': this.pks,
-                                 'fields': this.fields}, function (records) {
+        this.rpc('get_entries', {'model': this.viewManager.action.value.model,
+                                 'primary_keys': this.options.primary_keys,
+                                 'fields': this.options.fields}, function (records) {
             self.clear_all();
             self.render_records(records);
         });
@@ -42,7 +42,7 @@ ERPBlok.View.List = ERPBlok.View.extend({
         var line = new ERPBlok.View.List.Line(this, record);
         line.render();
         line.$el.appendTo(this.$el.find('tbody'));
-        this.lines.push(line.$el);
+        this.lines.push(line);
     }
 });
 ERPBlok.View.List.Line = ERPBlok.Model.extend({

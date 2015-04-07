@@ -35,12 +35,19 @@ class Web:
     @Declarations.classmethod_cache()
     def get_user_menu(cls):
         UserMenu = cls.registry.UI.UserMenu
-        query = query2 = UserMenu.query('function', 'action', 'icon', 'label')
+        query = query2 = UserMenu.query()
         query = query.filter(UserMenu.with_user())
         query2 = query2.filter(UserMenu.without_group())
         query.union_all(query2)
         query = query.order_by(UserMenu.order)
-        return query.all()
+        res = []
+        for menu in query.all():
+            res.append([
+                menu.function,
+                menu.action.id if menu.action else None,
+                menu.icon,
+                menu.label])
+        return res
 
     @classmethod
     def get_quick_menu(cls):
