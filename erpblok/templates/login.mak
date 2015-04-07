@@ -5,9 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
         <link rel="stylesheet" type="text/css" href="/static/foundation-5/css/foundation.min.css">
         <link rel="stylesheet" type="text/css" href="/static/erpblok.css">
-        <script type="text/javascript" src="/static/jquery-2.1.3.min.js" ></script>
-        <script type="text/javascript" src="/static/foundation-5/js/foundation.min.js"></script>
-        <script type="text/javascript" src="/static/login.js" ></script>
         <title>${title}</title>
     </head>
     <body>
@@ -42,5 +39,8 @@
             </div>
         </main>
         <footer></footer>
+        <script type="text/javascript" src="/static/jquery-2.1.3.min.js" ></script>
+        <script type="text/javascript" src="/static/foundation-5/js/foundation.min.js"></script>
+        <script type="text/javascript" src="/static/login.js" ></script>
     </body>
 </html>

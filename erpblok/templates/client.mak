@@ -7,10 +7,6 @@
         % for x in css:
             <link rel="stylesheet" type="text/css" href="${x}" ></link>
         % endfor
-        % for x in js:
-            <script type="text/javascript" src="${x}" ></script>
-        % endfor
-        ${templates | n}
     </head>
     <body>
         <div class="off-canvas-wrap" data-offcanvas="">
@@ -72,6 +68,10 @@
                 </section>
             </div>
         </div>
+        % for x in js:
+            <script type="text/javascript" src="${x}" ></script>
+        % endfor
+        ${templates | n}
     </body>
 </html>
 <%def name="add_side_menus(menus)">
