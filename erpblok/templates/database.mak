@@ -60,12 +60,12 @@
                                 <input id="password" type="password" required/>
                                 <label for="password2">Confirm the password of the administrator</label>
                                 <input id="password2" type="password" required/>
-                                <a id="submit-create" class="button right radius">Create</a>
+                                <a id="submit-create" class="button right radius" href="#">Create</a>
                             </div>
                             <div id="drop" class="hide">
                                 <div id="select">
                                 </div>
-                                <a id="submit-drop" class="button right radius">Drop</a>
+                                <a id="submit-drop" class="button right radius" href="#">Drop</a>
                             </div>
                         </div>
                     </div>
