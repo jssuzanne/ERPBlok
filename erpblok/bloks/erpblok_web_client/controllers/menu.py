@@ -27,8 +27,7 @@ class SideMenu:
                     res['function'] = m.function
 
                 if m.action:
-                    #res['action'] = m.action.render()
-                    res['action'] = m.action
+                    res['action'] = m.action.render()
 
                 if m.parent:
                     recurse_parent(m.parent)

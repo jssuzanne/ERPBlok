@@ -22,7 +22,7 @@ class MixinMenu:
 @register(UI)
 class Menu(MixinMenu):
 
-    action = Integer()
+    action = Many2One(model=UI.Action, one2many="menus")
     parent = Many2One(model='Model.UI.Menu', one2many='children')
     label = String(nullable=False)
 
@@ -42,7 +42,7 @@ class UserMenu(MixinMenu):
 
     icon = String()
     label = String(nullable=False)
-    action = Integer()
+    action = Many2One(model=UI.Action, one2many="user_menus")
 
     @Declarations.hybrid_method()
     def with_user(self):
@@ -58,7 +58,7 @@ class UserMenu(MixinMenu):
 @register(UI)
 class QuickMenu(MixinMenu):
 
-    action = Integer()
+    action = Many2One(model=UI.Action, one2many="quick_menus")
     menu = Integer(foreign_key=(UI.Menu, 'id'))
     icon = String(nullable=False)
     title = String()

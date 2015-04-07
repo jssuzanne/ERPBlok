@@ -40,11 +40,9 @@ class ERPBlokWebClient(Blok):
         'templates.tmpl',
     ]
 
-    def install_access_groups(self):
+    def install_admin_user(self):
         Group = self.registry.Access.Group
-        return Group.insert(name='administration', label='Administration')
-
-    def install_admin_user(self, group):
+        group = Group.insert(name='administration', label='Administration')
         login = self.registry.Web.Login.insert(login='admin', password='admin')
         user = self.registry.Access.User.insert(last_name='Administrator',
                                                 login=login)
@@ -54,50 +52,35 @@ class ERPBlokWebClient(Blok):
     def install_user_menu(self):
         UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
-                        icon='/login/logo',
+                        icon='/erpblok_web_client/static/img/about.png',
                         label='About')
         UserMenu.insert(function='do_logout',
                         order=1000,
                         label='Log out')
 
-    def install_quick_menu(self):
-        QuickMenu = self.registry.UI.QuickMenu
-        QuickMenu.insert(function='do_something',
-                         icon='/login/logo',
-                         title='Quick 1')
-        QuickMenu.insert(action=2,
-                         icon='/login/logo',
-                         title='Quick 2')
-        QuickMenu.insert(menu=3,
-                         icon='/login/logo',
-                         title='Quick 3')
-        QuickMenu.insert(function='do_something',
-                         icon='/login/logo',
-                         title='Quick 4')
-
     def install_menus(self):
         Menu = self.registry.UI.Menu
-        for x in range(5):
-            menux = Menu.insert(label="Menu %d" % x)
-            for y in range(5):
-                menuy = Menu.insert(label="Menu %d SubMenu %d" % (x, y),
-                                    parent=menux)
-                for z in range(5):
-                    menuz = Menu.insert(
-                        label="Menu %d SubMenu %d SubSubMenu %d" % (x, y, z),
-                        parent=menuy)
-                    for t in range(5):
-                        Menu.insert(
-                            label="Menu %d SubMenu %d SubSubMenu %d - %d" % (x, y, z, t),
-                            action=1,
-                            parent=menuz)
+        Action = self.registry.UI.Action
+        settings = Menu.insert(label='Settings')
+        access = Menu.insert(label="Access", parent=settings)
+        group = Action.insert(label="Access groups", model='Model.Access.Group')
+        Menu.insert(label='Groups', parent=access, action=group)
+        login = Action.insert(label="Access logins", model='Model.Web.Login')
+        Menu.insert(label='Logins', parent=access, action=login)
+        user = Action.insert(label="Access users", model='Model.Access.User')
+        Menu.insert(label='Userss', parent=access, action=user)
+        interface = Menu.insert(label="Interfaces", parent=settings)
+        umenus = Action.insert(label='User menus', model='Model.UI.UserMenu')
+        Menu.insert(label='User menus', parent=interface, action=umenus)
+        qmenus = Action.insert(label='Quick menus', model='Model.UI.QuickMenu')
+        Menu.insert(label='Quick menus', parent=interface, action=qmenus)
+        menus = Action.insert(label='Menus', model='Model.UI.Menu')
+        Menu.insert(label='Menus', parent=interface, action=menus)
 
     def install(self):
-        group = self.install_access_groups()
-        self.install_admin_user(group)
+        self.install_admin_user()
         self.install_user_menu()
         self.install_menus()
-        self.install_quick_menu()
 
     def update(self, latest_version):
         if latest_version is None:

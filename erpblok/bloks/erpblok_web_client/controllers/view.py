@@ -9,6 +9,7 @@ PyramidJsonRPC = Declarations.PyramidJsonRPC
 class View:
 
     def mock(self):
+        return []
         res = [
             {'login': 'admin', 'password': 'admin'},
             {'login': 'riri', 'password': 'admin'},
