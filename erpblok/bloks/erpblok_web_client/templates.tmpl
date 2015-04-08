@@ -63,8 +63,20 @@
     <template id="ERPBlokViewListLine">
         <tr class="view-list-line">
             <% for ( var i = 0; i < fields.length; i++) { %>
-                <td id="<%=fields[i]%>"><%=record[fields[i]]%></td>
+                <td id="<%=fields[i].id%>"/>
             <% } %>
         </tr>
+    </template>
+    <template id="ERPBlokViewListField">
+        <span><%=value%></span>
+    </template>
+    <template id="ERPBlokViewListOne2Many">
+        <% if (value) { %>
+            <% for (var i in value) {%>
+                <tr><td><%=value[i][1]%></td></tr>
+            <% } %>
+        <% } else {%>
+            <span/>
+        <% } %>
     </template>
 </templates>

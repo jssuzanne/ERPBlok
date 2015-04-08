@@ -13,19 +13,17 @@ class View:
         if not value:
             return value
 
+        model = entry.__registry_name__
+
         def get_query(Model):
             query = Model.query()
-            query = query.filter(Model.model == entry.__registry_name__)
+            query = query.filter(Model.model == model)
             return query.filter(Model.name == field)
 
-        Column = self.registry.System.Column
-        query = get_query(Column)
-        if query.count():
+        if get_query(self.registry.System.Column).count():
             return value
 
-        Field = self.registry.System.Field
-        query = get_query(Field)
-        if query.count():
+        if get_query(self.registry.System.Field).count():
             return value
 
         RelationShip = self.registry.System.RelationShip
@@ -33,9 +31,9 @@ class View:
         if query.count():
             rs = query.first()
             if rs.rtype in ('Many2One', 'One2One'):
-                return value.render()
+                return model, value.field_render()
             else:
-                return [x.render() for x in value]
+                return model, [x.field_render() for x in value]
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def get_entries(self, model=None, primary_keys=None, fields=None, **kwargs):

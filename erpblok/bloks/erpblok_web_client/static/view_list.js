@@ -50,6 +50,7 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         this.view = view;
         this.record = record;
         this.id = {}
+        this.fields = []
         var primary_keys = view.options.primary_keys;
         for (var i in primary_keys) {
             this.id[primary_keys[i]] = record[primary_keys[i]];
@@ -61,8 +62,51 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
             'fields': this.view.options.fields2display,
             'record': this.record,
         }));
+        for (var i in this.view.options.fields2display) {
+            this.render_field(this.view.options.fields2display[i]);
+        }
         this.$el.click(function () {
             self.view.transition('selectRecord', {id: self.id});
         });
     },
+    render_field: function(obj) {
+        var field = this.get_field_cls(obj.type);
+        this.fields.push(field);
+        field.render(obj, this.record[obj.id]); 
+        field.$el.appendTo(this.$el.find('td#' + obj.id))
+    },
+    get_field_cls: function(type) {
+        if (ERPBlok.View.List[type])
+            return new ERPBlok.View.List[type]();
+        return new ERPBlok.View.List.Field();
+    },
 });
+ERPBlok.View.List.Field = ERPBlok.Model.extend({
+    template: 'ERPBlokViewListField',
+    render: function(obj, value) {
+        this.set_value(value);
+        this.$el = $(tmpl(this.template, 
+                          $.extend({}, obj, {value: this.get_render_value()})))
+    },
+    set_value: function(value) {
+        this.value = value;
+    },
+    get_render_value: function() {
+        return this.value;
+    },
+});
+ERPBlok.View.List.Many2One = ERPBlok.View.List.Field.extend({
+    get_render_value: function() {
+        if (this.value) return this.value[1][1];
+        return this.value;
+    },
+});
+ERPBlok.View.List.One2One = ERPBlok.View.List.Many2One.extend({});
+ERPBlok.View.List.One2Many = ERPBlok.View.List.Field.extend({
+    template: 'ERPBlokViewListOne2Many',
+    get_render_value: function() {
+        if (this.value.length) return this.value[1];
+        return this.value;
+    },
+});
+ERPBlok.View.List.Many2Many = ERPBlok.View.List.One2Many.extend({});

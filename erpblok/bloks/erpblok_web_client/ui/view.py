@@ -44,16 +44,25 @@ class View:
 
     @classmethod
     def get_fields(cls, model):
-        Column = cls.registry.System.Column
-        RelationShip = cls.registry.System.RelationShip
-        query = Column.query('name', 'label')
-        query = query.filter(Column.model == model)
-        query = query.filter(Column.primary_key.is_(False))
-        columns = query.all()
-        query = RelationShip.query('name', 'label')
-        query = query.filter(RelationShip.model == model)
-        relationships = query.all()
-        return columns + relationships
+        res = {}
+        System = cls.registry.System
+
+        def get_query(Model):
+            return Model.query().filter(Model.model == model).all()
+
+        for col in get_query(System.Column):
+            res[col.name] = {x: getattr(col, x)
+                             for x in ('label', 'nullable')}
+            res[col.name]['id'] = col.name
+            res[col.name]['type'] = col.ctype
+
+        for rs in get_query(System.RelationShip):
+            res[rs.name] = {x: getattr(rs, x)
+                            for x in ('label', 'nullable')}
+            res[rs.name]['id'] = rs.name
+            res[rs.name]['type'] = rs.rtype
+
+        return res
 
 
 @register(Model.UI.View)
@@ -68,17 +77,15 @@ class List(Mixin.View):
     @classmethod
     def render_from_scratch(cls, action):
         Model = cls.registry.get(action.model)
-        _fields = cls.get_fields(action.model)
-        fields = [x[0] for x in _fields]
+        fields = cls.get_fields(action.model)
         return {
             'id': cls.id,  # arbitrary id
             'selectable': True,
             'mode': 'List',
             'primary_keys': Model.get_primary_keys(),
-            'fields': fields,
-            'fields2display': fields,
-            'headers': [[{'id': x, 'label': y, 'colspan': 1, 'rowspan': 1}
-                        for x, y in _fields]],
+            'fields': list(fields.keys()),
+            'fields2display': list(fields.values()),
+            'headers': [list(fields.values())],
             'transitions': {
                 'selectRecord': ('open_view', cls.registry.UI.View.Form.id),
             },
@@ -99,17 +106,17 @@ class Form(Mixin.View):
         Model = cls.registry.get(action.model)
         root = etree.Element('div')
         fields = cls.get_fields(action.model)
-        for name, label in fields:
+        for value in fields.values():
             _label = etree.SubElement(root, 'label')
-            _label.set('for', name)
-            _label.text = label
+            _label.set('for', value['id'])
+            _label.text = value['label']
             field = etree.SubElement(root, 'div')
-            field.set('id', name)
+            field.set('id', value['id'])
 
         return {
             'id': cls.id,
             'mode': 'Form',
             'template': etree.tostring(root).decode('utf-8'),
             'primary_keys': Model.get_primary_keys(),
-            'fields': [x[0] for x in fields],
+            'fields': list(fields.keys()),
         }
