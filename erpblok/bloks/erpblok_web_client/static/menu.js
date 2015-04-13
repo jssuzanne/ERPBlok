@@ -83,13 +83,16 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
             ERPBlok.hashTagManager.update({breadcrumb: undefined});
             return;
         }
+        if (ERPBlok.hashTagManager.get('clean-breadcrumbs')) {
+            ERPBlok.hashTagManager.update({'clean-breadcrumbs': undefined});
+            ERPBlok.actionManager.clear_all();
+        }
         this.rpc('openMenu', {menu: newMenu}, function (res) {
             self.$el.find('.active').removeClass('active');
             self.uncollapse_menus(res.nodemenu);
             self.active_menu(res.activemenu);
             var func = res.function;
             var action = res.action;
-            ERPBlok.actionManager.clear_all();
             if (func) self.call_function(func);
             if (action) self.call_action(action);
         });

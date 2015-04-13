@@ -84,7 +84,7 @@
                     </ul>
                 </div>
             % else:
-                <a id="menu${menu}" href="#menu=${menu}" class="side-menu">${name}</a>
+                <a id="menu${menu}" href="#menu=${menu}&clean-breadcrumbs=1" class="side-menu">${name}</a>
             % endif
         </li>
     % endfor
