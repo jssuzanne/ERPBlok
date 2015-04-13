@@ -49,7 +49,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
 });
 ERPBlok.View = ERPBlok.Model.extend({
     rpc_url: '/web/client/view',
-    icon_url_selector: '/static/login-logo.png',  // TODO replace by other
+    icon_selector: 'fi-alert',
     title_selector: 'undefined',
     class_name: 'view-undefined',
     init: function(viewManager, options) {
@@ -60,7 +60,7 @@ ERPBlok.View = ERPBlok.Model.extend({
         return $(tmpl('ERPBlokViewSelector',
                       {'id': this.options.id,
                        'title_selector': this.title_selector,
-                       'icon_url_selector': this.icon_url_selector,
+                       'icon_selector': this.icon_selector,
                        'selectable': this.options.selectable}));
     },
     getViewEl: function() {

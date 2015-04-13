@@ -107,8 +107,7 @@
                         % if title:
                             title="${titlelabel}"
                         % endif
-                    >
-                        <img src="${icon}"/>
+                        ><i class="${icon} menu-icon"></i>
                     </a>
                 % endfor
             </div>
@@ -132,8 +131,7 @@
                             % if title:
                                 title="${titlelabel}"
                             % endif
-                        >
-                            <img class="menu-img" src="${icon}"/>
+                        ><i class="${icon} menu-icon"></i>
                         </a>
                     </li>
                 % endfor
@@ -153,7 +151,7 @@
                             data-action="${action}"
                         % endif
                         % if icon:
-                            ><img src="${icon}" class="menu-img"/>${name}
+                            ><i class="${icon} menu-icon"></i>${name}
                         % else:
                             >${name}
                         % endif

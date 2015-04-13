@@ -14,6 +14,7 @@ class ERPBlokWebClient(Blok):
 
     css = [
         '/static/foundation-5/css/foundation.min.css',
+        '/static/foundation-icons/foundation-icons.css',
         '/static/erpblok.css',
         '#BLOK/static/view.css',
         '#BLOK/static/view_list.css',
@@ -57,7 +58,7 @@ class ERPBlokWebClient(Blok):
         # TODO replace IT by an csv import
         UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
-                        icon='/erpblok-web-client/static/img/about.png',
+                        icon='fi-info',
                         label='About')
         UserMenu.insert(function='do_logout',
                         order=1000,

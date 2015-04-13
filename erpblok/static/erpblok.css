@@ -2,9 +2,9 @@
     display: None;
 }
 /* FIXME apply this in the sass of foundation */
-img.menu-img {
-    width: 32px;
-    height: 32px;
+i.menu-img {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .icon-bar.menu-icon {
     margin-top: 7px;
@@ -19,8 +19,8 @@ aside.left-off-canvas-menu ul.accordion,
 .sidebar ul.accordion {
     margin-left: 0px;
 }
-aside.left-off-canvas-menu .accordion .accordion-navigation > a, 
-.sidebar .accordion .accordion-navigation > a { 
+aside.left-off-canvas-menu .accordion .accordion-navigation > a,
+.sidebar .accordion .accordion-navigation > a {
     background: none repeat scroll 0 0 #333;
     color: rgba(255, 255, 255, 0.7);
 }
@@ -34,8 +34,8 @@ aside.left-off-canvas-menu .accordion .accordion-navigation > .active,
 .sidebar .accordion .accordion-navigation .active {
     color: green;
 }
-aside.left-off-canvas-menu .accordion .accordion-navigation > a:hover, 
-.sidebar .accordion .accordion-navigation > a:hover { 
+aside.left-off-canvas-menu .accordion .accordion-navigation > a:hover,
+.sidebar .accordion .accordion-navigation > a:hover {
     background: none repeat scroll 0 0 #222;
 }
 /* end override foundation */

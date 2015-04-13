@@ -1,5 +1,6 @@
 ERPBlok.View.List = ERPBlok.View.extend({
     title_selector: 'List view',
+    icon_selector: 'fi-list',
     class_name: 'view-list',
     lines: [],
     getViewEl: function() {
