@@ -4,6 +4,7 @@ import os
 
 
 def make_config():
+    """ Add includem for mako and global static route """
     config = ap_make_config()
     config.include('pyramid_mako')
     here = os.path.dirname(__file__)
@@ -12,6 +13,7 @@ def make_config():
 
 
 def wsgi():
+    """ wsgi console script """
     from . import client  # noqa
     anyblok_wsgi('Web server for AnyBlok', '0.0.1',
                  ['config', 'database', 'logging'],

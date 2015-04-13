@@ -3,16 +3,16 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD = /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/bin/sphinx-build
+SPHINXBUILD = /Users/jssuzanne/erpblok/erpblok/bin/sphinx-build
 PAPER         =
-BUILDDIR      = /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc/_build
+BUILDDIR      = /Users/jssuzanne/erpblok/erpblok/erpblok/doc/_build
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc
+ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /Users/jssuzanne/erpblok/erpblok/erpblok/doc
 # the i18n builder cannot share the environment and doctrees with the others
-I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc
+I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /Users/jssuzanne/erpblok/erpblok/erpblok/doc
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 

@@ -5,9 +5,9 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-set BUILDDIR=/home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc/_build
-set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc
-set I18NSPHINXOPTS=%SPHINXOPTS% /home/franck/workspace/virtualenvs/anyblok_venv/opt/erpblok_buildout/erpblok/doc
+set BUILDDIR=/Users/jssuzanne/erpblok/erpblok/erpblok/doc/_build
+set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% /Users/jssuzanne/erpblok/erpblok/erpblok/doc
+set I18NSPHINXOPTS=%SPHINXOPTS% /Users/jssuzanne/erpblok/erpblok/erpblok/doc
 if NOT "%PAPER%" == "" (
 	set ALLSPHINXOPTS=-D latex_paper_size=%PAPER% %ALLSPHINXOPTS%
 	set I18NSPHINXOPTS=-D latex_paper_size=%PAPER% %I18NSPHINXOPTS%
