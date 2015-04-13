@@ -16,6 +16,7 @@ class Login:
 
     @classmethod
     def update_admin(cls, login, password):
+        """ Change the login and password of the main administrator """
         user = cls.registry.IO.Mapping.get('Model.Access.User',
                                            'main_admin_user')
         user.login.login = login
@@ -23,6 +24,12 @@ class Login:
 
     @classmethod
     def check_authentification(cls, login, password):
+        """ Verify if the login / password allow to found a user
+
+        :param login: login of the user
+        :param password: password of the use
+        :rtype: Boolean True if the user is found else False
+        """
         query = cls.query().filter(cls.login == login)
         query = query.filter(cls.password == password)
         if query.count():

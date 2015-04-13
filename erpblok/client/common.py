@@ -5,12 +5,17 @@ from anyblok.environment import EnvironmentManager
 
 
 def list_databases():
+    """ return the name of the databases """
     drivername = ArgsParseManager.get('dbdrivername')
     bdd = anyblok.BDD[drivername]
     return bdd.listdb()
 
 
 def create_database(database):
+    """ Create a new database, initialize it and return an AnyBlok registry
+
+    rtype: AnyBlok registry instance
+    """
     drivername = ArgsParseManager.get('dbdrivername')
     bdd = anyblok.BDD[drivername]
     bdd.createdb(database)
@@ -19,6 +24,7 @@ def create_database(database):
 
 
 def drop_database(database):
+    """ Close the registry instance of the database and drop the database"""
     registry = RegistryManager.get(database)
     registry.close()
     drivername = ArgsParseManager.get('dbdrivername')
@@ -27,6 +33,16 @@ def drop_database(database):
 
 
 def login_user(request, database, login, password):
+    """ Log the user
+
+    The informations of the user are saved in the request if the user is found
+    by is login and is password. The user founded are saved in the Environnemnt
+
+    :param database: the database where the user want to be connected
+    :param login: user login
+    :param password: user password
+    :type: boolean, True if the user is founed else False
+    """
     request.session['database'] = database
     request.session['login'] = login
     request.session['password'] = password
@@ -45,6 +61,7 @@ def login_user(request, database, login, password):
 
 
 def logout(request):
+    """ Remove the user information of the login """
     request.session['password'] = ""
     request.session['state'] = "disconnected"
     request.session.save()

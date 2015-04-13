@@ -10,6 +10,9 @@ class SideMenu:
 
     @PyramidJsonRPC.rpc_method()
     def openMenu(self, menu=None, **kwargs):
+        """ Return the main information for a specific menu in case of
+        open the accordion menu, add active class one the rigth menu and
+        the action or function to user"""
         res = dict(nodemenu=[], activemenu=None, action=None, function=None)
         Menu = self.registry.UI.Menu
 

@@ -17,6 +17,10 @@ Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
 @Declarations.Pyramid.add_view('login',
                                renderer='erpblok:templates/login.mak')
 def get_login(request, database=None):
+    """ Display the login page
+
+    :param database: default database filled by the url
+    """
     title = ArgsParseManager.get('app_name', 'ERPBlok')
     allow_database_manager = ArgsParseManager.get('allow_database_manager',
                                                   True)
@@ -30,6 +34,7 @@ def get_login(request, database=None):
 
 @Declarations.Pyramid.add_view('login-logo')
 def get_login_logo(request):
+    """ Return the logo for thelogin page """
     url_login_logo = ArgsParseManager.get('url_login_logo')
     if url_login_logo:
         return HTTPFound(location=url_login_logo)
@@ -39,6 +44,13 @@ def get_login_logo(request):
 
 @Declarations.Pyramid.add_view('login-connect')
 def post_login_connect(request, database=None, login=None, password=None):
+    """ Log the user, if the login and password are right
+
+    :param database: the target database
+    :param login: the login to verify
+    :param password: the password to verify
+    :rtype: redirection if login/password is right else HTTPUnauthorized
+    """
     registry = RegistryManager.get(database)
     authentificated = registry.Web.Login.check_authentification(
         login, password)
@@ -50,7 +62,8 @@ def post_login_connect(request, database=None, login=None, password=None):
 
 
 @Declarations.Pyramid.add_view('login-disconnect')
-def post_login_disconnect(request, database=None, login=None, password=None):
+def post_login_disconnect(request, database=None):
+    """ Logout the current user and do a redirect to the login page """
     logout(request)
     database = request.session.get('database')
     query = {}

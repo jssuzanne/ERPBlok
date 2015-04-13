@@ -13,6 +13,19 @@ class TemplateException(Exception):
 
 @Declarations.register(Declarations.Model.UI)
 class Template:
+    """ html templating framework, the need is to manipulate web template.
+
+    ::
+
+        tmpl = registry.UI.Template()
+        tmpl.load_file(file_pointer_1)
+        tmpl.load_file(file_pointer_2)
+        tmpl.load_file(file_pointer_3)
+        tmpl.load_file(file_pointer_N)
+        tmpl.compîle()
+        tmpl.get_amm_template()
+
+    """
 
     def __init__(self, *args, **kwargs):
         if 'forclient' in kwargs:
@@ -24,10 +37,12 @@ class Template:
         self.clean()
 
     def clean(self):
+        """ Erase all the known templates """
         self.compiled = {}
         self.known = {}
 
     def get_all_template(self):
+        """ Return all the template in string format """
         res = []
         for tmpl in self.compiled.keys():
             res.append(self.get_template(tmpl))
@@ -36,6 +51,11 @@ class Template:
         return res.strip()
 
     def get_template(self, name):
+        """return a specific template
+
+        :param name: name of the template
+        :rtype: str
+        """
         tmpl = deepcopy(self.compiled[name])
         if self.forclient:
             tmpl.tag = 'script'
@@ -44,6 +64,11 @@ class Template:
         return self.decode(res.decode("utf-8"))
 
     def decode(self, element):
+        """ Decode some element need for the web template
+
+        :param element: string representation of the element
+        :rtype: str
+        """
         element = element.replace('__start_value_operator__', '<%')
         element = element.replace('__end_value_operator__', '%>')
         element = element.replace('__less_than_operator__', '<')
@@ -51,6 +76,11 @@ class Template:
         return element
 
     def encode_blok(self, element):
+        """ Encode the element in the templating command
+
+        :param element: string representation of the element
+        :rtype: str
+        """
         last = 0
         while True:
             start = element.find('<%', last)
@@ -80,12 +110,30 @@ class Template:
         return element
 
     def encode(self, element):
+        """ Encode the templating commande
+
+        :param element: string representation of the element
+        :rtype: str
+        """
         element = self.encode_blok(element)
         element = element.replace('<%', '__start_value_operator__')
         element = element.replace('%>', '__end_value_operator__')
         return element
 
     def load_file(self, openedfile):
+        """ Load a file
+
+        File format ::
+
+            <templates>
+                <template id="...">
+                    ...
+                </template>
+            </templates>
+
+        :param openedfile: file descriptor
+        :exception: TemplateException
+        """
         try:
             el = openedfile.read()
             # the operator ?= are cut, then I replace them before
@@ -116,6 +164,11 @@ class Template:
                 % (element.tag, openedfile))
 
     def load_template(self, element):
+        """ Load one specific template
+
+        :param element: html.Element
+        :exception: TemplateException
+        """
         name = element.attrib.get('id')
         extend = element.attrib.get('extend')
         rewrite = bool(eval(element.attrib.get('rewrite', "False")))
@@ -149,6 +202,11 @@ class Template:
         self.known[name]['tmpl'].append(element)
 
     def get_xpath(self, element):
+        """ Find and return the xpath found in the template
+
+        :param element: html.Element
+        :rtype: list of dict
+        """
         res = []
         for el in element.findall('xpath'):
             res.append(dict(
@@ -160,6 +218,7 @@ class Template:
         return res
 
     def xpath(self, name, expression, mult):
+        """ Apply the xpath """
         tmpl = self.compiled[name]
         if mult:
             return tmpl.findall(expression)
@@ -167,6 +226,19 @@ class Template:
             return [tmpl.find(expression)]
 
     def xpath_insert(self, name, expression, mult, elements):
+        """ Apply a xpath insert::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="insert">
+                    ...
+                </xpath>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        :elements: children of the xpath to insert
+        """
         els = self.xpath(name, expression, mult)
         for el in els:
             nbchildren = len(el.getchildren())
@@ -174,6 +246,19 @@ class Template:
                 el.insert(i + nbchildren, subel)
 
     def xpath_insertBefore(self, name, expression, mult, elements):
+        """ Apply a xpath insert::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="insertBefore">
+                    ...
+                </xpath>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        :elements: children of the xpath to insert
+        """
         els = self.xpath(name, expression, mult)
         parent_els = self.xpath(name, expression + '/..', mult)
         for parent in parent_els:
@@ -183,6 +268,19 @@ class Template:
                         parent.insert(i + j, subel)
 
     def xpath_insertAfter(self, name, expression, mult, elements):
+        """ Apply a xpath insert::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="insertAfter">
+                    ...
+                </xpath>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        :elements: children of the xpath to insert
+        """
         els = self.xpath(name, expression, mult)
         parent_els = self.xpath(name, expression + '/..', mult)
         for parent in parent_els:
@@ -192,6 +290,16 @@ class Template:
                         parent.insert(i + j + 1, subel)
 
     def xpath_remove(self, name, expression, mult):
+        """ Apply a xpath remove::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="remove"/>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        """
         els = self.xpath(name, expression, mult)
         parent_els = self.xpath(name, expression + '/..', mult)
         for parent in parent_els:
@@ -200,6 +308,19 @@ class Template:
                     parent.remove(cel)
 
     def xpath_replace(self, name, expression, mult, elements):
+        """ Apply a xpath replace::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="replace">
+                    ...
+                </xpath>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        :elements: children of the xpath to replace
+        """
         els = self.xpath(name, expression, mult)
         parent_els = self.xpath(name, expression + '/..', mult)
         for parent in parent_els:
@@ -210,12 +331,27 @@ class Template:
                         parent.insert(i + j, subel)
 
     def xpath_attributes(self, name, expression, mult, attributes):
+        """ Apply a xpath attributes::
+
+            <template id="..." extend="other template">
+                <xpath expresion="..." action="attributes">
+                    <attribute key="value"/>
+                    <attribute foo="bar"/>
+                </xpath>
+            </template>
+
+        :param name: name of the template
+        :param expresion: xpath regex to find the good node
+        :param mult: If true, xpath can apply on all the element found
+        :attributes: attributes to apply
+        """
         els = self.xpath(name, expression, mult)
         for el in els:
             for k, v in attributes.items():
                 el.set(k, v)
 
     def get_xpath_attributes(self, elements):
+        """ Find and return the attibute """
         res = []
         for el in elements:
             if el.tag != 'attribute':
@@ -228,6 +364,10 @@ class Template:
         return res
 
     def compile_template(self, name):
+        """ compile a specific template
+
+        :param name: id str of the template
+        """
         if name in self.compiled:
             return self.compiled[name]
 
@@ -238,7 +378,7 @@ class Template:
             tmpl.set('id', name)
             elements = self.known[name]['tmpl']
         else:
-            tmpl = self.known[name]['tmpl'][0]
+            tmpl = deepcopy(self.known[name]['tmpl'][0])
             elements = self.known[name]['tmpl'][1:]
 
         self.compiled[name] = tmpl
@@ -269,5 +409,6 @@ class Template:
         return self.compiled[name]
 
     def compile(self):
+        """ compile all the templates """
         for tmpl in self.known.keys():
             self.compile_template(tmpl)

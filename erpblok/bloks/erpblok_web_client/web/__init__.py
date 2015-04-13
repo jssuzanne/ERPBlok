@@ -7,6 +7,7 @@ class Web:
 
     @classmethod
     def format_static(cls, blok, static_url):
+        """ Replace the attribute #BLOK by the real name of the blok """
         if static_url.startswith('#BLOK'):
             return '/' + blok + static_url[5:]
         else:
@@ -14,6 +15,11 @@ class Web:
 
     @classmethod
     def get_static(cls, static_type):
+        """ return the list of all static file path
+
+        :param static_type: entry in the blok
+        :rtype: list of the path
+        """
         res = []
         Blok = cls.registry.System.Blok
         for blok in Blok.list_by_state('installed'):
@@ -26,14 +32,20 @@ class Web:
 
     @classmethod
     def get_css(cls):
+        """ Return the css paths """
         return cls.get_static('css')
 
     @classmethod
     def get_js(cls):
+        """ return the js paths """
         return cls.get_static('js')
 
     @Declarations.classmethod_cache()
     def get_user_menu(cls):
+        """ Return the list of the user menu
+
+        list format is [[function, action, icon, label], ...]
+        """
         UserMenu = cls.registry.UI.UserMenu
         query = query2 = UserMenu.query()
         query = query.filter(UserMenu.with_user())
@@ -51,7 +63,12 @@ class Web:
 
     @classmethod
     def get_quick_menu(cls):
+        """ Return the list of the quick menu
+
+        list format is [[function, action, menu, icon, title], ...]
+        """
         QuickMenu = cls.registry.UI.QuickMenu
+        # FIXME action is not a column but a relation ship (get_user_menu)
         query = query2 = QuickMenu.query('function', 'action', 'menu', 'icon', 'title')
         query = query.filter(QuickMenu.with_user())
         query2 = query2.filter(QuickMenu.without_group())
@@ -84,6 +101,7 @@ class Web:
 
     @classmethod
     def get_templates(cls):
+        """ Return the list of the web client template to load """
         from os.path import join
         tmpl = cls.registry.UI.Template(forclient=True)
         Blok = cls.registry.System.Blok

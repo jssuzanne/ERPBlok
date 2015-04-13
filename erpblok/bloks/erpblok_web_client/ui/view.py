@@ -23,6 +23,10 @@ class View:
 
     @classmethod
     def get_mode_choices(cls):
+        """ Return the View type available
+
+        :rtype: dict(registry name: label)
+        """
         # TODO use the declarations
         return {
             'Model.UI.View.List': 'List view',
@@ -30,10 +34,16 @@ class View:
         }
 
     def render(self):
+        """ Return the View render"""
         return self.registry.get(self.mode).render(self)
 
     @classmethod
     def render_from_scratch(cls, action):
+        """ Make a render for List and Form view without template
+
+        :param action: instance of the model UI.Action
+        :rtype: list [selected view, [view(List / form) render])
+        """
         _list = cls.registry.UI.View.List.render_from_scratch(action)
         _form = cls.registry.UI.View.Form.render_from_scratch(action)
         return _list['id'], [_list, _form]
@@ -67,15 +77,21 @@ class View:
 
 @register(Model.UI.View)
 class List(Mixin.View):
+    "List View"
 
     id = 1000001
 
     @classmethod
     def render(cls, view):
+        """ Specific render for a list view """
         pass
 
     @classmethod
     def render_from_scratch(cls, action):
+        """ Render without template for List view
+
+        :param action: instance of the model UI.Action
+        """
         Model = cls.registry.get(action.model)
         fields = cls.get_fields(action.model)
         return {
@@ -94,15 +110,21 @@ class List(Mixin.View):
 
 @register(Model.UI.View)
 class Form(Mixin.View):
+    "Form View"
 
     id = 1000002
 
     @classmethod
     def render(cls, view):
+        """ Specific render for a Form view """
         pass
 
     @classmethod
     def render_from_scratch(cls, action):
+        """ Render without template for Form view
+
+        :param action: instance of the model UI.Action
+        """
         Model = cls.registry.get(action.model)
         root = etree.Element('div')
         fields = cls.get_fields(action.model)

@@ -9,6 +9,7 @@ Declarations.Pyramid.add_route('homepage', '/')
 
 @Declarations.Pyramid.add_view('homepage')
 def get_homepage(request):
+    """ Redirect the homepage to the good page """
     databases = list_databases()
     session = request.session
     connection_state = session.get('state', 'disconnected')

@@ -11,6 +11,7 @@ Declarations.Pyramid.add_route('web-client', '/web/client')
 
 @Declarations.Pyramid.add_view('web-client')
 def load_client(request):
+    """ Return the client main page """
     database = request.session.get('database')
     login = request.session.get('login')
     password = request.session.get('password')

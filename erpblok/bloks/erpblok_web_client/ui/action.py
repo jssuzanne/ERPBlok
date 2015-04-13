@@ -18,6 +18,7 @@ class Action:
     selected = Integer()
 
     def render(self):
+        """ Return the information of one action """
         views = []
         selected = self.selected
 

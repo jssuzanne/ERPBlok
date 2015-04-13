@@ -2,6 +2,7 @@ from anyblok.blok import Blok
 
 
 class ERPBlokWebClient(Blok):
+    """ Web Client for ERPBlok """
     version = '0.0.1'
     autoinstall = True
 
@@ -41,6 +42,8 @@ class ERPBlokWebClient(Blok):
     ]
 
     def install_admin_user(self):
+        """ Create an administrator client """
+        # TODO replace IT by an csv import
         Group = self.registry.Access.Group
         group = Group.insert(name='administration', label='Administration')
         login = self.registry.Web.Login.insert(login='admin', password='admin')
@@ -50,6 +53,8 @@ class ERPBlokWebClient(Blok):
         self.registry.IO.Mapping.set('main_admin_user', user)
 
     def install_user_menu(self):
+        """ Define the user menu """
+        # TODO replace IT by an csv import
         UserMenu = self.registry.UI.UserMenu
         UserMenu.insert(function='do_about',
                         icon='/erpblok-web-client/static/img/about.png',
@@ -59,6 +64,8 @@ class ERPBlokWebClient(Blok):
                         label='Log out')
 
     def install_menus(self):
+        """ Define the functionnal menus """
+        # TODO replace IT by an csv import
         Menu = self.registry.UI.Menu
         Action = self.registry.UI.Action
 
@@ -99,11 +106,13 @@ class ERPBlokWebClient(Blok):
         Menu.insert(label='In / Out mapping', parent=lowlevel, action=io)
 
     def install(self):
+        """ Initialize database with the blok information """
         self.install_admin_user()
         self.install_user_menu()
         self.install_menus()
 
     def update(self, latest_version):
+        """ Update the database """
         if latest_version is None:
             self.install()
 
