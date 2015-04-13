@@ -21,10 +21,6 @@ ERPBlok.MenuManager = ERPBlok.Model.extend({
     define_side_menu: function() {
         var self = this;
         this.sideMenu = new ERPBlok.SideMenu();
-        this.sideMenu.$el.find("a.side-menu").click(function(e) {
-            ERPBlok.actionManager.clear_all();
-            self.on_click(e, self.sideMenu);
-        });
         ERPBlok.hashTagManager.onAdd('menu', function(newMenu) {
             self.sideMenu.openMenu(newMenu);
         });
@@ -93,6 +89,7 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
             self.active_menu(res.activemenu);
             var func = res.function;
             var action = res.action;
+            ERPBlok.actionManager.clear_all();
             if (func) self.call_function(func);
             if (action) self.call_action(action);
         });
