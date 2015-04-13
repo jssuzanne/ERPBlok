@@ -2,7 +2,10 @@ ERPBlok.View.List = ERPBlok.View.extend({
     title_selector: 'List view',
     icon_selector: 'fi-list',
     class_name: 'view-list',
-    lines: [],
+    init: function(viewManager, options) {
+        this._super(viewManager, options);
+        this.lines = [];
+    },
     getViewEl: function() {
         var $el = $(tmpl('ERPBlokViewList', {
             id: this.options.id,

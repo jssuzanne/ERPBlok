@@ -1,7 +1,6 @@
 ERPBlok.View.Form = ERPBlok.View.extend({
     title_selector: 'Form view',
     class_name: 'view-form',
-    lines: [],
     render: function (args) {
         var self = this;
         if(args && args.id) {
