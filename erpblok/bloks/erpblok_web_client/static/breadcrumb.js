@@ -13,11 +13,9 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
     add: function(id, label, $node) {
         var self = this;
         if (this.$last) {
-            var $link = this.$last.link,
-                $node = this.$last.node;
-            $link.removeClass('current');
-            $link.click(function (e) {self.on_click(e);});
-            $node.addClass('hide')
+            this.$last.link.removeClass('current');
+            this.$last.link.click(function (e) {self.on_click(e);});
+            this.$last.node.addClass('hide')
             this.links.push(this.$last);
         }
         // FIXME get the active menu and save it in last
@@ -53,10 +51,10 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
         }
     },
     clear_all: function () {
-        for (var i in this.links) {
-            this.links[i].link.remove();
-            this.links[i].node.remove();
-        }
+        $.each(this.links, function(i, item) {
+            item.link.remove();
+            item.node.remove();
+        })
         this.links = [];
         if (this.$last) {
             this.$last.link.remove();
