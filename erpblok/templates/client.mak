@@ -48,10 +48,9 @@
                 <a class="exit-off-canvas" href="#"/>
                 <section role="main" class="scroll-container">
                     <div class="row">
-                         <div class="columns large-3 medium-4">
+                         <div id="main-menu" class="columns large-3 medium-4">
                             <div class="hide-for-small">
                                 <div class="sidebar">
-                                    <img src="/login/logo"/>
                                     <ul class="accordion slide-out" data-accordion>
                                         ${add_side_menus(appmenu)}
                                     </ul>

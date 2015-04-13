@@ -12,6 +12,9 @@ img.menu-img {
 .row {
     max-width: 100%;
 }
+#main-menu.columns {
+    padding: 0;
+}
 aside.left-off-canvas-menu ul.accordion,
 .sidebar ul.accordion {
     margin-left: 0px;
