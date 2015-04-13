@@ -79,10 +79,6 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
     },
     openMenu: function(newMenu) {
         var self = this;
-        if (ERPBlok.hashTagManager.get('breadcrumb')) {
-            ERPBlok.hashTagManager.update({breadcrumb: undefined});
-            return;
-        }
         if (ERPBlok.hashTagManager.get('clean-breadcrumbs')) {
             ERPBlok.hashTagManager.update({'clean-breadcrumbs': undefined});
             ERPBlok.actionManager.clear_all();
@@ -91,6 +87,10 @@ ERPBlok.SideMenu = ERPBlok.MixinMenu.extend({
             self.$el.find('.active').removeClass('active');
             self.uncollapse_menus(res.nodemenu);
             self.active_menu(res.activemenu);
+            if (ERPBlok.hashTagManager.get('breadcrumb')) {
+                ERPBlok.hashTagManager.update({breadcrumb: undefined});
+                return;
+            }
             var func = res.function;
             var action = res.action;
             if (func) self.call_function(func);
