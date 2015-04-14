@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    // Save the main hash in case of we want keep it for open action and view and other
+    var hash = window.location.hash;
     $("#submit").click(function (){
         var $error = $("#error")
         $error.addClass("hide");
@@ -20,7 +22,7 @@ $(document).ready(function(){
                 }
             })
             .done(function (url) {
-                window.location = url;
+                window.location = url + hash;
             });
         }
     });
