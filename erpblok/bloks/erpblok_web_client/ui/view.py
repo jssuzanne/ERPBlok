@@ -141,4 +141,5 @@ class Form(Mixin.View):
             'template': etree.tostring(root).decode('utf-8'),
             'primary_keys': Model.get_primary_keys(),
             'fields': list(fields.keys()),
+            'fields2display': list(fields.values()),
         }

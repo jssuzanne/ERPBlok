@@ -26,6 +26,12 @@ ERPBlok.BreadCrumb = ERPBlok.Model.extend({
         };
         this.$last.link.appendTo(this.$el);
     },
+    update_last_hashtag: function(hash) {
+        if (this.$last){
+            this.$last.hash = $.extend({}, hash, this.$last.hash);
+            ERPBlok.hashTagManager.update(hash);
+        }
+    },
     on_click: function (event) {
         this.$last.link.remove();
         this.$last.node.remove();

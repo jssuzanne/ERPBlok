@@ -9,7 +9,18 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         for (var i in action.value.views) {
             this.add(action.value.views[i]);
         }
-        this.select_view(action.value.selected);
+        var view_id = ERPBlok.hashTagManager.get('view');
+        if (view_id) {
+            var pks = ERPBlok.hashTagManager.get('pks');
+            if (pks) {
+                pks = JSON.parse(pks);
+                this.select_view(view_id, pks);
+            } else {
+                this.select_view(view_id);
+            }
+        } else {
+            this.select_view(action.value.selected);
+        }
     },
     add: function(view) {
         var self = this;
@@ -44,6 +55,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
             this.views[view_id].$nav.addClass('active');
             this.views[view_id].$view.removeClass('hide');
             this.views[view_id].view.render(kwargs);
+            this.action.actionManager.select_view(view_id, kwargs);
         }
     },
 });
@@ -80,5 +92,10 @@ ERPBlok.View = ERPBlok.Model.extend({
         if (selectRecord[0] == 'open_view') {
             this.viewManager.select_view(selectRecord[1], kwargs);
         }
-    }
+    },
+    get_field_cls: function(type) {
+        if (ERPBlok.View.Field[type])
+            return new ERPBlok.View.Field[type]();
+        return new ERPBlok.View.Field();
+    },
 });

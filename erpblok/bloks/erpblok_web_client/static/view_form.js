@@ -1,6 +1,11 @@
 ERPBlok.View.Form = ERPBlok.View.extend({
     title_selector: 'Form view',
     class_name: 'view-form',
+    icon_selector: 'fi-page',
+    init: function(viewManager, options) {
+        this._super(viewManager, options);
+        this.fields = []
+    },
     render: function (args) {
         var self = this;
         if(args && args.id) {
@@ -14,9 +19,14 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         }
     },
     render_record: function(record) {
-        var fields = this.options.fields;
-        for (var i in fields) {
-            this.$el.find('#' + fields[i]).text(record[fields[i]]);
-        }
+        var self = this;
+        $.each(this.options.fields2display, function(i, item) {
+            var node = self.$el.find('#' + item.id),
+                field = self.get_field_cls(item.type);
+            node.children().remove();
+            self.fields.push(field);
+            field.render(item, record[item.id]);
+            field.$el.appendTo(node);
+        });
     }
 });
