@@ -95,14 +95,16 @@
             <% } %>
         </tr>
     </template>
-    <template id="ERPBlokViewListField">
+    <template id="ERPBlokViewField">
         <% if (readonly) { %>
             <span><%=value%></span>
         <% } else { %>
-            <input id="<%=id%>" value="<%=value%>"/>
+            <div>
+                <input name="<%=id%>" type="<%=type%>"/>
+            </div>
         <% } %>
     </template>
-    <template id="ERPBlokViewListOne2Many">
+    <template id="ERPBlokViewOne2Many">
         <% if (value) { %>
             <% for (var i in value) {%>
                 <tr><td><%=value[i][1]%></td></tr>

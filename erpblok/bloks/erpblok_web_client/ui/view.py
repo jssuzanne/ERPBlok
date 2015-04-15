@@ -1,4 +1,5 @@
 from anyblok import Declarations
+from sqlalchemy.sql import functions
 from lxml import etree
 
 
@@ -54,25 +55,29 @@ class View:
 
     @classmethod
     def get_fields(cls, model):
-        res = {}
-        System = cls.registry.System
+        Field = cls.registry.System.Field
+        Column = cls.registry.System.Column
+        RelationShip = cls.registry.System.RelationShip
 
         def get_query(Model):
-            return Model.query().filter(Model.model == model).all()
+            columns = [
+                Model.name.label('id'),
+                Model.label,
+                Model.ftype.label('type'),
+            ]
+            if Model in (Column, RelationShip):
+                columns.append(Model.nullable)
+            else:
+                columns.append(
+                    functions.literal_column('true as nullable'))
 
-        for col in get_query(System.Column):
-            res[col.name] = {x: getattr(col, x)
-                             for x in ('label', 'nullable')}
-            res[col.name]['id'] = col.name
-            res[col.name]['type'] = col.ctype
+            return Model.query(*columns).filter(Model.model == model)
 
-        for rs in get_query(System.RelationShip):
-            res[rs.name] = {x: getattr(rs, x)
-                            for x in ('label', 'nullable')}
-            res[rs.name]['id'] = rs.name
-            res[rs.name]['type'] = rs.rtype
-
-        return res
+        query = get_query(RelationShip).union_all(get_query(Column)).union_all(
+            get_query(Field))
+        return {x.id: {y: getattr(x, y)
+                       for y in ('id', 'label', 'type', 'nullable')}
+                for x in query.all()}
 
 
 @register(Model.UI.View)
@@ -164,6 +169,16 @@ class Form(Mixin.View):
                     'label': 'Save',
                     'visibility': 'on-readwrite',
                     'fnct': 'save_view',
+                },
+                {
+                    'label': 'Close',
+                    'visibility': "on-readonly",
+                    'fnct': 'close_view',
+                },
+                {
+                    'label': 'Cancel',
+                    'visibility': 'on-readwrite',
+                    'fnct': 'read_view',
                 },
             ],
             'groups_buttons': [

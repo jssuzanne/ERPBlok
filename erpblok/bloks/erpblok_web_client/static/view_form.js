@@ -9,6 +9,7 @@ ERPBlok.View.Form = ERPBlok.View.extend({
     render: function (args) {
         this._super(args);
         var self = this;
+        this.args = args;
         if(args && args.id) {
             this.rpc('get_entry', {'model': this.viewManager.action.value.model,
                                    'primary_keys': args.id,
@@ -34,5 +35,31 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         $.each(this.fields, function (i, field) {
             field.refresh_render();
         });
+    },
+    on_save_view: function () {
+        var self = this;
+        var values = this.get_values_changed();
+        this.toggleReadonly();
+        this.rpc('set_entry', {model: this.viewManager.action.value.model,
+                               primary_keys: this.args.id,
+                               values: values,
+                               fields: this.options.fields}, function (record) {
+            if (record) {
+                $.each(self.fields, function (i, field) {
+                    field.set_value(record[field.options.id])
+                    field.refresh_render();
+                });
+            }
+        });
+    },
+    get_values_changed: function () {
+        var res = {},
+            self = this;
+        $.each(this.fields, function(i, field) {
+            if (field.value_changed()) {
+                res[field.options.id] = field.get_value()
+            }
+        });
+        return res;
     },
 });

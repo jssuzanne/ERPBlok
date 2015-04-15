@@ -113,6 +113,7 @@ ERPBlok.View = ERPBlok.Model.extend({
     get_field_cls: function(item) {
         if (ERPBlok.View.Field[item.type])
             return new ERPBlok.View.Field[item.type](this, item);
+        console.warn("Unknon type : " + item.type);
         return new ERPBlok.View.Field(this, item);
     },
     toggleReadonly : function() {
@@ -159,5 +160,7 @@ ERPBlok.View = ERPBlok.Model.extend({
         }
     },
     refresh_render: function() {
+    },
+    get_values_changed: function () {
     },
 });
