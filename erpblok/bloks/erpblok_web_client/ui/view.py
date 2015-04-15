@@ -102,6 +102,18 @@ class List(Mixin.View):
             'fields': list(fields.keys()),
             'fields2display': list(fields.values()),
             'headers': [list(fields.values())],
+            'buttons': [
+                {
+                    'label': 'New',
+                    'visibility': 'on-readonly',
+                    'fnct': 'new_entry',
+                },
+                {
+                    'label': 'Delete',
+                    'visibility': 'on-readonly on-selected',
+                    'fnct': 'delete_entry',
+                },
+            ],
             'transitions': {
                 'selectRecord': ('open_view', cls.registry.UI.View.Form.id),
             },
@@ -142,4 +154,34 @@ class Form(Mixin.View):
             'primary_keys': Model.get_primary_keys(),
             'fields': list(fields.keys()),
             'fields2display': list(fields.values()),
+            'buttons': [
+                {
+                    'label': 'Edit',
+                    'visibility': "on-readonly",
+                    'fnct': 'edit_view',
+                },
+                {
+                    'label': 'Save',
+                    'visibility': 'on-readwrite',
+                    'fnct': 'save_view',
+                },
+            ],
+            'groups_buttons': [
+                {
+                    'label': 'Options',
+                    'id': 'group-options',
+                    'visibility': 'on-readonly',
+                    'buttons': [
+                        {
+                            'label': 'Create',
+                            'visibility': '',
+                            'fnct': 'new_entry',
+                        },
+                        {
+                            'label': 'Delete',
+                            'fnct': 'delete_entry',
+                        },
+                    ],
+                },
+            ],
         }

@@ -15,7 +15,8 @@ ERPBlok.View.List = ERPBlok.View.extend({
         this.$el = $el;
         return $el;
     },
-    render: function () {
+    render: function (args) {
+        this._super(args);
         this.do_search();
     },
     do_search: function () {
@@ -74,9 +75,9 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         });
     },
     render_field: function(obj) {
-        var field = this.view.get_field_cls(obj.type);
+        var field = this.view.get_field_cls(obj);
         this.fields.push(field);
-        field.render(obj, this.record[obj.id]);
+        field.render(this.record[obj.id]);
         field.$el.appendTo(this.$el.find('td#' + obj.id))
     },
 });

@@ -5,6 +5,9 @@ ERPBlok.ActionInterface = ERPBlok.Model.extend({
     select_view: function (view, pks) {
         console.error('select_view function must be overloaded');
     },
+    update_hash: function (kwargs) {
+        console.error('update_hash function must be overloaded');
+    },
 });
 ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
     init: function() {
@@ -22,13 +25,16 @@ ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
         action.$el.appendTo(this.$el);
         this.breadcrumb.add(action.value.id, action.value.label, action.$el);
     },
-    select_view: function(view, pks) {
-        if (pks) {
+    select_view: function(view, kwargs) {
+        if (kwargs != undefined && kwargs.id != undefined) {
             this.breadcrumb.update_last_hashtag({view: view,
-                                                 pks: JSON.stringify(pks)});
+                                                 pks: JSON.stringify(kwargs.id)});
         } else {
             this.breadcrumb.update_last_hashtag({view: view, pks: undefined});
         }
+    },
+    update_hash: function (kwargs) {
+        this.breadcrumb.update_last_hashtag(kwargs);
     },
 });
 ERPBlok.Action = ERPBlok.Model.extend({

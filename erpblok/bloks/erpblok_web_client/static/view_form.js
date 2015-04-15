@@ -4,9 +4,10 @@ ERPBlok.View.Form = ERPBlok.View.extend({
     icon_selector: 'fi-page',
     init: function(viewManager, options) {
         this._super(viewManager, options);
-        this.fields = []
+        this.fields = [];
     },
     render: function (args) {
+        this._super(args);
         var self = this;
         if(args && args.id) {
             this.rpc('get_entry', {'model': this.viewManager.action.value.model,
@@ -22,11 +23,16 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         var self = this;
         $.each(this.options.fields2display, function(i, item) {
             var node = self.$el.find('#' + item.id),
-                field = self.get_field_cls(item.type);
+                field = self.get_field_cls(item);
             node.children().remove();
             self.fields.push(field);
-            field.render(item, record[item.id]);
+            field.render(record[item.id]);
             field.$el.appendTo(node);
         });
-    }
+    },
+    refresh_render: function () {
+        $.each(this.fields, function (i, field) {
+            field.refresh_render();
+        });
+    },
 });

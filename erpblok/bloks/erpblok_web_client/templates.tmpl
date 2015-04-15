@@ -23,10 +23,38 @@
     </template>
     <template id="ERPBlokViewManager">
         <div class="row view-manager">
-            <nav class="view-selector">
-                <ul/>
-            </nav>
+            <div class="columns large-7">
+                <ul class="button-group radius view-buttons"></ul>
+            </div>
+            <div class="columns large-3 medium-7">
+            </div>
+            <div class="columns large-2 medium-5">
+                <nav class="view-selector">
+                    <ul/>
+                </nav>
+            </div>
         </div>
+    </template>
+    <template id="ERPBlokViewManagerButton">
+        <li>
+            <a class="view-button button small <%=visibility%>"
+               data-function="<%=fnct%>"><%=label%></a>
+        </li>
+    </template>
+    <template id="ERPBlokViewManagerGroup">
+        <li>
+            <a data-dropdown="<%=id%>"
+               class="button dropdown small"><%=label%></a>
+            <br>
+            <ul id="<%=id%>" class="f-dropdown">
+                <% for ( var i = 0; i < buttons.length; i++ ) { %>
+                    <li>
+                        <a class="view-button <%=buttons[i].visibility || ''%>"
+                           data-function="<%=buttons[i].fnct%>"><%=buttons[i].label%></a>
+                    </li>
+                <% } %>
+            </ul>
+        </li>
     </template>
     <template id="ERPBlokView">
         <div id="<%=id%>" class="row view <%=class_name%>"/>
@@ -68,7 +96,11 @@
         </tr>
     </template>
     <template id="ERPBlokViewListField">
-        <span><%=value%></span>
+        <% if (readonly) { %>
+            <span><%=value%></span>
+        <% } else { %>
+            <input id="<%=id%>" value="<%=value%>"/>
+        <% } %>
     </template>
     <template id="ERPBlokViewListOne2Many">
         <% if (value) { %>

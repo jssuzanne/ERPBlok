@@ -1,15 +1,27 @@
 ERPBlok.View.Field = ERPBlok.Model.extend({
     template: 'ERPBlokViewListField',
-    render: function(obj, value) {
+    init : function(view, options) {
+        this.view = view;
+        this.options = options;
+    },
+    render: function(value) {
         this.set_value(value);
-        this.$el = $(tmpl(this.template, 
-                          $.extend({}, obj, {value: this.get_render_value()})))
+        this.$el = this._render();
+    },
+    _render: function () {
+        var readonly = this.options.readonly || this.view.readonly || false;
+        var values = $.extend({}, this.options, {readonly: readonly},
+                              {value: this.get_render_value()})
+        return $(tmpl(this.template, values));
     },
     set_value: function(value) {
         this.value = value;
     },
     get_render_value: function() {
         return this.value;
+    },
+    refresh_render: function () {
+        this.$el.replaceWith(this._render());
     },
 });
 ERPBlok.View.Field.Many2One = ERPBlok.View.Field.extend({

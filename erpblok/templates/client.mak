@@ -114,7 +114,7 @@
         </li>
         <li class="hide-for-small divider"/>
         <li class="has-dropdown show-for-small">
-            <a class="menu-icon">Plop</a>
+            <a class="menu-icon">Quick menus</a>
             <ul id="dropdown-quickmenu" class="dropdown small-block-grid-3 medium-block-grid-3 large-block-grid-3">
                 % for function, action, menu, icon, titlelabel in quickmenu:
                     <li>
