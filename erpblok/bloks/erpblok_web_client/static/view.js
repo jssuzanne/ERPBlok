@@ -54,8 +54,8 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         if (view_id) {
             this.views[view_id].$nav.addClass('active');
             this.views[view_id].$view.removeClass('hide');
+            this.views[view_id].view.last_view = this.active_view || this.action.value.selected;
             this.views[view_id].view.render(kwargs);
-            this.views[view_id].view.last_view = this.active_view;
             this.action.actionManager.select_view(view_id, kwargs);
             this.active_view = view_id;
         }
@@ -95,7 +95,7 @@ ERPBlok.View = ERPBlok.Model.extend({
     },
     render: function(args) {
         var readonly = ERPBlok.hashTagManager.get('readonly') || true;
-        if (readonly != this.readonly) {
+        if (Boolean(readonly) != this.readonly) {
             this.toggleReadonly();
         }
         this.display_buttons();
@@ -108,6 +108,18 @@ ERPBlok.View = ERPBlok.Model.extend({
         if (selectRecord[0] == 'open_view') {
             this.viewManager.action.actionManager.update_hash({readonly: undefined});
             this.viewManager.select_view(selectRecord[1], kwargs);
+        }
+    },
+    transition_newRecord: function(kwargs) {
+        var newRecord = this.options.transitions.newRecord;
+        if (newRecord[0] == 'open_view') {
+            this.viewManager.select_view(newRecord[1], {id: null,
+                                                        new: true});
+        }
+    },
+    transition_closeView: function(kwargs) {
+        if (this.last_view) {
+            this.viewManager.select_view(this.last_view, kwargs);
         }
     },
     get_field_cls: function(item) {
@@ -158,6 +170,16 @@ ERPBlok.View = ERPBlok.Model.extend({
             this.toggleReadonly();
             this.refresh_render();
         }
+    },
+    on_read_view: function() {
+        if (! this.readonly) {
+            this.toggleReadonly();
+            this.refresh_render();
+        }
+    },
+    on_close_view: function () {
+        if (! this.readonly) this.toggleReadonly();
+        this.transition('closeView');
     },
     refresh_render: function() {
     },

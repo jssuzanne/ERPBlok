@@ -1,5 +1,4 @@
 from anyblok import Declarations
-from sqlalchemy.sql import functions
 from lxml import etree
 
 
@@ -52,32 +51,7 @@ class View:
 
 @register(Mixin)  # noqa
 class View:
-
-    @classmethod
-    def get_fields(cls, model):
-        Field = cls.registry.System.Field
-        Column = cls.registry.System.Column
-        RelationShip = cls.registry.System.RelationShip
-
-        def get_query(Model):
-            columns = [
-                Model.name.label('id'),
-                Model.label,
-                Model.ftype.label('type'),
-            ]
-            if Model in (Column, RelationShip):
-                columns.append(Model.nullable)
-            else:
-                columns.append(
-                    functions.literal_column('true as nullable'))
-
-            return Model.query(*columns).filter(Model.model == model)
-
-        query = get_query(RelationShip).union_all(get_query(Column)).union_all(
-            get_query(Field))
-        return {x.id: {y: getattr(x, y)
-                       for y in ('id', 'label', 'type', 'nullable')}
-                for x in query.all()}
+    pass
 
 
 @register(Model.UI.View)
@@ -98,15 +72,17 @@ class List(Mixin.View):
         :param action: instance of the model UI.Action
         """
         Model = cls.registry.get(action.model)
-        fields = cls.get_fields(action.model)
+        fields = Model.fields_description()
+        pks = Model.get_primary_keys()
         return {
             'id': cls.id,  # arbitrary id
             'selectable': True,
             'mode': 'List',
-            'primary_keys': Model.get_primary_keys(),
-            'fields': list(fields.keys()),
-            'fields2display': list(fields.values()),
-            'headers': [list(fields.values())],
+            'primary_keys': pks,
+            'fields': [x for x in fields.keys() if x not in pks],
+            'fields2display': [x for y, x in fields.items() if y not in pks],
+            'headers': [[x for y, x in fields.items() if y not in pks]],
+            'checkbox': True,
             'buttons': [
                 {
                     'label': 'New',
@@ -121,6 +97,7 @@ class List(Mixin.View):
             ],
             'transitions': {
                 'selectRecord': ('open_view', cls.registry.UI.View.Form.id),
+                'newRecord': ('open_view', cls.registry.UI.View.Form.id),
             },
         }
 
@@ -144,8 +121,12 @@ class Form(Mixin.View):
         """
         Model = cls.registry.get(action.model)
         root = etree.Element('div')
-        fields = cls.get_fields(action.model)
-        for value in fields.values():
+        fields = Model.fields_description()
+        pks = Model.get_primary_keys()
+        for name, value in fields.items():
+            if name in pks:
+                continue
+
             _label = etree.SubElement(root, 'label')
             _label.set('for', value['id'])
             _label.text = value['label']
@@ -156,9 +137,9 @@ class Form(Mixin.View):
             'id': cls.id,
             'mode': 'Form',
             'template': etree.tostring(root).decode('utf-8'),
-            'primary_keys': Model.get_primary_keys(),
-            'fields': list(fields.keys()),
-            'fields2display': list(fields.values()),
+            'primary_keys': pks,
+            'fields': [x for x in fields.keys() if x not in pks],
+            'fields2display': [x for y, x in fields.items() if y not in pks],
             'buttons': [
                 {
                     'label': 'Edit',
@@ -188,7 +169,7 @@ class Form(Mixin.View):
                     'visibility': 'on-readonly',
                     'buttons': [
                         {
-                            'label': 'Create',
+                            'label': 'New',
                             'visibility': '',
                             'fnct': 'new_entry',
                         },

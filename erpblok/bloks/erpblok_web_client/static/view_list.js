@@ -7,11 +7,17 @@ ERPBlok.View.List = ERPBlok.View.extend({
         this.lines = [];
     },
     getViewEl: function() {
+        var self = this;
         var $el = $(tmpl('ERPBlokViewList', {
             id: this.options.id,
             class_name: this.class_name,
             headers: this.options.headers,
+            checkbox: this.options.checkbox || true,
         }));
+        $el.find('input#all_checkbox').click(function (event) {
+            var checked = $(event.currentTarget).prop('checked');
+            self.$el.find('input#line_checkbox').prop('checked', checked);
+        });
         this.$el = $el;
         return $el;
     },
@@ -48,7 +54,10 @@ ERPBlok.View.List = ERPBlok.View.extend({
         line.render();
         line.$el.appendTo(this.$el.find('tbody'));
         this.lines.push(line);
-    }
+    },
+    on_new_entry: function () {
+        this.transition('newRecord', {});
+    },
 });
 ERPBlok.View.List.Line = ERPBlok.Model.extend({
     init: function(view, record) {
@@ -66,18 +75,29 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         this.$el = $(tmpl('ERPBlokViewListLine', {
             'fields': this.view.options.fields2display,
             'record': this.record,
+            'checkbox': this.view.options.checkbox || true,
         }));
         for (var i in this.view.options.fields2display) {
             this.render_field(this.view.options.fields2display[i]);
         }
-        this.$el.click(function () {
-            self.view.transition('selectRecord', {id: self.id});
+        this.$el.find('input#line_checkbox').click(function () {
+            var nb = self.view.$el.find('input#line_checkbox:not(:checked)').length;
+            if (nb) {
+                self.view.$el.find('input#all_checkbox').prop('checked', false);
+            } else {
+                self.view.$el.find('input#all_checkbox').prop('checked', true);
+            }
+        })
+        this.$el.find('td.selectable').click(function () {
+            if (self.view.readonly) {
+                self.view.transition('selectRecord', {id: self.id});
+            }
         });
     },
     render_field: function(obj) {
         var field = this.view.get_field_cls(obj);
         this.fields.push(field);
-        field.render(this.record[obj.id]);
+        field.render(this.record[obj.id], true);
         field.$el.appendTo(this.$el.find('td#' + obj.id))
     },
 });

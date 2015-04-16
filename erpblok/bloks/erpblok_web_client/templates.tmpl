@@ -43,13 +43,15 @@
     </template>
     <template id="ERPBlokViewManagerGroup">
         <li>
-            <a data-dropdown="<%=id%>"
-               class="button dropdown small"><%=label%></a>
+            <button data-dropdown="<%=id%>" aria-controls="<%=id%>"
+                    aria-expanded="false"
+                    class="button dropdown small <%=visibility%>"><%=label%></button>
             <br>
-            <ul id="<%=id%>" class="f-dropdown">
+            <ul id="<%=id%>" data-dropdown-content class="f-dropdown"
+                aria-hidden="true">
                 <% for ( var i = 0; i < buttons.length; i++ ) { %>
                     <li>
-                        <a class="view-button <%=buttons[i].visibility || ''%>"
+                        <a class="view-button <%=buttons[i].visibility%>"
                            data-function="<%=buttons[i].fnct%>"><%=buttons[i].label%></a>
                     </li>
                 <% } %>
@@ -74,6 +76,12 @@
                 <thead>
                     <% for ( var i = 0; i < headers.length; i++ ) { %>
                         <tr>
+                            <% if (i == 0 && checkbox) { %>
+                                <th width="10px"
+                                    rowspan="<%=headers.length%>">
+                                    <input type="checkbox" id="all_checkbox"></input>
+                                </th>
+                            <% } %>
                             <% for ( var j = 0; j < headers[i].length; j++ ) { %>
                                 <th id="<%=headers[i][j].id%>"
                                     colspan="<%=headers[i][j].colspan%>"
@@ -90,8 +98,13 @@
     </template>
     <template id="ERPBlokViewListLine">
         <tr class="view-list-line">
+            <% if (checkbox) { %>
+                <td>
+                    <input type="checkbox" id="line_checkbox"></input>
+                </td>
+            <% } %>
             <% for ( var i = 0; i < fields.length; i++) { %>
-                <td id="<%=fields[i].id%>"/>
+                <td id="<%=fields[i].id%>" class="selectable"/>
             <% } %>
         </tr>
     </template>
@@ -99,9 +112,7 @@
         <% if (readonly) { %>
             <span><%=value%></span>
         <% } else { %>
-            <div>
-                <input name="<%=id%>" type="<%=type%>"/>
-            </div>
+            <input id="<%=id%>" name="<%=id%>" type="<%=type%>"/>
         <% } %>
     </template>
     <template id="ERPBlokViewOne2Many">

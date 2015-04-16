@@ -73,6 +73,7 @@ class Template:
         element = element.replace('__end_value_operator__', '%>')
         element = element.replace('__less_than_operator__', '<')
         element = element.replace('__more_than_operator__', '>')
+        element = element.replace('__amp_than_operator__', '&')
         return element
 
     def encode_blok(self, element):
@@ -102,10 +103,16 @@ class Template:
                 el = el.replace('>', '__more_than_operator__', 1)
                 more_counter += 1
 
+            amp_counter = 0
+            while el.find('&') != -1:
+                el = el.replace('&', '__amp_than_operator__', 1)
+                more_counter += 1
+
             element = begin + el + end
             last = stop + 1
             last += less_counter * len('__less_than_operator__')
             last += more_counter * len('__more_than_operator__')
+            last += amp_counter * len('__amp_than_operator__')
 
         return element
 

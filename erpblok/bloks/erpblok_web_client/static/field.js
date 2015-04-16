@@ -4,21 +4,33 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
     init : function(view, options) {
         this.view = view;
         this.options = options;
+        this.changed = false;
     },
-    render: function(value) {
-        this.set_value(value);
-        this.$el = this._render();
+    render: function(value, forced) {
+        if (value || forced) this.set_value(value);
+        var $el = this._render();
+        if (this.$el) this.$el.replaceWith($el);  // update the html
+        this.$el = $el;
+    },
+    is_readonly: function () {
+        return this.options.readonly || this.view.readonly || false;
     },
     _render: function () {
-        var readonly = this.options.readonly || this.view.readonly || false;
+        var readonly = this.is_readonly();
+        var value = this.get_render_value();
         var values = $.extend({}, {
             readonly: readonly,
             type: this.type},
             this.options,
-            {value: this.get_render_value()})
+            {value: value})
         var $el =  $(tmpl(this.template, values));
-        $el.find('input').val(this.get_render_value());
+        if (! readonly) this._render_init_input($el, value);
         return $el
+    },
+    _render_init_input: function($el, value) {
+        var self = this;
+        $el.val(value);
+        $el.change(function () {self.changed = true;})
     },
     set_value: function(value) {
         this.value = value;
@@ -26,28 +38,14 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
     get_render_value: function() {
         return this.value;
     },
-    refresh_render: function () {
-        var $el = this._render();
-        // update the html
-        this.$el.replaceWith($el);
-        // update the dom
-        this.$el = $el;
-    },
     get_value: function() {
-        var $input = this.$el.find('input')
-        if ($input) {
-            var val = $input.val();
+        if (this.is_readonly()) {
+            return this.get_render_value();
+        } else {
+            var val = this.$el.val();
             if (val == "") return null;
             return val;
-        } else {
-            return this.get_render_value();
         }
-    },
-    value_changed: function () {
-        if (this.get_value() == this.get_render_value()) {
-            return false;
-        }
-        return true;
     },
 });
 ERPBlok.View.Field.String = ERPBlok.View.Field.extend({});
