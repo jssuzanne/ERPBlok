@@ -10,10 +10,15 @@ class ERPBlokCore(Blok):
         'erpblok-web-client',
     ]
 
+    views = [
+        'system/blok.tmpl',
+    ]
+
     @classmethod
     def import_declaration_module(cls):
-        pass
+        from . import system  # noqa
 
     @classmethod
     def reload_declaration_module(cls, reload):
-        pass
+        from . import system
+        reload(system)

@@ -50,7 +50,7 @@ class Template:
         res = ''.join(res)
         return res.strip()
 
-    def get_template(self, name):
+    def get_template(self, name, tostring=True):
         """return a specific template
 
         :param name: name of the template
@@ -60,8 +60,12 @@ class Template:
         if self.forclient:
             tmpl.tag = 'script'
             tmpl.set('type', 'text/html')
-        res = html.tostring(tmpl)
-        return self.decode(res.decode("utf-8"))
+
+        if tostring:
+            res = html.tostring(tmpl)
+            return self.decode(res.decode("utf-8"))
+
+        return tmpl
 
     def decode(self, element):
         """ Decode some element need for the web template

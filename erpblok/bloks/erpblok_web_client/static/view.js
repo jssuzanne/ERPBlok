@@ -43,6 +43,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
     get_view_cls: function(view) {
         if (ERPBlok.View[view.mode])
             return new ERPBlok.View[view.mode](this, view);
+        console.log(view.mode)
         return new ERPBlok.View(this, view);
     },
     select_view: function (view_id, kwargs) {
@@ -104,14 +105,24 @@ ERPBlok.View = ERPBlok.Model.extend({
         this['transition_' + name](kwargs);
     },
     transition_selectRecord: function(kwargs) {
-        var selectRecord = this.options.transitions.selectRecord;
+        var selectRecord = [''];
+        try {
+            selectRecord = this.options.transitions.selectRecord;
+        } catch (err) {
+            console.warn(err);
+        }
         if (selectRecord[0] == 'open_view') {
             this.viewManager.action.actionManager.update_hash({readonly: undefined});
             this.viewManager.select_view(selectRecord[1], kwargs);
         }
     },
     transition_newRecord: function(kwargs) {
-        var newRecord = this.options.transitions.newRecord;
+        var newRecord = [''];
+        try {
+            newRecord = this.options.transitions.newRecord;
+        } catch (err) {
+            console.warn(err);
+        }
         if (newRecord[0] == 'open_view') {
             this.viewManager.select_view(newRecord[1], {id: null,
                                                         new: true});
@@ -134,11 +145,14 @@ ERPBlok.View = ERPBlok.Model.extend({
     },
     applyReadOnly: function () {
         this.viewManager.action.actionManager.update_hash({readonly: this.readonly});
+        this.hide_show_buttons();
+    },
+    hide_show_buttons: function() {
+        this.viewManager.$buttons.find('.on-readwrite').addClass('hide');
+        this.viewManager.$buttons.find('.on-readonly').addClass('hide');
         if (this.readonly) {
             this.viewManager.$buttons.find('.on-readonly').removeClass('hide');
-            this.viewManager.$buttons.find('.on-readwrite').addClass('hide');
         } else {
-            this.viewManager.$buttons.find('.on-readonly').addClass('hide');
             this.viewManager.$buttons.find('.on-readwrite').removeClass('hide');
         }
     },

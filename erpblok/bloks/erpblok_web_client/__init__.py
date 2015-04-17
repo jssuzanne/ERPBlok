@@ -1,4 +1,4 @@
-from anyblok.blok import Blok
+from anyblok.blok import Blok, BlokManager
 
 
 class ERPBlokWebClient(Blok):
@@ -70,10 +70,25 @@ class ERPBlokWebClient(Blok):
         # TODO replace IT by an csv import
         Menu = self.registry.UI.Menu
         Action = self.registry.UI.Action
+        View = self.registry.UI.View
 
         settings = Menu.insert(label='Settings')
 
-        bloks = Action.insert(label='Bloks', model='Model.System.Blok')
+        bloks = Action.insert(label='Bloks', model='Model.System.Blok',
+                              add_delete=False, add_new=False, add_edit=False)
+        blist = View.insert(selectable=True, mode='Model.UI.View.List',
+                            action=bloks, template="AnyBlokSystemBlokList",
+                            add_delete=False, add_new=False, add_edit=False)
+        bform = View.insert(selectable=False, mode='Model.UI.View.Form',
+                            action=bloks, template="AnyBlokSystemBlokForm",
+                            add_delete=False, add_new=False, add_edit=False)
+        bloks.update({'selected': blist.id})
+        Action.Transition.insert(action=bloks, name='selectRecord',
+                                 mode='Model.UI.View.List',
+                                 code='open_view', view=bform)
+        Action.Transition.insert(action=bloks, name='newRecord',
+                                 mode='Model.UI.View.List',
+                                 code='open_view', view=bform)
         Menu.insert(label="Bloks", parent=settings, action=bloks)
 
         access = Menu.insert(label="Access", parent=settings)
@@ -93,6 +108,8 @@ class ERPBlokWebClient(Blok):
         Menu.insert(label='Menus', parent=interface, action=menus)
         actions = Action.insert(label='Actions', model='Model.UI.Action')
         Menu.insert(label='Actions', parent=interface, action=actions)
+        views = Action.insert(label='Views', model='Model.UI.View')
+        Menu.insert(label='View', parent=interface, action=views)
 
         lowlevel = Menu.insert(label="Database datas", parent=settings)
         models = Action.insert(label="Models", model='Model.System.Model')
@@ -117,6 +134,22 @@ class ERPBlokWebClient(Blok):
         """ Update the database """
         if latest_version is None:
             self.install()
+
+    def load(self):
+        from os.path import join
+        tmpl = self.registry.UI.Template()
+        Blok = self.registry.System.Blok
+        for blok in Blok.list_by_state('installed'):
+            b = BlokManager.get(blok)
+            if hasattr(b, 'views'):
+                bpath = BlokManager.getPath(blok)
+                for template in b.views:
+                    with open(join(bpath, template), 'r') as fp:
+                        tmpl.load_file(fp)
+
+        tmpl.compile()
+        self.registry.erpblok_views = tmpl
+        # TODO check all view template exist
 
     @classmethod
     def import_declaration_module(cls):

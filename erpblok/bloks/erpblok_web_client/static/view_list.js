@@ -17,6 +17,7 @@ ERPBlok.View.List = ERPBlok.View.extend({
         $el.find('input#all_checkbox').click(function (event) {
             var checked = $(event.currentTarget).prop('checked');
             self.$el.find('input#line_checkbox').prop('checked', checked);
+            self.hide_show_buttons()
         });
         this.$el = $el;
         return $el;
@@ -58,6 +59,37 @@ ERPBlok.View.List = ERPBlok.View.extend({
     on_new_entry: function () {
         this.transition('newRecord', {});
     },
+    on_delete_entry: function () {
+        var self = this,
+            entries_primary_keys = [];
+        $.each(this.lines, function(i, line) {
+            if (line.selected) {
+                entries_primary_keys.push(line.id);
+            }
+        });
+        self.rpc('del_entry', {model: this.viewManager.action.value.model,
+                               primary_keys: entries_primary_keys}, function () {
+            self.do_search();
+        });
+    },
+    hide_show_buttons: function() {
+        var checked = this.$el.find('input#line_checkbox:checked').length;
+        this.viewManager.$buttons.find('.on-readonly').addClass('hide');
+        this.viewManager.$buttons.find('.on-selected').addClass('hide');
+        this.viewManager.$buttons.find('.on-readwrite').addClass('hide');
+        if (this.readonly && checked) {
+            this.viewManager.$buttons.find('.on-readonly.on-selected, .on-readonly:not(.on-selected)').removeClass('hide');
+        } else if (this.readonly) {
+            this.viewManager.$buttons.find('.on-readonly:not(.on-selected)').removeClass('hide');
+        } else {
+            if (checked) {
+                this.viewManager.$buttons.find('.on-selected:not(.on-readonly)').removeClass('hide');
+                this.viewManager.$buttons.find('.on-readwrite').removeClass('hide');
+            } else {
+                this.viewManager.$buttons.find('.on-readwrite:not(.on-selected)').removeClass('hide');
+            }
+        }
+    },
 });
 ERPBlok.View.List.Line = ERPBlok.Model.extend({
     init: function(view, record) {
@@ -65,6 +97,7 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
         this.record = record;
         this.id = {}
         this.fields = []
+        this.selected = false;
         var primary_keys = view.options.primary_keys;
         for (var i in primary_keys) {
             this.id[primary_keys[i]] = record[primary_keys[i]];
@@ -87,6 +120,12 @@ ERPBlok.View.List.Line = ERPBlok.Model.extend({
             } else {
                 self.view.$el.find('input#all_checkbox').prop('checked', true);
             }
+            if (self.$el.find('input#line_checkbox:checked').length) {
+                self.selected = true;
+            } else {
+                self.selected = false;
+            }
+            self.view.hide_show_buttons()
         })
         this.$el.find('td.selectable').click(function () {
             if (self.view.readonly) {

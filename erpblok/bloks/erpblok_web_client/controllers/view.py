@@ -85,6 +85,9 @@ class View:
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def del_entry(self, model=None, primary_keys=None, **kwargs):
 
+        if not primary_keys:
+            return False
+
         Model = self.registry.get(model)
         for pks in primary_keys:
             Model.from_primary_keys(**pks).delete()

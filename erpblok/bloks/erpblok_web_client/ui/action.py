@@ -16,14 +16,18 @@ class Action:
     label = String(nullable=False)
     dialog = Boolean(default=False)
     selected = Integer()
+    add_delete = Boolean(default=True)
+    add_new = Boolean(default=True)
+    add_edit = Boolean(default=True)
 
     def render(self):
         """ Return the information of one action """
-        views = []
         selected = self.selected
 
         if not self.views:
             selected, views = self.registry.UI.View.render_from_scratch(self)
+        else:
+            views = self.views.render()
 
         return {
             'model': self.model,

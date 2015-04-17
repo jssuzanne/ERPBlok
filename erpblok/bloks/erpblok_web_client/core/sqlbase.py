@@ -14,7 +14,7 @@ class SqlBase:
         return str(self.to_primary_keys())
 
     @classmethod
-    def fields_description(cls):
+    def fields_description(cls, fields=None):
         """ Return the information of the Field, Column, RelationShip """
         Field = cls.registry.System.Field
         Column = cls.registry.System.Column
@@ -51,5 +51,10 @@ class SqlBase:
             get_query(Field))
         fields2get = ['id', 'label', 'type', 'nullable', 'primary_key',
                       'model']
-        return {x.id: {y: getattr(x, y) for y in fields2get}
-                for x in query.all()}
+        res = {x.id: {y: getattr(x, y) for y in fields2get}
+               for x in query.all()}
+
+        if fields:
+            return {x: y for x, y in res.items() if x in fields}
+
+        return res

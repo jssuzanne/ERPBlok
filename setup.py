@@ -7,6 +7,7 @@ requires = [
     'anyblok_pyramid',
     'pyramid_mako',
     'lxml',
+    'rst2html5',
 ]
 
 ERPBlok = [

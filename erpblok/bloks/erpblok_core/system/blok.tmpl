@@ -1,0 +1,32 @@
+<templates>
+    <template id="AnyBlokSystemBlokList">
+        <field name="name"/>
+        <field name="version"/>
+        <field name="installed_version"/>
+        <field name="state"/>
+    </template>
+    <template id="AnyBlokSystemBlokForm">
+        <div class="row">
+            <div class="columns large-8 medium-6">
+                <label for="name"/>
+                <field name="name"/>
+                <label for="short_description"/>
+                <field name="short_description"/>
+            </div>
+            <div class="columns large-4 medium-6">
+                <label for="state"/>
+                <field name="state"/>
+                <label for="version"/>
+                <field name="version"/>
+                <label for="installed_version"/>
+                <field name="installed_version" type="Html"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns">
+                <label for="long_description"/>
+                <field name="long_description" type="Html"/>
+            </div>
+        </div>
+    </template>
+</templates>
