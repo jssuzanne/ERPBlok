@@ -1,4 +1,5 @@
 from anyblok_pyramid.scripts import anyblok_wsgi
+from anyblok.scripts import interpreter as anyblok_interpreter
 from anyblok_pyramid.config import make_config as ap_make_config
 import os
 
@@ -19,3 +20,10 @@ def wsgi():
                  ['config', 'database', 'logging'],
                  ['AnyBlok', 'ERPBlok'],
                  Configurator=make_config)
+
+
+def interpreter():
+    anyblok_interpreter(
+        'Interpreter', '1.0',
+        argsparse_groups=['config', 'database', 'interpreter', 'logging'],
+        parts_to_load=['AnyBlok', 'ERPBlok'])

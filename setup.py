@@ -34,6 +34,7 @@ setup(
     entry_points={
         'console_scripts': [
             'erpblok=erpblok.scripts:wsgi',
+            'erpblok_interpretor=erpblok.scripts:interpreter',
         ],
         'ERPBlok': ERPBlok,
     },
