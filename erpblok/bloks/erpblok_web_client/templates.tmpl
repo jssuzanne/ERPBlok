@@ -74,19 +74,19 @@
         <xpath action="insert" expression="./div">
             <table role="grid">
                 <thead>
-                    <% for ( var i = 0; i < headers.length; i++ ) { %>
+                    <% for ( var i = 0; i < options.headers.length; i++ ) { %>
                         <tr>
-                            <% if (i == 0 && checkbox) { %>
+                            <% if (i == 0 && options.checkbox) { %>
                                 <th width="10px"
-                                    rowspan="<%=headers.length%>">
+                                    rowspan="<%=options.headers.length%>">
                                     <input type="checkbox" id="all_checkbox"></input>
                                 </th>
                             <% } %>
-                            <% for ( var j = 0; j < headers[i].length; j++ ) { %>
-                                <th id="<%=headers[i][j].id%>"
-                                    colspan="<%=headers[i][j].colspan%>"
-                                    rowspan="<%=headers[i][j].rowspan%>"
-                                ><%=headers[i][j].label%></th>
+                            <% for ( var j = 0; j < options.headers[i].length; j++ ) { %>
+                                <th id="<%=options.headers[i][j].id%>"
+                                    colspan="<%=options.headers[i][j].colspan%>"
+                                    rowspan="<%=options.headers[i][j].rowspan%>"
+                                ><%=options.headers[i][j].label%></th>
                             <% } %>
                         </tr>
                     <% } %>
@@ -98,7 +98,7 @@
     </template>
     <template id="ERPBlokViewListLine">
         <tr class="view-list-line">
-            <% if (checkbox) { %>
+            <% if (options.checkbox) { %>
                 <td>
                     <input type="checkbox" id="line_checkbox"></input>
                 </td>

@@ -305,6 +305,13 @@ class Form(Mixin.View):
             'fnct': 'new_entry',
         }
 
+    def get_button_close(self):
+        return {
+            'label': 'Close',
+            'visibility': "on-readonly",
+            'fnct': 'close_view',
+        }
+
     def get_button_delete(self):
         return {
             'label': 'Delete',
@@ -322,6 +329,9 @@ class Form(Mixin.View):
 
         if view.add_new and view.action.add_new and not add_save:
             res.append(self.get_button_save())
+
+        if view.id != view.action.selected:
+            res.append(self.get_button_close())
 
         return res
 
