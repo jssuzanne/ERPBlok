@@ -3,10 +3,6 @@ ERPBlok.View.List = ERPBlok.View.MultiEntries.extend({
     icon_selector: 'fi-list',
     class_name: 'view-list',
     template: 'ERPBlokViewList',
-    init: function(viewManager, options) {
-        this._super(viewManager, options);
-        this.lines = [];
-    },
     getViewEl: function() {
         var self = this;
         var $el = this._super();

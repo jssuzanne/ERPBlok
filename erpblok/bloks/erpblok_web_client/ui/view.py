@@ -25,6 +25,7 @@ class ViewType:
         """
         return {
             'Model.UI.View.List': 'List view',
+            'Model.UI.View.Thumbnails': 'Thumbnails view',
             'Model.UI.View.Form': 'Form view',
         }
 
@@ -39,6 +40,7 @@ class View(Mixin.ViewType):
     add_delete = Boolean(default=True)
     add_new = Boolean(default=True)
     add_edit = Boolean(default=True)
+    is_selectable = Boolean(default=True)  # Only for multi
 
     def render(self):
         """ Return the View render"""
@@ -86,144 +88,8 @@ class View:
                 if x.mode == self.__registry_name__}
 
 
-@register(Model.UI.View)
-class List(Mixin.View):
-    "List View"
-
-    id = 1000001
-    mode_name = 'List'
-
-    def _rc_get_headers(self, fields, headers, node, level):
-        maxlevel = level
-        nbel = 0
-        els = []
-        ordered_fields = []
-        if level not in headers:
-            headers[level] = []
-        for el in node.getchildren():
-            if el.tag is etree.Comment:
-                continue
-            elif el.tag.lower() == 'group':
-                subfields, submaxlevel, subnbel = self._rc_get_headers(
-                    fields, headers, el, level + 1)
-                if submaxlevel > maxlevel:
-                    maxlevel = submaxlevel
-
-                group = {
-                    'label': el.attrib.get('label', ''),
-                    'colspan': subnbel,
-                }
-                headers[level].append(group)
-                els.append(group)
-                ordered_fields.extend(subfields)
-            elif el.tag.lower() == 'field':
-                label = el.attrib.get('label')
-                name = el.attrib.get('name')
-                if not label:
-                    label = fields[el.attrib.get('name')]['label']
-
-                el = {
-                    'id': name,
-                    'label': label,
-                    'colspan': 1,
-                }
-                headers[level].append(el)
-                els.append(el)
-                ordered_fields.append(name)
-
-        for el in els:
-            el['rowspan'] = maxlevel - level + 1
-
-        return ordered_fields, maxlevel, nbel
-
-    def get_button_delete(self):
-        return {
-            'label': 'Delete',
-            'visibility': 'on-readonly on-selected',
-            'fnct': 'delete_entry',
-        }
-
-    def get_button_new(self):
-        return {
-            'label': 'New',
-            'visibility': 'on-readonly',
-            'fnct': 'new_entry',
-        }
-
-    def get_buttons(self, view):
-        res = super(List, self).get_buttons(view)
-        if view.add_delete and view.action.add_delete:
-            res.append(self.get_button_delete())
-
-        if view.add_new and view.action.add_delete:
-            res.append(self.get_button_new())
-
-        return res
-
-    def render(self, view):
-        """ Specific render for a list view """
-        res = super(List, self).render(view)
-        tmpl = self.registry.erpblok_views.get_template(
-            view.template, tostring=False)
-        fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
-        Model = self.registry.get(view.action.model)
-        fields_description = Model.fields_description(fields=fields_name)
-        headers = {}
-        ordered_fields, level, _ = self._rc_get_headers(
-            fields_description, headers, tmpl, 0)
-        res.update({
-            'fields': fields_name,
-            'fields2display': [fields_description[x] for x in ordered_fields],
-            'headers': list(headers.values()),
-            'buttons': self.get_buttons(view),
-            'buttons': self.get_buttons(view),
-            'groups_buttons': self.get_groups_buttons(view),
-            'transitions': self.get_transitions(view),
-        })
-        return res
-
-    def render_from_scratch(self, action):
-        """ Render without template for List view
-
-        :param action: instance of the model UI.Action
-        """
-        Model = self.registry.get(action.model)
-        fields = Model.fields_description()
-        pks = Model.get_primary_keys()
-        return {
-            'id': self.id,  # arbitrary id
-            'selectable': True,
-            'mode': 'List',
-            'primary_keys': pks,
-            'fields': [x for x in fields.keys() if x not in pks],
-            'fields2display': [x for y, x in fields.items() if y not in pks],
-            'headers': [[x for y, x in fields.items() if y not in pks]],
-            'checkbox': True,
-            'buttons': [
-                {
-                    'label': 'New',
-                    'visibility': 'on-readonly',
-                    'fnct': 'new_entry',
-                },
-                {
-                    'label': 'Delete',
-                    'visibility': 'on-readonly on-selected',
-                    'fnct': 'delete_entry',
-                },
-            ],
-            'transitions': {
-                'selectRecord': ('open_view', self.registry.UI.View.Form.id),
-                'newRecord': ('open_view', self.registry.UI.View.Form.id),
-            },
-        }
-
-
-@register(Model.UI.View)
-class Form(Mixin.View):
-    "Form View"
-
-    id = 1000002
-    mode_name = 'Form'
+@register(Mixin)
+class ViewRenderTemplate:
 
     def get_template_replace_label(self, el, fields_description):
         el_for = el.attrib.get('for')
@@ -276,6 +142,152 @@ class Form(Mixin.View):
         tmpl = html.tostring(tmpl)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_name, fields_description]
+
+    def render_template(self, view):
+        """ Specific render for a list view """
+        template, fields_name, fields_description = self.get_template(view)
+        return {
+            'fields': fields_name,
+            'template': template,
+            'fields2display': [fields_description[x] for x in fields_name],
+        }
+
+
+@register(Mixin)
+class ViewMultiEntries(Mixin.View):
+
+    def get_button_delete(self):
+        return {
+            'label': 'Delete',
+            'visibility': 'on-readonly on-selected',
+            'fnct': 'delete_entry',
+        }
+
+    def get_button_new(self):
+        return {
+            'label': 'New',
+            'visibility': 'on-readonly',
+            'fnct': 'new_entry',
+        }
+
+    def get_buttons(self, view):
+        res = super(ViewMultiEntries, self).get_buttons(view)
+        if view.add_delete and view.action.add_delete:
+            res.append(self.get_button_delete())
+
+        if view.add_new and view.action.add_delete:
+            res.append(self.get_button_new())
+
+        return res
+
+
+@register(Model.UI.View)
+class List(Mixin.ViewMultiEntries):
+    "List View"
+
+    id = 1000001
+    mode_name = 'List'
+
+    def _rc_get_headers(self, fields, headers, node, level):
+        maxlevel = level
+        nbel = 0
+        els = []
+        ordered_fields = []
+        if level not in headers:
+            headers[level] = []
+        for el in node.getchildren():
+            if el.tag is etree.Comment:
+                continue
+            elif el.tag.lower() == 'group':
+                subfields, submaxlevel, subnbel = self._rc_get_headers(
+                    fields, headers, el, level + 1)
+                if submaxlevel > maxlevel:
+                    maxlevel = submaxlevel
+
+                group = {
+                    'label': el.attrib.get('label', ''),
+                    'colspan': subnbel,
+                }
+                headers[level].append(group)
+                els.append(group)
+                ordered_fields.extend(subfields)
+            elif el.tag.lower() == 'field':
+                label = el.attrib.get('label')
+                name = el.attrib.get('name')
+                if not label:
+                    label = fields[el.attrib.get('name')]['label']
+
+                el = {
+                    'id': name,
+                    'label': label,
+                    'colspan': 1,
+                }
+                headers[level].append(el)
+                els.append(el)
+                ordered_fields.append(name)
+
+        for el in els:
+            el['rowspan'] = maxlevel - level + 1
+
+        return ordered_fields, maxlevel, nbel
+
+    def render(self, view):
+        """ Specific render for a list view """
+        res = super(List, self).render(view)
+        tmpl = self.registry.erpblok_views.get_template(
+            view.template, tostring=False)
+        fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
+        Model = self.registry.get(view.action.model)
+        fields_description = Model.fields_description(fields=fields_name)
+        headers = {}
+        ordered_fields, level, _ = self._rc_get_headers(
+            fields_description, headers, tmpl, 0)
+        res.update({
+            'fields': fields_name,
+            'checkbox': view.is_selectable,
+            'fields2display': [fields_description[x] for x in ordered_fields],
+            'headers': list(headers.values()),
+            'buttons': self.get_buttons(view),
+            'buttons': self.get_buttons(view),
+            'groups_buttons': self.get_groups_buttons(view),
+            'transitions': self.get_transitions(view),
+        })
+        return res
+
+    def render_from_scratch(self, action):
+        """ Render without template for List view
+
+        :param action: instance of the model UI.Action
+        """
+        Model = self.registry.get(action.model)
+        fields = Model.fields_description()
+        pks = Model.get_primary_keys()
+        return {
+            'id': self.id,  # arbitrary id
+            'selectable': True,
+            'mode': 'List',
+            'primary_keys': pks,
+            'fields': [x for x in fields.keys() if x not in pks],
+            'fields2display': [x for y, x in fields.items() if y not in pks],
+            'headers': [[x for y, x in fields.items() if y not in pks]],
+            'checkbox': True,
+            'buttons': [
+                self.get_button_new(),
+                self.get_button_delete(),
+            ],
+            'transitions': {
+                'selectRecord': ('open_view', self.registry.UI.View.Form.id),
+                'newRecord': ('open_view', self.registry.UI.View.Form.id),
+            },
+        }
+
+
+@register(Model.UI.View)
+class Form(Mixin.View, Mixin.ViewRenderTemplate):
+    "Form View"
+
+    id = 1000002
+    mode_name = 'Form'
 
     def get_button_edit(self):
         return {
@@ -365,11 +377,8 @@ class Form(Mixin.View):
     def render(self, view):
         """ Specific render for a list view """
         res = super(Form, self).render(view)
-        template, fields_name, fields_description = self.get_template(view)
+        res.update(self.render_template(view))
         res.update({
-            'fields': fields_name,
-            'template': template,
-            'fields2display': [fields_description[x] for x in fields_name],
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
             'transitions': self.get_transitions(view),
@@ -403,26 +412,10 @@ class Form(Mixin.View):
             'fields': [x for x in fields.keys() if x not in pks],
             'fields2display': [x for y, x in fields.items() if y not in pks],
             'buttons': [
-                {
-                    'label': 'Edit',
-                    'visibility': "on-readonly",
-                    'fnct': 'edit_view',
-                },
-                {
-                    'label': 'Save',
-                    'visibility': 'on-readwrite',
-                    'fnct': 'save_view',
-                },
-                {
-                    'label': 'Close',
-                    'visibility': "on-readonly",
-                    'fnct': 'close_view',
-                },
-                {
-                    'label': 'Cancel',
-                    'visibility': 'on-readwrite',
-                    'fnct': 'read_view',
-                },
+                self.get_button_edit(),
+                self.get_button_save(),
+                self.get_button_close(),
+                self.get_button_cancel(),
             ],
             'groups_buttons': [
                 {
@@ -430,19 +423,31 @@ class Form(Mixin.View):
                     'id': 'group-options',
                     'visibility': 'on-readonly',
                     'buttons': [
-                        {
-                            'label': 'New',
-                            'visibility': '',
-                            'fnct': 'new_entry',
-                        },
-                        {
-                            'label': 'Delete',
-                            'fnct': 'delete_entry',
-                        },
+                        self.get_button_new(),
+                        self.get_button_delete(),
                     ],
                 },
             ],
         }
+
+
+@register(Model.UI.View)
+class Thumbnails(Mixin.ViewMultiEntries, Mixin.ViewRenderTemplate):
+    "Form View"
+
+    id = 1000002
+    mode_name = 'Thumbnails'
+
+    def render(self, view):
+        """ Specific render for a list view """
+        res = super(Thumbnails, self).render(view)
+        res.update(self.render_template(view))
+        res.update({
+            'buttons': self.get_buttons(view),
+            'groups_buttons': self.get_groups_buttons(view),
+            'transitions': self.get_transitions(view),
+        })
+        return res
 
 
 @register(Model.UI.Action)

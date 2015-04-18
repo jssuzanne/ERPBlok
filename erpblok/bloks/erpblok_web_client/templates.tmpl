@@ -108,6 +108,20 @@
             <% } %>
         </tr>
     </template>
+    <template id="ERPBlokViewThumbnails" extend="ERPBlokView">
+        <xpath action="insert" expression="./div">
+            <div id="thumbnails-<%=id%>" class="row" data-equalizer>
+            </div>
+        </xpath>
+    </template>
+    <template id="ERPBlokViewThumbnailsSticker">
+        <xpath action="insert" expression="./div">
+            <div class="medium-6 large-3 columns panel callout radius selectable"
+                 data-equalizer-watch>
+                 <%=options.template%>
+            </div>
+        </xpath>
+    </template>
     <template id="ERPBlokViewField">
         <% if (readonly) { %>
             <span><%=value%></span>

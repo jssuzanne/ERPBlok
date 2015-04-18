@@ -35,6 +35,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_multi_entries.js',
         '#BLOK/static/field.js',
         '#BLOK/static/view_list.js',
+        '#BLOK/static/view_thumbnails.js',
         '#BLOK/static/view_form.js',
         '#BLOK/static/template.js',
         '#BLOK/static/notification/notification.js',
@@ -77,18 +78,21 @@ class ERPBlokWebClient(Blok):
 
         bloks = Action.insert(label='Bloks', model='Model.System.Blok',
                               add_delete=False, add_new=False, add_edit=False)
-        blist = View.insert(selectable=True, mode='Model.UI.View.List',
-                            action=bloks, template="AnyBlokSystemBlokList",
-                            add_delete=False, add_new=False, add_edit=False)
+        bthumbnails = View.insert(selectable=True,
+                                  mode='Model.UI.View.Thumbnails',
+                                  action=bloks,
+                                  template="AnyBlokSystemBlokThumbnails",
+                                  add_delete=False, add_new=False,
+                                  add_edit=False)
         bform = View.insert(selectable=False, mode='Model.UI.View.Form',
                             action=bloks, template="AnyBlokSystemBlokForm",
                             add_delete=False, add_new=False, add_edit=False)
-        bloks.update({'selected': blist.id})
+        bloks.update({'selected': bthumbnails.id})
         Action.Transition.insert(action=bloks, name='selectRecord',
-                                 mode='Model.UI.View.List',
+                                 mode='Model.UI.View.Thumbnails',
                                  code='open_view', view=bform)
         Action.Transition.insert(action=bloks, name='newRecord',
-                                 mode='Model.UI.View.List',
+                                 mode='Model.UI.View.Thumbnails',
                                  code='open_view', view=bform)
         Menu.insert(label="Bloks", parent=settings, action=bloks)
 
