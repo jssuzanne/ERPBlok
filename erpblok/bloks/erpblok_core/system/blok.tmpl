@@ -1,24 +1,19 @@
 <templates>
-    <template id="AnyBlokSystemBlokList">
-        <field name="name"/>
-        <field name="version"/>
-        <field name="installed_version"/>
-        <field name="state"/>
-    </template>
     <template id="AnyBlokSystemBlokForm">
         <div class="row">
-            <div class="columns large-8 medium-6">
-                <h1><field name="name"/></h1>
-                <label for="short_description"/>
-                <field name="short_description"/>
-            </div>
             <div class="columns large-4 medium-6">
+                <field name="logo" type="Binary"/>
                 <label for="state"/>
                 <field name="state"/>
                 <label for="version"/>
                 <field name="version"/>
                 <label for="installed_version"/>
                 <field name="installed_version" type="Html"/>
+            </div>
+            <div class="columns large-8 medium-6">
+                <h1><field name="name"/></h1>
+                <label for="short_description"/>
+                <field name="short_description"/>
             </div>
         </div>
         <div class="row">
@@ -30,10 +25,11 @@
     </template>
     <template id="AnyBlokSystemBlokThumbnails">
         <div class="row">
-            <div class="columns large-8 medium-6">
-                <h4><field name="name"/></h4>
+            <div class="columns large-7 medium-6">
+                <h5><field name="name"/></h5>
+                <field name="logo" type="Binary"/>
             </div>
-            <div class="columns large-4 medium-6">
+            <div class="columns large-5 medium-6">
                 <label for="state"/>
                 <field name="state"/>
                 <label for="version"/>

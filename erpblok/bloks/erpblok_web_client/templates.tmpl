@@ -131,6 +131,9 @@
             <input id="<%=id%>" name="<%=id%>" type="<%=type%>"/>
         <% } %>
     </template>
+    <template id="ERPBlokViewFieldBinary">
+        <img src="<%=value%>"></img>
+    </template>
     <template id="ERPBlokViewOne2Many">
         <% if (value) { %>
             <% for (var i in value) {%>

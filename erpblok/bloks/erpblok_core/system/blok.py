@@ -1,11 +1,36 @@
 from anyblok import Declarations
+from anyblok.blok import BlokManager
 from docutils.core import publish_programmatically
 from docutils import io
 from rst2html5 import HTML5Writer
+from os.path import join, isfile
+
+
+register = Declarations.register
+System = Declarations.Model.System
+Function = Declarations.Field.Function
 
 
 @Declarations.register(Declarations.Model.System)
 class Blok:
+
+    logo = Function(fget='get_logo')
+
+    def get_logo(self):
+        blok = BlokManager.get(self.name)
+
+        def _get_logo(blok_name, logo_path):
+            path = BlokManager.getPath(blok_name)
+            file_path = join(path, logo_path)
+            if isfile(file_path):
+                return self.registry.UI.Image.filepath2html(file_path)
+            else:
+                return None
+
+        if hasattr(blok, 'logo'):
+            return _get_logo(self.name, blok.logo)
+        else:
+            return _get_logo('erpblok-core', 'static/image/none.png')
 
     def convert_rst2html(self, rst):
         output, _ = publish_programmatically(

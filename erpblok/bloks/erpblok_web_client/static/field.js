@@ -55,6 +55,9 @@ ERPBlok.View.Field.Integer = ERPBlok.View.Field.extend({
         return Number(this._super());
     },
 });
+ERPBlok.View.Field.Binary = ERPBlok.View.Field.extend({
+    template: 'ERPBlokViewFieldBinary',
+})
 ERPBlok.View.Field.Many2One = ERPBlok.View.Field.extend({
     get_render_value: function() {
         if (this.value) return this.value[1][1];

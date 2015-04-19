@@ -8,6 +8,7 @@ requires = [
     'pyramid_mako',
     'lxml',
     'rst2html5',
+    'python-magic',
 ]
 
 ERPBlok = [
