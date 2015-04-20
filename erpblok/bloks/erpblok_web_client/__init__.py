@@ -94,6 +94,10 @@ class ERPBlokWebClient(Blok):
         Action.Transition.insert(action=bloks, name='newRecord',
                                  mode='Model.UI.View.Thumbnails',
                                  code='open_view', view=bform)
+        Action.Button.insert(label='Reload All bloks',
+                             on_readonly=True, action=bloks, mode='all',
+                             function="rpc_call_classmethod",
+                             method='reload_blokmanager')
         Menu.insert(label="Bloks", parent=settings, action=bloks)
 
         access = Menu.insert(label="Access", parent=settings)
@@ -155,6 +159,7 @@ class ERPBlokWebClient(Blok):
         tmpl.compile()
         self.registry.erpblok_views = tmpl
         # TODO check all view template exist
+        # TODO check if view template are not wrong
 
     @classmethod
     def import_declaration_module(cls):

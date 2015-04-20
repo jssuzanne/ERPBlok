@@ -8,6 +8,16 @@ ERPBlok.ActionInterface = ERPBlok.Model.extend({
     update_hash: function (kwargs) {
         console.error('update_hash function must be overloaded');
     },
+    get_hash: function (key) {
+        console.error('get_hash function must be overloaded');
+    },
+    reload: function (keephash) {
+        if (keephash) {
+            location.reload(true)
+        } else {
+            window.location = '/web/client';
+        }
+    },
 });
 ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
     init: function() {
@@ -35,6 +45,9 @@ ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
     },
     update_hash: function (kwargs) {
         this.breadcrumb.update_last_hashtag(kwargs);
+    },
+    get_hash: function (key) {
+        return ERPBlok.hashTagManager.get(key);
     },
 });
 ERPBlok.Action = ERPBlok.Model.extend({

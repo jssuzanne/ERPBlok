@@ -38,7 +38,8 @@
     <template id="ERPBlokViewManagerButton">
         <li>
             <a class="view-button button small <%=visibility%>"
-               data-function="<%=fnct%>"><%=label%></a>
+               data-function="<%=fnct%>"
+               data-method="<%=method%>"><%=label%></a>
         </li>
     </template>
     <template id="ERPBlokViewManagerGroup">
@@ -52,7 +53,8 @@
                 <% for ( var i = 0; i < buttons.length; i++ ) { %>
                     <li>
                         <a class="view-button <%=buttons[i].visibility%>"
-                           data-function="<%=buttons[i].fnct%>"><%=buttons[i].label%></a>
+                           data-function="<%=buttons[i].fnct%>"
+                           data-params="<%=buttons[i].params%>"><%=buttons[i].label%></a>
                     </li>
                 <% } %>
             </ul>

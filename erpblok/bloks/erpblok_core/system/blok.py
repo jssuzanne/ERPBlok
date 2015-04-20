@@ -50,3 +50,11 @@ class Blok:
     def get_long_description(self):
         res = super(Blok, self).get_long_description()
         return self.convert_rst2html(res)
+
+    def install_blok(self):
+        self.registry.upgrade(install=[self.name])
+        return {'action': 'reload', 'keephash': True}
+
+    def uninstall_blok(self):
+        self.registry.upgrade(uninstall=[self.name])
+        return {'action': 'reload', 'keephash': True}

@@ -68,6 +68,21 @@ ERPBlok.View.MultiEntries = ERPBlok.View.extend({
             self.do_search();
         });
     },
+    on_rpc_call_classmethod: function(dataset) {
+        var self = this,
+            entries_primary_keys = [];
+        $.each(this.entries, function(i, line) {
+            if (line.selected) {
+                entries_primary_keys.push(line.id);
+            }
+        });
+        self.rpc('call_classmethod', {model: this.viewManager.action.value.model,
+                                      primary_keys: entries_primary_keys,
+                                      method: dataset.method,
+                                      params: [], kwparams: {}}, function (result) {
+            self.parse_call_result(result);
+        });
+    },
 });
 ERPBlok.View.Entry = ERPBlok.Model.extend({
     template: undefined,

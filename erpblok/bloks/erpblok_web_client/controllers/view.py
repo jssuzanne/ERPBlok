@@ -108,8 +108,25 @@ class View:
             kwparams = dict()
 
         Model = self.registry.get(model)
-        return getattr(Model.from_primary_keys(**primary_keys), method)(
+        res = getattr(Model.from_primary_keys(**primary_keys), method)(
             *params, **kwparams)
+        self.registry.commit()
+        return res
+
+    @PyramidJsonRPC.rpc_method(request_method='POST')
+    def call_classmethod(self, model=None, primary_keys=None, method=None,
+                         params=None, kwparams=None, **kwargs):
+        if params is None:
+            params = tuple()
+
+        if kwparams is None:
+            kwparams = dict()
+
+        Model = self.registry.get(model)
+        res = getattr(Model, method)(
+            primary_keys, *params, **kwparams)
+        self.registry.commit()
+        return res
 
 
 PyramidJsonRPC.add_route(PyramidJsonRPC.View, '/web/client/view')

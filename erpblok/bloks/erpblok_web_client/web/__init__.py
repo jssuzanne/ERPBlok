@@ -1,4 +1,4 @@
-from anyblok import Declarations
+from anyblok import Declarations, reload_module_if_blok_is_reloaded
 from anyblok.blok import BlokManager
 
 
@@ -116,4 +116,5 @@ class Web:
         tmpl.compile()
         return tmpl.get_all_template()
 
-from . import login  # noqa
+from . import login
+reload_module_if_blok_is_reloaded(login)

@@ -10,10 +10,10 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         for (var i in action.value.views) {
             this.add(action.value.views[i]);
         }
-        var view_id = ERPBlok.hashTagManager.get('view');
+        var view_id = action.actionManager.get_hash('view');
         if (view_id) {
             kwargs = {}
-            var pks = ERPBlok.hashTagManager.get('pks');
+            var pks = action.actionManager.get_hash('pks');
             if (pks) {
                 kwargs.id = JSON.parse(pks);
             }
@@ -63,7 +63,7 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
     },
     add_buttons: function(button) {
         var $el = $(tmpl('ERPBlokViewManagerButton', button));
-         $el.appendTo(this.$buttons);
+        $el.appendTo(this.$buttons);
     },
     add_group: function(group) {
         var $el = $(tmpl('ERPBlokViewManagerGroup', group));
@@ -175,8 +175,9 @@ ERPBlok.View = ERPBlok.Model.extend({
         }
         self.applyReadOnly();
         this.viewManager.$buttons.find('.view-button').click(function (e) {
-            var func = e.currentTarget.dataset.function;
-            self['on_' + func]();
+            var func = e.currentTarget.dataset.function,
+                dataset = e.currentTarget.dataset;
+            self['on_' + func](dataset);
         });
     },
     on_edit_view: function() {
@@ -210,6 +211,14 @@ ERPBlok.View = ERPBlok.Model.extend({
         });
     },
     parse_call_result: function(result) {
-        console.log(result);
+        var self = this;
+        $.each(result, function(name, value) {
+            if (name == 'action') {
+                self[value](result);
+            }
+        });
+    },
+    reload: function(params) {
+        this.viewManager.action.actionManager.reload(params.keephash || false);
     },
 });

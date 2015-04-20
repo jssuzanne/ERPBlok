@@ -72,14 +72,19 @@ class View:
             'primary_keys': pks,
         }
 
-    def get_buttons(self, view):
-        # FIXME Add models UI.View.Button
-        # FIXME Add models UI.Action.Button
-        return []
+    def get_buttons(self, view, withoutgroup=True):
+        res = []
+        for button in view.action.buttons:
+            res.append(button.render(withoutgroup=withoutgroup))
+
+        print(res)
+        return res
 
     def get_groups_buttons(self, view):
         # FIXME Add models UI.View.Button.Group
         # FIXME Add models UI.Action.Button.Group
+        # FIXME Add models UI.View.Button
+        # FIXME Add models UI.Action.Button
         return []
 
     def get_transitions(self, view):
@@ -161,6 +166,7 @@ class ViewMultiEntries(Mixin.View):
             'label': 'Delete',
             'visibility': 'on-readonly on-selected',
             'fnct': 'delete_entry',
+            'params': '',
         }
 
     def get_button_new(self):
@@ -168,6 +174,7 @@ class ViewMultiEntries(Mixin.View):
             'label': 'New',
             'visibility': 'on-readonly',
             'fnct': 'new_entry',
+            'params': '',
         }
 
     def get_buttons(self, view):
@@ -294,6 +301,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Edit',
             'visibility': "on-readonly",
             'fnct': 'edit_view',
+            'params': '',
         }
 
     def get_button_save(self):
@@ -301,6 +309,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Save',
             'visibility': 'on-readwrite',
             'fnct': 'save_view',
+            'params': '',
         }
 
     def get_button_cancel(self):
@@ -308,6 +317,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Cancel',
             'visibility': 'on-readwrite',
             'fnct': 'read_view',
+            'params': '',
         }
 
     def get_button_new(self):
@@ -315,6 +325,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'New',
             'visibility': '',
             'fnct': 'new_entry',
+            'params': '',
         }
 
     def get_button_close(self):
@@ -322,12 +333,14 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Close',
             'visibility': "on-readonly",
             'fnct': 'close_view',
+            'params': '',
         }
 
     def get_button_delete(self):
         return {
             'label': 'Delete',
             'fnct': 'delete_entry',
+            'params': '',
         }
 
     def get_buttons(self, view):
@@ -448,24 +461,3 @@ class Thumbnails(Mixin.ViewMultiEntries, Mixin.ViewRenderTemplate):
             'transitions': self.get_transitions(view),
         })
         return res
-
-
-@register(Model.UI.Action)
-class Transition(Mixin.ViewType):
-
-    id = Integer(primary_key=True)
-    name = String(nullable=False)
-    action = Many2One(model=Model.UI.Action, one2many='transitions',
-                      nullable=False)
-    view = Many2One(model=Model.UI.View, nullable=False)
-    code = Selection(selections='get_code_choices', nullable=False)
-
-    @classmethod
-    def get_code_choices(cls):
-        """ Return the View type available
-
-        :rtype: dict(registry name: label)
-        """
-        return {
-            'open_view': 'Open view',
-        }
