@@ -58,3 +58,9 @@ class Blok:
     def uninstall_blok(self):
         self.registry.upgrade(uninstall=[self.name])
         return {'action': 'reload', 'keephash': True}
+
+    @classmethod
+    def reload_blokmanager(cls, *args, **kwargs):
+        cls.registry.close()
+        BlokManager.reload()
+        return {'action': 'reload', 'keephash': True}
