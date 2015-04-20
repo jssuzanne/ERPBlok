@@ -118,8 +118,8 @@
         <xpath action="insert" expression="./div">
             <div class="medium-6 large-3 columns"
                  data-equalizer-watch>
-                <div class="sticker panel callout radius selectable">
-                     <%=options.template%>
+                <div class="sticker panel radius selectable">
+                     <%=tmpl(options.template, {record: record, options: options})%>
                 </div>
             </div>
         </xpath>

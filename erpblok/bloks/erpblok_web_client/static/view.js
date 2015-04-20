@@ -199,4 +199,17 @@ ERPBlok.View = ERPBlok.Model.extend({
     },
     get_values_changed: function () {
     },
+    rpc_call: function(pks, method, params, kwparams) {
+        var self = this;
+        this.rpc('call', {model: this.viewManager.action.value.model,
+                          primary_keys: pks,
+                          method: method,
+                          params: params || new Array(),
+                          kwparams: kwparams || {}}, function (result) {
+            self.parse_call_result(result);
+        });
+    },
+    parse_call_result: function(result) {
+        console.log(result);
+    },
 });

@@ -88,6 +88,12 @@ ERPBlok.View.Entry = ERPBlok.Model.extend({
             'record': this.record,
             'options': this.view.options,
         }));
+        this.$el.find('button').click(function(event) {
+            event.stopPropagation();
+            var func = event.currentTarget.dataset.function;
+            var method = event.currentTarget.dataset.method || undefined;
+            self.view[func](self.id, method);
+        });
         for (var i in this.view.options.fields2display) {
             this.render_field(this.view.options.fields2display[i]);
         }

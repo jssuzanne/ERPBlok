@@ -9,6 +9,9 @@
                 <field name="version"/>
                 <label for="installed_version"/>
                 <field name="installed_version" type="Html"/>
+                <button data-function="call"
+                        data-method="install_blok"
+                        class="small">Install this blok</button>
             </div>
             <div class="columns large-8 medium-6">
                 <h1><field name="name"/></h1>
@@ -27,7 +30,18 @@
         <div class="row">
             <div class="columns large-7 medium-6">
                 <h5><field name="name"/></h5>
-                <field name="logo" type="Binary"/>
+                <field name="logo" type="Binary"></field>
+                <div>
+                    <% if (record.state == 'uninstalled') { %>
+                        <button data-function="rpc_call"
+                                data-method="install_blok"
+                                class="small success">Install this blok</button>
+                    <% } else { %>
+                        <button data-function="rpc_call"
+                                data-method="uninstall_blok"
+                                class="small alert">Uninstall this blok</button>
+                    <% } %>
+                </div>
             </div>
             <div class="columns large-5 medium-6">
                 <label for="state"/>

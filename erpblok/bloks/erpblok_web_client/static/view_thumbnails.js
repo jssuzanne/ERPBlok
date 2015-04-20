@@ -18,7 +18,7 @@ ERPBlok.View.Thumbnails.Sticker = ERPBlok.View.Entry.extend({
     render: function () {
         var self = this;
         this._super();
-        this.$el.find('div.selectable').click(function () {
+        this.$el.find('div.selectable:not(button)').click(function () {
             if (self.view.readonly) {
                 self.view.transition('selectRecord', {id: self.id});
             }
