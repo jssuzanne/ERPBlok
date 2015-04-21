@@ -72,20 +72,31 @@ class View:
             'primary_keys': pks,
         }
 
-    def get_buttons(self, view, withoutgroup=True):
+    def get_buttons(self, view):
         res = []
         for button in view.action.buttons:
-            res.append(button.render(withoutgroup=withoutgroup))
+            if button.mode not in ('all', self.__registry_name__):
+                continue
 
-        print(res)
+            if not button.group:
+                res.append(button.render())
+
         return res
 
     def get_groups_buttons(self, view):
-        # FIXME Add models UI.View.Button.Group
-        # FIXME Add models UI.Action.Button.Group
-        # FIXME Add models UI.View.Button
-        # FIXME Add models UI.Action.Button
-        return []
+        groups = {}
+        for button in view.action.buttons:
+            if button.mode not in ('all', self.__registry_name__):
+                continue
+
+            if button.group:
+                if button.group.label not in groups:
+                    groups[button.group.label] = button.group.render()
+
+                groups[button.group.label]['buttons'].append(
+                    button.render())
+
+        return list(groups.values())
 
     def get_transitions(self, view):
         return {x.name: (x.code, x.view.id)
@@ -166,7 +177,7 @@ class ViewMultiEntries(Mixin.View):
             'label': 'Delete',
             'visibility': 'on-readonly on-selected',
             'fnct': 'delete_entry',
-            'params': '',
+            'method': '',
         }
 
     def get_button_new(self):
@@ -174,7 +185,7 @@ class ViewMultiEntries(Mixin.View):
             'label': 'New',
             'visibility': 'on-readonly',
             'fnct': 'new_entry',
-            'params': '',
+            'method': '',
         }
 
     def get_buttons(self, view):
@@ -301,7 +312,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Edit',
             'visibility': "on-readonly",
             'fnct': 'edit_view',
-            'params': '',
+            'method': '',
         }
 
     def get_button_save(self):
@@ -309,7 +320,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Save',
             'visibility': 'on-readwrite',
             'fnct': 'save_view',
-            'params': '',
+            'method': '',
         }
 
     def get_button_cancel(self):
@@ -317,7 +328,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Cancel',
             'visibility': 'on-readwrite',
             'fnct': 'read_view',
-            'params': '',
+            'method': '',
         }
 
     def get_button_new(self):
@@ -325,7 +336,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'New',
             'visibility': '',
             'fnct': 'new_entry',
-            'params': '',
+            'method': '',
         }
 
     def get_button_close(self):
@@ -333,14 +344,14 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'label': 'Close',
             'visibility': "on-readonly",
             'fnct': 'close_view',
-            'params': '',
+            'method': '',
         }
 
     def get_button_delete(self):
         return {
             'label': 'Delete',
             'fnct': 'delete_entry',
-            'params': '',
+            'method': '',
         }
 
     def get_buttons(self, view):

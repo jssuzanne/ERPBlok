@@ -11,34 +11,12 @@ Boolean = Declarations.Column.Boolean
 Json = Declarations.Column.Json
 
 
-@register(Model.UI.Action)
-class Button(Mixin.ViewType):
-
-    id = Integer(primary_key=True)
+@register(Mixin)
+class UIButton:
     label = String(nullable=False)
     on_readonly = Boolean(default=False)
     on_readwrite = Boolean(default=False)
     on_selected = Boolean(default=False)
-    action = Many2One(model=Model.UI.Action, one2many='buttons',
-                      nullable=False)
-    function = String(nullable=False)
-    method = String()
-
-    @classmethod
-    def get_mode_choices(cls):
-        res = super(Button, cls).get_mode_choices()
-        res['all'] = 'All'
-        return res
-
-    @classmethod
-    def get_code_choices(cls):
-        """ Return the View type available
-
-        :rtype: dict(registry name: label)
-        """
-        return {
-            'open_view': 'Open view',
-        }
 
     def render_visibility(self):
         visibility = []
@@ -53,15 +31,41 @@ class Button(Mixin.ViewType):
 
         return ' '.join(visibility)
 
-    def render(self, withoutgroup=True):
-        res = {
+
+@register(Model.UI.Action)
+class ButtonGroup(Mixin.UIButton):
+
+    code = String(primary_key=True)
+
+    def render(self):
+        return {
+            'label': self.label,
+            'id': self.code,
+            'visibility': self.render_visibility(),
+            'buttons': [],
+        }
+
+
+@register(Model.UI.Action)
+class Button(Mixin.UIButton, Mixin.ViewType):
+
+    id = Integer(primary_key=True)
+    action = Many2One(model=Model.UI.Action, one2many='buttons',
+                      nullable=False)
+    group = Many2One(model=Model.UI.Action.ButtonGroup)
+    function = String(nullable=False)
+    method = String()
+
+    @classmethod
+    def get_mode_choices(cls):
+        res = super(Button, cls).get_mode_choices()
+        res['all'] = 'All'
+        return res
+
+    def render(self):
+        return {
             'label': self.label,
             'fnct': self.function,
             'visibility': self.render_visibility(),
             'method': self.method,
         }
-        if withoutgroup:
-            return res
-
-        res.update({})
-        return res

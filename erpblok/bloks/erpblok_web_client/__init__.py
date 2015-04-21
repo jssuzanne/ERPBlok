@@ -94,8 +94,11 @@ class ERPBlokWebClient(Blok):
         Action.Transition.insert(action=bloks, name='newRecord',
                                  mode='Model.UI.View.Thumbnails',
                                  code='open_view', view=bform)
-        Action.Button.insert(label='Reload All bloks',
-                             on_readonly=True, action=bloks, mode='all',
+        others = Action.ButtonGroup.insert(label='Others',
+                                           code="other",
+                                           on_readonly=True)
+        Action.Button.insert(label='Reload all bloks', action=bloks,
+                             mode='all', group=others,
                              function="rpc_call_classmethod",
                              method='reload_blokmanager')
         Menu.insert(label="Bloks", parent=settings, action=bloks)

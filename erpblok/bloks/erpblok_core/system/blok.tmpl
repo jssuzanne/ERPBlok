@@ -28,8 +28,12 @@
     </template>
     <template id="AnyBlokSystemBlokThumbnails">
         <div class="row">
-            <div class="columns large-7 medium-6">
+            <div class="columns">
                 <h5><field name="name"/></h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns large-7 medium-6">
                 <field name="logo" type="Binary"></field>
                 <div>
                     <% if (record.state == 'uninstalled') { %>

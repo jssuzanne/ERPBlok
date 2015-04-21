@@ -1,5 +1,6 @@
 from anyblok import Declarations
 from anyblok.blok import BlokManager
+from anyblok.registry import RegistryManager
 from docutils.core import publish_programmatically
 from docutils import io
 from rst2html5 import HTML5Writer
@@ -61,6 +62,8 @@ class Blok:
 
     @classmethod
     def reload_blokmanager(cls, *args, **kwargs):
-        cls.registry.close()
-        BlokManager.reload()
+        RegistryManager.clear()  # close all the registry
+        BlokManager.reload()  # reload all the blok code
+        # FIXME BlokManager.reload should close all the registry and
+        # forbidden load registry during the reload
         return {'action': 'reload', 'keephash': True}
