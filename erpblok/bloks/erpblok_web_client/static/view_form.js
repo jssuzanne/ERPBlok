@@ -40,6 +40,11 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         this.$el.children().remove();
         var $el = $(tmpl(this.options.template, values));
         $el.appendTo(this.$el);
+        $el.find('button').click(function(event) {
+            var func = event.currentTarget.dataset.function;
+            var method = event.currentTarget.dataset.method || undefined;
+            self[func](self.args.id, method);
+        });
     },
     get_fields: function() {
         var self = this,

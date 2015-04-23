@@ -56,6 +56,10 @@ class Blok:
         self.registry.upgrade(install=[self.name])
         return {'action': 'reload', 'keephash': True}
 
+    def upgrade_blok(self):
+        self.registry.upgrade(update=[self.name])
+        return {'action': 'reload', 'keephash': True}
+
     def uninstall_blok(self):
         self.registry.upgrade(uninstall=[self.name])
         return {'action': 'reload', 'keephash': True}
