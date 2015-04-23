@@ -374,6 +374,19 @@ class Template:
 
         return res
 
+    def get_elements(self, name):
+        elements = [deepcopy(x) for x in self.known[name]['tmpl']]
+        for el in elements:
+            for el_call in el.findall('.//call'):
+                parent = el_call.getparent()
+                index = parent.index(el_call)
+                tmpl = self.compile_template(el_call.attrib['template'])
+                for child in tmpl.getchildren():
+                    parent.insert(index, deepcopy(child))
+                    index += 1
+
+        return elements
+
     def compile_template(self, name):
         """ compile a specific template
 
@@ -383,14 +396,14 @@ class Template:
             return self.compiled[name]
 
         extend = self.known[name].get('extend')
+        elements = self.get_elements(name)
 
         if extend:
             tmpl = deepcopy(self.compile_template(extend))
             tmpl.set('id', name)
-            elements = self.known[name]['tmpl']
         else:
-            tmpl = deepcopy(self.known[name]['tmpl'][0])
-            elements = self.known[name]['tmpl'][1:]
+            tmpl = elements[0]
+            elements = elements[1:]
 
         self.compiled[name] = tmpl
 
