@@ -90,17 +90,16 @@ ERPBlok.View.Entry = ERPBlok.Model.extend({
         this.view = view;
         this.record = record;
         this.id = {}
-        this.fields = []
         var primary_keys = view.options.primary_keys;
         for (var i in primary_keys) {
             this.id[primary_keys[i]] = record[primary_keys[i]];
         }
     },
-    render: function () {
+    render: function() {
         var self = this;
+        fields = this.get_fields();
         this.$el = $(tmpl(this.template, {
-            'fields': this.view.options.fields2display,
-            'record': this.record,
+            'fields': fields,
             'options': this.view.options,
         }));
         this.$el.find('button').click(function(event) {
@@ -109,16 +108,7 @@ ERPBlok.View.Entry = ERPBlok.Model.extend({
             var method = event.currentTarget.dataset.method || undefined;
             self.view[func](self.id, method);
         });
-        for (var i in this.view.options.fields2display) {
-            this.render_field(this.view.options.fields2display[i]);
-        }
     },
-    appendToEntry: function(field, obj) {
-    },
-    render_field: function(obj) {
-        var field = this.view.get_field_cls(obj);
-        this.fields.push(field);
-        field.render(this.record[obj.id], true);
-        this.appendToEntry(field, obj);
+    get_fields: function () {
     },
 });

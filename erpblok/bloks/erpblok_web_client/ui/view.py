@@ -126,16 +126,75 @@ class ViewRenderTemplate:
             for k, v in el.attrib.items():
                 self.get_template_replace_field_attribute(
                     k, v, fields_description[el_name])
+                if k != 'type':
+                    div.set(k, v)
+
+            div.text = '%(sop)s=fields.%(fname)s.render()%(eop)s' % dict(
+                sop='__start_value_operator__', fname=el_name,
+                eop='__end_value_operator__')
 
             return div
 
         return None
+
+    def get_template_replace_expr(self, el, fields_description):
+
+        def replace(attrib, head, tail, notailifnextin=None):
+            if notailifnextin is None:
+                notailifnextin = []
+
+            el.tag = 'div'
+            del el.attrib[attrib]
+            index = el.getparent().getchildren().index(el)
+            if index == 0:
+                el.getparent().text += head
+            else:
+                if el.getparent().getchildren()[index - 1].tail:
+                    el.getparent().getchildren()[index - 1].tail += head
+                else:
+                    el.getparent().getchildren()[index - 1].tail = head
+
+            if index != (len(el.getparent().getchildren()) - 1):
+                nextel = el.getparent().getchildren()[index + 1]
+                if nextel.tag == 'expr':
+                    for expr in notailifnextin:
+                        if expr in nextel.attrib.keys():
+                            return
+
+            if el.tail:
+                el.tail = tail + el.tail
+            else:
+                el.tail = tail
+
+        endop = '%(sop)s } %(eop)s' % dict(sop='__start_value_operator__',
+                                           eop='__end_value_operator__')
+
+        for k, v in el.attrib.items():
+            if k == "if":
+                head = '%(sop)s if (%(expr)s) { %(eop)s' % dict(
+                    sop='__start_value_operator__', expr=v,
+                    eop='__end_value_operator__')
+                replace(k, head, endop, notailifnextin=('else', 'elif'))
+
+            elif k == "else":
+                head = '%(sop)s } else { %(eop)s' % dict(
+                    sop='__start_value_operator__',
+                    eop='__end_value_operator__')
+                replace(k, head, endop)
+            elif k == "elif":
+                head = '%(sop)s } else if (%(expr)s) { %(eop)s' % dict(
+                    sop='__start_value_operator__', expr=v,
+                    eop='__end_value_operator__')
+                replace(k, head, endop, notailifnextin=('else', 'elif'))
 
     def get_template_replace(self, tmpl, fields_description):
         for node in tmpl.getchildren():
             if node.tag is etree.Comment:
                 continue
             else:
+                if node.getchildren():
+                    self.get_template_replace(node, fields_description)
+
                 tag = node.tag.lower()
                 if hasattr(self, 'get_template_replace_' + tag):
                     el = getattr(self, 'get_template_replace_' + tag)(
@@ -143,9 +202,6 @@ class ViewRenderTemplate:
 
                     if el is not None:
                         tmpl.replace(node, el)
-
-                if node.getchildren():
-                    self.get_template_replace(node, fields_description)
 
     def get_template(self, view):
         Model = self.registry.get(view.action.model)
@@ -423,15 +479,18 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
                 continue
 
             _label = etree.SubElement(root, 'label')
-            _label.set('for', value['id'])
+            _label.set('for', name)
             _label.text = value['label']
-            field = etree.SubElement(root, 'div')
-            field.set('id', value['id'])
+            field = etree.SubElement(root, 'field')
+            field.set('name', name)
+
+        self.get_template_replace(root, fields)
 
         return {
             'id': self.id,
             'mode': 'Form',
-            'template': etree.tostring(root).decode('utf-8'),
+            'template': self.registry.erpblok_views.decode(
+                html.tostring(root).decode('utf-8')),
             'primary_keys': pks,
             'fields': [x for x in fields.keys() if x not in pks],
             'fields2display': [x for y, x in fields.items() if y not in pks],

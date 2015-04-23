@@ -90,7 +90,6 @@ ERPBlok.View = ERPBlok.Model.extend({
     getViewEl: function() {
         var $el = $(tmpl('ERPBlokView',
                     {id: this.options.id, class_name: this.class_name}));
-        if (this.options.template) $(this.options.template).appendTo($el);
         this.$el = $el;
         return $el;
     },

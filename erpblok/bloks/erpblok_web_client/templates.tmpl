@@ -106,7 +106,9 @@
                 </td>
             <% } %>
             <% for ( var i = 0; i < fields.length; i++) { %>
-                <td id="<%=fields[i].id%>" class="selectable"/>
+                <td id="<%=fields[i].options.id%>" class="selectable">
+                    <%=fields[i].render()%>
+                </td>
             <% } %>
         </tr>
     </template>
@@ -121,7 +123,7 @@
             <div class="medium-6 large-3 columns"
                  data-equalizer-watch>
                 <div class="sticker panel radius selectable">
-                     <%=tmpl(options.template, {record: record, options: options})%>
+                     <%=tmpl(options.template, {fields: fields, options: options})%>
                 </div>
             </div>
         </xpath>
@@ -138,9 +140,11 @@
     </template>
     <template id="ERPBlokViewOne2Many">
         <% if (value) { %>
-            <% for (var i in value) {%>
-                <tr><td><%=value[i][1]%></td></tr>
-            <% } %>
+            <ul>
+                <% for (var i in value) {%>
+                    <li><span class="label round"><%=value[i][1]%></span></li>
+                <% } %>
+            </ul>
         <% } else {%>
             <span/>
         <% } %>

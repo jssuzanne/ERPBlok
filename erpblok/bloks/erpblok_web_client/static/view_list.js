@@ -67,7 +67,14 @@ ERPBlok.View.List.Line = ERPBlok.View.Entry.extend({
             }
         });
     },
-    appendToEntry: function(field, obj) {
-        field.$el.appendTo(this.$el.find('td#' + obj.id))
+    get_fields: function () {
+        var self = this,
+            fields = [];
+        $.each(this.view.options.fields2display, function (i, field) {
+            var f  = self.view.get_field_cls(field);
+            f.set_value(self.record[field.id]);
+            fields.push(f);
+        });
+        return fields;
     },
 });

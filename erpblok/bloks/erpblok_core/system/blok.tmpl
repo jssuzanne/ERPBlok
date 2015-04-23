@@ -1,6 +1,7 @@
 <templates>
     <template id="AnyBlokSystemBlokForm">
         <div class="row">
+            <h1><field name="name"/></h1>
             <div class="columns large-4 medium-6">
                 <field name="logo" type="Binary"/>
                 <label for="state"/>
@@ -9,12 +10,23 @@
                 <field name="version"/>
                 <label for="installed_version"/>
                 <field name="installed_version" type="Html"/>
-                <button data-function="call"
-                        data-method="install_blok"
-                        class="small">Install this blok</button>
+                <expr if="fields.state.get_value() == 'uninstalled'">
+                    <button data-function="rpc_call"
+                            data-method="install_blok"
+                            class="small success">Install this blok</button>
+                </expr>
+                <expr else>
+                    <button data-function="rpc_call"
+                            data-method="uninstall_blok"
+                            class="small alert">Uninstall this blok</button>
+                    <expr if="fields.version.get_value() != fields.installed_version.get_value()">
+                        <button data-function="rpc_call"
+                                data-method="upgrade_blok"
+                                class="small">Upgrade this blok</button>
+                    </expr>
+                </expr>
             </div>
             <div class="columns large-8 medium-6">
-                <h1><field name="name"/></h1>
                 <label for="short_description"/>
                 <field name="short_description"/>
             </div>
@@ -35,23 +47,33 @@
         <div class="row">
             <div class="columns large-7 medium-6">
                 <field name="logo" type="Binary"></field>
-                <div>
-                    <% if (record.state == 'uninstalled') { %>
+                <expr if="fields.state.get_value() == 'uninstalled'">
+                    <button data-function="rpc_call"
+                            data-method="install_blok"
+                            class="small success">Install this blok</button>
+                </expr>
+                <expr else>
+                    <button data-function="rpc_call"
+                            data-method="uninstall_blok"
+                            class="small alert">Uninstall this blok</button>
+                    <expr if="fields.version.get_value() != fields.installed_version.get_value()">
                         <button data-function="rpc_call"
-                                data-method="install_blok"
-                                class="small success">Install this blok</button>
-                    <% } else { %>
-                        <button data-function="rpc_call"
-                                data-method="uninstall_blok"
-                                class="small alert">Uninstall this blok</button>
-                    <% } %>
-                </div>
+                                data-method="upgrade_blok"
+                                class="small">Upgrade this blok</button>
+                    </expr>
+                </expr>
             </div>
             <div class="columns large-5 medium-6">
                 <label for="state"/>
                 <field name="state"/>
-                <label for="version"/>
-                <field name="version"/>
+                <expr if="fields.version.get_value() != fields.installed_version.get_value()">
+                    <label for="version"/>
+                    <field name="version"/>
+                </expr>
+                <expr if="fields.state.get_value() != 'uninstalled'">
+                    <label for="installed_version"/>
+                    <field name="installed_version"/>
+                </expr>
             </div>
         </div>
     </template>

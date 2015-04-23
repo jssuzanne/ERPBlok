@@ -6,16 +6,7 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
         this.options = options;
         this.changed = false;
     },
-    render: function(value, forced) {
-        if (value || forced) this.set_value(value);
-        var $el = this._render();
-        if (this.$el) this.$el.replaceWith($el);  // update the html
-        this.$el = $el;
-    },
-    is_readonly: function () {
-        return this.options.readonly || this.view.readonly || false;
-    },
-    _render: function () {
+    render: function() {
         var readonly = this.is_readonly();
         var value = this.get_render_value();
         var values = $.extend({}, {
@@ -23,14 +14,21 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
             type: this.type},
             this.options,
             {value: value})
-        var $el =  $(tmpl(this.template, values));
-        if (! readonly) this._render_init_input($el, value);
-        return $el
+        var html = tmpl(this.template, values);
+        if (! readonly) this._render_init_input($(html), value);
+        return html;
+    },
+    is_readonly: function () {
+        return this.options.readonly || this.view.readonly || false;
     },
     _render_init_input: function($el, value) {
+        debugger
         var self = this;
         $el.val(value);
-        $el.change(function () {self.changed = true;})
+        $el.change(function () {
+            debugger
+            self.changed = true;
+        })
     },
     set_value: function(value) {
         this.value = value;

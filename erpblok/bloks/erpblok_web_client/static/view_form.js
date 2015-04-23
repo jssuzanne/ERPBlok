@@ -31,20 +31,28 @@ ERPBlok.View.Form = ERPBlok.View.extend({
         }
     },
     render_record: function(record) {
-        var self = this;
-        $.each(this.options.fields2display, function(i, item) {
-            var node = self.$el.find('#' + item.id),
-                field = self.get_field_cls(item);
-            node.children().remove();
-            self.fields.push(field);
-            field.render(record[item.id], true);
-            field.$el.appendTo(node);
+        this.record = record;
+        var self = this,
+            values = {
+                fields: this.get_fields(),
+                options: this.options,
+            };
+        this.$el.children().remove();
+        var $el = $(tmpl(this.options.template, values));
+        $el.appendTo(this.$el);
+    },
+    get_fields: function() {
+        var self = this,
+            fields = {};
+        $.each(this.options.fields2display, function(i, field) {
+            var f = self.get_field_cls(field);
+            f.set_value(self.record[field.id]);
+            fields[field.id] = f;
         });
+        return fields;
     },
     refresh_render: function () {
-        $.each(this.fields, function (i, field) {
-            field.render();
-        });
+        self.render_record(this.record);
     },
     on_save_view: function () {
         var self = this;

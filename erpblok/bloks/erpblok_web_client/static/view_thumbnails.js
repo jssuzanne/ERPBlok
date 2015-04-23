@@ -12,9 +12,6 @@ ERPBlok.View.Thumbnails = ERPBlok.View.MultiEntries.extend({
 });
 ERPBlok.View.Thumbnails.Sticker = ERPBlok.View.Entry.extend({
     template: 'ERPBlokViewThumbnailsSticker',
-    appendToEntry: function(field, obj) {
-        field.$el.appendTo(this.$el.find('#' + obj.id))
-    },
     render: function () {
         var self = this;
         this._super();
@@ -23,5 +20,15 @@ ERPBlok.View.Thumbnails.Sticker = ERPBlok.View.Entry.extend({
                 self.view.transition('selectRecord', {id: self.id});
             }
         });
+    },
+    get_fields: function () {
+        var self = this,
+            fields = {};
+        $.each(this.view.options.fields2display, function (i, field) {
+            var f  = self.view.get_field_cls(field);
+            f.set_value(self.record[field.id]);
+            fields[field.id] = f;
+        });
+        return fields;
     },
 });
