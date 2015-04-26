@@ -36,6 +36,8 @@ setup(
         'console_scripts': [
             'erpblok=erpblok.scripts:wsgi',
             'erpblok_interpretor=erpblok.scripts:interpreter',
+            'erpblok_createdb=erpblok.scripts:erpblok_createdb',
+            'erpblok_nose=erpblok.scripts:erpblok_nose',
         ],
         'ERPBlok': ERPBlok,
     },
