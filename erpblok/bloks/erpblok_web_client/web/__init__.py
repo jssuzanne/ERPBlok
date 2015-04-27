@@ -69,7 +69,8 @@ class Web:
         """
         QuickMenu = cls.registry.UI.QuickMenu
         # FIXME action is not a column but a relation ship (get_user_menu)
-        query = query2 = QuickMenu.query('function', 'action', 'menu', 'icon', 'title')
+        query = query2 = QuickMenu.query('function', 'action', 'menu', 'icon',
+                                         'title')
         query = query.filter(QuickMenu.with_user())
         query2 = query2.filter(QuickMenu.without_group())
         query.union_all(query2)

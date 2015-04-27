@@ -104,7 +104,8 @@ class ERPBlokWebClient(Blok):
         Menu.insert(label="Bloks", parent=settings, action=bloks)
 
         access = Menu.insert(label="Access", parent=settings)
-        group = Action.insert(label="Access groups", model='Model.Access.Group')
+        group = Action.insert(label="Access groups",
+                              model='Model.Access.Group')
         Menu.insert(label='Groups', parent=access, action=group)
         login = Action.insert(label="Access logins", model='Model.Web.Login')
         Menu.insert(label='Logins', parent=access, action=login)

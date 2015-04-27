@@ -36,7 +36,8 @@ class View:
                 return model, [x.field_render() for x in value]
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
-    def get_entries(self, model=None, primary_keys=None, fields=None, **kwargs):
+    def get_entries(self, model=None, primary_keys=None, fields=None,
+                    **kwargs):
         Model = self.registry.get(model)
         query = Model.query()
         return [{x: self.get_field_value(y, x) for x in primary_keys + fields}
