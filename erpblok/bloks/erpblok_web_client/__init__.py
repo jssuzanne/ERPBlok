@@ -72,36 +72,8 @@ class ERPBlokWebClient(Blok):
         # TODO replace IT by an csv import
         Menu = self.registry.UI.Menu
         Action = self.registry.UI.Action
-        View = self.registry.UI.View
 
         settings = Menu.insert(label='Settings')
-
-        bloks = Action.insert(label='Bloks', model='Model.System.Blok',
-                              add_delete=False, add_new=False, add_edit=False)
-        bthumbnails = View.insert(selectable=True,
-                                  mode='Model.UI.View.Thumbnails',
-                                  action=bloks,
-                                  template="AnyBlokSystemBlokThumbnails",
-                                  add_delete=False, add_new=False,
-                                  add_edit=False)
-        bform = View.insert(selectable=False, mode='Model.UI.View.Form',
-                            action=bloks, template="AnyBlokSystemBlokForm",
-                            add_delete=False, add_new=False, add_edit=False)
-        bloks.update({'selected': bthumbnails.id})
-        Action.Transition.insert(action=bloks, name='selectRecord',
-                                 mode='Model.UI.View.Thumbnails',
-                                 code='open_view', view=bform)
-        Action.Transition.insert(action=bloks, name='newRecord',
-                                 mode='Model.UI.View.Thumbnails',
-                                 code='open_view', view=bform)
-        others = Action.ButtonGroup.insert(label='Others',
-                                           code="other",
-                                           on_readonly=True)
-        Action.Button.insert(label='Reload all bloks', action=bloks,
-                             mode='all', group=others,
-                             function="rpc_call_classmethod",
-                             method='reload_blokmanager')
-        Menu.insert(label="Bloks", parent=settings, action=bloks)
 
         access = Menu.insert(label="Access", parent=settings)
         group = Action.insert(label="Access groups",

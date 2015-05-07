@@ -34,6 +34,7 @@ class ViewType:
 class View(Mixin.ViewType):
 
     id = Integer(primary_key=True)
+    order = Integer(sequence='ui__view_order_seq', nullable=False)
     selectable = Boolean(default=False)
     action = Many2One(model=Model.UI.Action, one2many='views', nullable=False)
     template = String(nullable=False)

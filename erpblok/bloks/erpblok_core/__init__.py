@@ -1,4 +1,5 @@
-from anyblok.blok import Blok
+from anyblok.blok import Blok, BlokManager
+from os.path import join
 
 
 class ERPBlokCore(Blok):
@@ -8,6 +9,7 @@ class ERPBlokCore(Blok):
 
     required = [
         'erpblok-web-client',
+        'anyblok-io-xml',
     ]
 
     views = [
@@ -22,3 +24,10 @@ class ERPBlokCore(Blok):
     def reload_declaration_module(cls, reload):
         from . import system
         reload(system)
+
+    def update(self, latest_version):
+        blok_path = BlokManager.getPath('erpblok-core')
+        with open(join(blok_path, 'menu.xml'), 'r') as fp:
+            importer = self.registry.IO.Importer.XML.insert(
+                model='Model.UI.Menu', file_to_import=fp.read().encode('utf-8'))
+            importer.run()

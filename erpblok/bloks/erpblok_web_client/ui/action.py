@@ -27,6 +27,13 @@ class Action:
         if not self.views:
             selected, views = self.registry.UI.View.render_from_scratch(self)
         else:
+            if not selected:
+                selectables = [(v.order, v.id)
+                               for v in self.views
+                               if v.selectable]
+                selectables.sort()
+                selected = self.selected = selectables[0][1]
+
             views = self.views.render()
 
         return {
