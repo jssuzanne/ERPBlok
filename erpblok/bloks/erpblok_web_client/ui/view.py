@@ -124,16 +124,17 @@ class ViewRenderTemplate:
         if el_name in fields_description:
             div = etree.Element('div')
             div.set('id', el_name)
+            _class = ["field"]
             for k, v in el.attrib.items():
                 self.get_template_replace_field_attribute(
                     k, v, fields_description[el_name])
-                if k != 'type':
+                if k not in ('type', 'class'):
                     div.set(k, v)
 
-            div.text = '%(sop)s=fields.%(fname)s.render()%(eop)s' % dict(
-                sop='__start_value_operator__', fname=el_name,
-                eop='__end_value_operator__')
+                if k == "class":
+                    _class.extend(v.split(' '))
 
+            div.set('class', ' '.join(_class))
             return div
 
         return None

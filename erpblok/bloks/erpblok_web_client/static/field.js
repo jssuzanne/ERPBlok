@@ -14,19 +14,16 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
             type: this.type},
             this.options,
             {value: value})
-        var html = tmpl(this.template, values);
-        if (! readonly) this._render_init_input($(html), value);
-        return html;
+        this.$el = $(tmpl(this.template, values));
+        if (! readonly) this._render_init_input(value);
     },
     is_readonly: function () {
         return this.options.readonly || this.view.readonly || false;
     },
-    _render_init_input: function($el, value) {
-        debugger
+    _render_init_input: function(value) {
         var self = this;
-        $el.val(value);
-        $el.change(function () {
-            debugger
+        this.$el.val(value);
+        this.$el.change(function () {
             self.changed = true;
         })
     },

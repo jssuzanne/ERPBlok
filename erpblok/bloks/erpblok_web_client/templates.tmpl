@@ -106,8 +106,8 @@
                 </td>
             <% } %>
             <% for ( var i = 0; i < fields.length; i++) { %>
-                <td id="<%=fields[i].options.id%>" class="selectable">
-                    <%=fields[i].render()%>
+                <td id="<%=fields[i]%>" class="selectable">
+                    <div id="<%=fields[i]%>" class="field"></div>
                 </td>
             <% } %>
         </tr>

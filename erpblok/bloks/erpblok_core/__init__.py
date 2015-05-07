@@ -1,5 +1,4 @@
-from anyblok.blok import Blok, BlokManager
-from os.path import join
+from anyblok.blok import Blok
 
 
 class ERPBlokCore(Blok):
@@ -26,8 +25,5 @@ class ERPBlokCore(Blok):
         reload(system)
 
     def update(self, latest_version):
-        blok_path = BlokManager.getPath('erpblok-core')
-        with open(join(blok_path, 'menu.xml'), 'r') as fp:
-            importer = self.registry.IO.Importer.XML.insert(
-                model='Model.UI.Menu', file_to_import=fp.read().encode('utf-8'))
-            importer.run()
+        super(ERPBlokCore, self).update(latest_version)
+        self.import_cfg_file('xml', 'Model.UI.Menu', 'menu.xml')

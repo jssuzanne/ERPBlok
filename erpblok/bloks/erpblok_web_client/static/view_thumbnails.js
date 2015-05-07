@@ -21,14 +21,4 @@ ERPBlok.View.Thumbnails.Sticker = ERPBlok.View.Entry.extend({
             }
         });
     },
-    get_fields: function () {
-        var self = this,
-            fields = {};
-        $.each(this.view.options.fields2display, function (i, field) {
-            var f  = self.view.get_field_cls(field);
-            f.set_value(self.record[field.id]);
-            fields[field.id] = f;
-        });
-        return fields;
-    },
 });

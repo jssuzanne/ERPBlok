@@ -67,14 +67,11 @@ ERPBlok.View.List.Line = ERPBlok.View.Entry.extend({
             }
         });
     },
-    get_fields: function () {
-        var self = this,
-            fields = [];
-        $.each(this.view.options.fields2display, function (i, field) {
-            var f  = self.view.get_field_cls(field);
-            f.set_value(self.record[field.id]);
-            fields.push(f);
+    get_values_for_template: function() {
+        var fields = [];
+        $.each(this.fields, function (name, field) {
+            fields.push(name);
         });
-        return fields;
+        return {fields: fields, options: this.view.options}
     },
 });

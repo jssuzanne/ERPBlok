@@ -97,11 +97,20 @@ ERPBlok.View.Entry = ERPBlok.Model.extend({
     },
     render: function() {
         var self = this;
-        fields = this.get_fields();
-        this.$el = $(tmpl(this.template, {
-            'fields': fields,
-            'options': this.view.options,
-        }));
+        this.fields = this.get_fields();
+        this.$el = $(tmpl(this.template, this.get_values_for_template()));
+        // two way (first)
+        var two_way_link = {};
+        $.each(this.fields, function(id, field) {
+            var key = 'div#' + id + '.field';
+            var $field = self.$el.find(key);
+            two_way_link[id] = {parents: $field, field: field}
+        });
+        // two way (2nd)
+        $.each(two_way_link, function(id, field) {
+            field.field.render();
+            field.field.$el.appendTo(field.parents);
+        });
         this.$el.find('button').click(function(event) {
             event.stopPropagation();
             var func = event.currentTarget.dataset.function;
@@ -110,5 +119,16 @@ ERPBlok.View.Entry = ERPBlok.Model.extend({
         });
     },
     get_fields: function () {
+        var self = this,
+            fields = {};
+        $.each(this.view.options.fields2display, function (i, field) {
+            var f  = self.view.get_field_cls(field);
+            f.set_value(self.record[field.id]);
+            fields[field.id] = f;
+        });
+        return fields;
+    },
+    get_values_for_template: function() {
+        return {fields: this.fields, options: this.view.options}
     },
 });

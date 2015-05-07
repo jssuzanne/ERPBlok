@@ -33,13 +33,27 @@ ERPBlok.View.Form = ERPBlok.View.extend({
     render_record: function(record) {
         this.record = record;
         var self = this,
+            fields = this.get_fields(),
             values = {
-                fields: this.get_fields(),
+                fields: fields,
                 options: this.options,
             };
         this.$el.children().remove();
         var $el = $(tmpl(this.options.template, values));
         $el.appendTo(this.$el);
+
+        // two way (first)
+        var two_way_link = {};
+        $.each(fields, function(id, field) {
+            var key = 'div#' + id + '.field';
+            var $field = $el.find(key);
+            two_way_link[id] = {parents: $field, field: field}
+        });
+        // two way (2nd)
+        $.each(two_way_link, function(id, field) {
+            field.field.render();
+            field.field.$el.appendTo(field.parents);
+        });
         $el.find('button').click(function(event) {
             var func = event.currentTarget.dataset.function;
             var method = event.currentTarget.dataset.method || undefined;
@@ -53,11 +67,12 @@ ERPBlok.View.Form = ERPBlok.View.extend({
             var f = self.get_field_cls(field);
             f.set_value(self.record[field.id]);
             fields[field.id] = f;
+            self.fields.push(f);
         });
         return fields;
     },
     refresh_render: function () {
-        self.render_record(this.record);
+        this.render_record(this.record);
     },
     on_save_view: function () {
         var self = this;
@@ -68,9 +83,7 @@ ERPBlok.View.Form = ERPBlok.View.extend({
                                values: values,
                                fields: this.options.fields}, function (record) {
             if (record) {
-                $.each(self.fields, function (i, field) {
-                    field.render(record[field.options.id])
-                });
+                self.render_record(record);
                 if (!self.args.id){
                     self.args.id = {};
                     $.each(self.options.primary_keys, function(i, pk) {
