@@ -1,6 +1,9 @@
 from anyblok import Declarations
 from anyblok._argsparse import ArgsParseManager
-from pyramid.httpexceptions import HTTPForbidden, HTTPFound, HTTPNotFound
+from pyramid.httpexceptions import (HTTPForbidden,
+                                    HTTPFound,
+                                    HTTPNotFound,
+                                    HTTPUnauthorized)
 from pyramid.response import Response
 from .common import list_databases, create_database, drop_database, login_user
 
@@ -24,6 +27,12 @@ def check_allow_database_manager():
         raise HTTPNotFound()
 
 
+def check_db_manager_password(password):
+    db_manager_password = ArgsParseManager.get('db_manager_password')
+    if password != db_manager_password:
+        raise HTTPUnauthorized()
+
+
 @Declarations.Pyramid.add_view('database',
                                renderer='erpblok:templates/database.mak')
 def get_database(request):
@@ -31,11 +40,15 @@ def get_database(request):
 
     check_allow_database_manager()
     title = ArgsParseManager.get('app_name', 'ERPBlok')
-    return {'title': title}
+    demo = ArgsParseManager.get('db_manager_demo')
+    blok_manager = ArgsParseManager.get('db_manager_blok_manager')
+    return {'title': title, 'demo': demo, 'blok_manager': blok_manager}
 
 
 @Declarations.Pyramid.add_view('database-createdb')
-def post_create_database(request, database=None, login=None, password=None):
+def post_create_database(request, database=None, login=None, password=None,
+                         db_manager_password=None, blok_manager=None,
+                         demo=None):
     """ Create a new database, and initialize it
 
     :param database: name of the database to create
@@ -44,23 +57,36 @@ def post_create_database(request, database=None, login=None, password=None):
     :rtype: Redirection to the client
     """
     check_allow_database_manager()
+    check_db_manager_password(db_manager_password)
     if database in list_databases():
         return HTTPForbidden()
 
     registry = create_database(database)
     registry.Web.Login.update_admin(login, password)
     registry.commit()
+    bloks_to_install = []
+    if blok_manager == 'true':
+        bloks_to_install.append('erpblok-blok-manager')
+
+    if demo == 'true':
+        bloks_to_install.append('erpblok-demo')
+
+    if bloks_to_install:
+        registry.upgrade(install=bloks_to_install)
+        registry.commit()
+
     login_user(request, database, login, password)
     return Response(request.route_url('web-client'))
 
 
 @Declarations.Pyramid.add_view('database-dropdb')
-def post_drop_database(request, database):
+def post_drop_database(request, database=None, db_manager_password=None):
     """ Drop the database
 
     :param database: database name to drop
     """
     check_allow_database_manager()
+    check_db_manager_password(db_manager_password)
     drop_database(database)
     return HTTPFound(location=request.route_url('database'))
 

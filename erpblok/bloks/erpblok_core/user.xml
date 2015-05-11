@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+    <record external_id="main_admin_user">
+        <field name="last_name">Administrator</field>
+        <field name="login">
+             <field name="login">admin</field>
+             <field name="password">admin</field>
+        </field>
+    </record>
+</records>

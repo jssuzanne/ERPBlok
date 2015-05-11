@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+    <record external_id="group_administration">
+        <field name="name">administration</field>
+        <field name="label">Administration</field>
+    </record>
+</records>

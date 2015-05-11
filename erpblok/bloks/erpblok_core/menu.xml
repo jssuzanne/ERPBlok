@@ -3,52 +3,34 @@
     <record external_id="menu_setting">
         <field name="label">Settings</field>
         <field name="children">
-            <record external_id="menu_setting_blok">
-                <field name="label">Bloks</field>
-                <field name="action" external_id="action_setting_blok">
-                    <field name="model">Model.System.Blok</field>
-                    <field name="label">Bloks</field>
-                    <field name="add_delete">0</field>
-                    <field name="add_new">0</field>
-                    <field name="add_edit">0</field>
-                    <field name="views">
-                        <record external_id="view_blok_thumbnails">
-                            <field name="selectable">1</field>
-                            <field name="mode">Model.UI.View.Thumbnails</field>
-                            <field name="template">AnyBlokSystemBlokThumbnails</field>
-                        </record>
-                        <record external_id="view_blok_form">
-                            <field name="mode">Model.UI.View.Form</field>
-                            <field name="template">AnyBlokSystemBlokForm</field>
-                        </record>
-                    </field>
-                    <field name="transitions">
-                        <record>
-                            <field name="name">selectRecord</field>
-                            <field name="mode">Model.UI.View.Thumbnails</field>
-                            <field name="code">open_view</field>
-                            <field name="view" external_id="view_blok_form"/>
-                        </record>
-                        <record>
-                            <field name="name">newRecord</field>
-                            <field name="mode">Model.UI.View.Thumbnails</field>
-                            <field name="code">open_view</field>
-                            <field name="view" external_id="view_blok_form"/>
-                        </record>
-                    </field>
-                    <field name="buttons">
-                        <record>
-                            <field name="group">
-                                <field name="label">Others</field>
-                                <field name="code">others</field>
-                                <field name="on_readonly">1</field>
-                            </field>
-                            <field name="label">Relad all bloks</field>
-                            <field name="mode">all</field>
-                            <field name="function">rpc_call_classmethod</field>
-                            <field name="method">reload_blokmanager</field>
-                        </record>
-                    </field>
+            <record>
+                <field name="label">Access</field>
+                <field name="children">
+                    <record>
+                        <field name="label">Groups</field>
+                        <field name="action" external_id="action_group"/>
+                    </record>
+                    <record>
+                        <field name="label">Logins</field>
+                        <field name="action" external_id="action_login"/>
+                    </record>
+                    <record>
+                        <field name="label">Users</field>
+                        <field name="action" external_id="action_user"/>
+                    </record>
+                </field>
+            </record>
+            <record>
+                <field name="label">Configurations</field>
+                <field name="children">
+                    <record>
+                        <field name="label">Sequence</field>
+                        <field name="action" external_id="action_sequence"/>
+                    </record>
+                    <record>
+                        <field name="label">Parameters</field>
+                        <field name="action" external_id="action_parameter"/>
+                    </record>
                 </field>
             </record>
         </field>

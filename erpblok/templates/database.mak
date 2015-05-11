@@ -48,6 +48,11 @@
                             <div id="error2" data-alert class="hide alert-box alert radius text-center">
                                 The password and the confirmation of the password are different
                             </div>
+                            <div id="error3" data-alert class="hide alert-box alert radius text-center">
+                                Wrong database manager password
+                            </div>
+                            <label for="db_manager_password">Passord for database manager</label>
+                            <input id="db_manager_password" type="password" required/>
                             <div id="create">
                                 <label for="database">Name of the database</label>
                                 <input id="database" type="text" required/>
@@ -57,6 +62,11 @@
                                 <input id="password" type="password" required/>
                                 <label for="password2">Confirm the password of the administrator</label>
                                 <input id="password2" type="password" required/>
+                                <input id="db_manager_blok_manager" type="checkbox" default-value="${blok_manager}"/>
+                                <label for="db_manager_blok_manager">Install blok manager</label>
+                                <br/>
+                                <input id="db_manager_demo" type="checkbox" default-value="${demo}"/>
+                                <label for="db_manager_demo">Install demo bloks</label>
                                 <a id="submit-create" class="button right radius" href="#">Create</a>
                             </div>
                             <div id="drop" class="hide">

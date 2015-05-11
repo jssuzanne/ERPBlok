@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+    <record external_id="user_demo">
+        <field name="first_name">User</field>
+        <field name="last_name">Demo</field>
+        <field name="login">
+             <field name="login">demo</field>
+             <field name="password">demo</field>
+        </field>
+    </record>
+</records>

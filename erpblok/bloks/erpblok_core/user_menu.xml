@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+    <record external_id="user_menu_do_about">
+        <field name="label">About</field>
+        <field name="icon">fi-info</field>
+        <field name="function">do_about</field>
+    </record>
+    <record external_id="user_menu_logout">
+        <field name="label">Log out</field>
+        <field name="order">1000</field>
+        <field name="function">do_logout</field>
+    </record>
+</records>

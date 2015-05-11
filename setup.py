@@ -14,6 +14,9 @@ requires = [
 ERPBlok = [
     'erpblok-core=erpblok.bloks.erpblok_core:ERPBlokCore',
     'erpblok-web-client=erpblok.bloks.erpblok_web_client:ERPBlokWebClient',
+    'erpblok-demo=erpblok.bloks.erpblok_demo:ERPBlokDemo',
+    'erpblok-debug=erpblok.bloks.erpblok_debug:ERPBlokDebug',
+    'erpblok-blok-manager=erpblok.bloks.blok_manager:ERPBlokBlokManager',
 ]
 
 setup(
