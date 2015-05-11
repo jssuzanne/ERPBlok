@@ -31,7 +31,7 @@ class Blok:
         if hasattr(blok, 'logo'):
             return _get_logo(self.name, blok.logo)
         else:
-            return _get_logo('erpblok-core', 'static/image/none.png')
+            return _get_logo('erpblok-blok-manager', 'static/image/none.png')
 
     def convert_rst2html(self, rst):
         output, _ = publish_programmatically(

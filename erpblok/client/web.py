@@ -17,14 +17,6 @@ def load_client(request):
     password = request.session.get('password')
     state = request.session.get('state')
 
-    # SHORTCUT
-    database = 'erpblok'
-    request.session['database'] = database
-    request.session.save()
-    login = password = 'admin'
-    state = 'connected'
-    # \SHORTCUT
-
     if not(database and login and password and state == "connected"):
         logout(request)
         return HTTPFound(location=request.route_url('homepage'))

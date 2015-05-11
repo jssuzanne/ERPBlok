@@ -3,6 +3,17 @@
     <record external_id="action_group">
         <field name="label">Groups</field>
         <field name="model">Model.Access.Group</field>
+        <field name="add_delete">0</field>
+        <field name="add_new">0</field>
+        <field name="add_edit">0</field>
+        <field name="views">
+            <record external_id="view_access_group_tree">
+                <field name="selectable">1</field>
+                <field name="is_selectable">0</field>
+                <field name="mode">Model.UI.View.List</field>
+                <field name="template">ERPBlokAccessGroupList</field>
+            </record>
+        </field>
     </record>
     <record external_id="action_login">
         <field name="label">Logins</field>
