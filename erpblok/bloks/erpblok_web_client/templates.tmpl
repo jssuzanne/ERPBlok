@@ -135,6 +135,17 @@
             <input id="<%=id%>" name="<%=id%>" type="<%=type%>"/>
         <% } %>
     </template>
+    <template id="ERPBlokViewFieldPassword">
+        <% if (readonly) { %>
+            <% if (value) { %>
+                <span> *** Unreadable protected value *** </span>
+            <% } else { %>
+                <span ></span>
+            <% } %>
+        <% } else { %>
+            <input id="<%=id%>" name="<%=id%>" type="password"/>
+        <% } %>
+    </template>
     <template id="ERPBlokViewFieldBinary">
         <img src="<%=value%>"></img>
     </template>

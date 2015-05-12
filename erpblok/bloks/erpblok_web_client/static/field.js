@@ -44,6 +44,9 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
     },
 });
 ERPBlok.View.Field.String = ERPBlok.View.Field.extend({});
+ERPBlok.View.Field.Password = ERPBlok.View.Field.String.extend({
+    template: 'ERPBlokViewFieldPassword',
+});
 ERPBlok.View.Field.Integer = ERPBlok.View.Field.extend({
     type: 'number',
     get_value: function() {

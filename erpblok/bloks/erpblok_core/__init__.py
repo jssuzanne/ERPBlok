@@ -12,7 +12,7 @@ class ERPBlokCore(Blok):
     ]
 
     views = [
-        'views/group.tmpl',
+        'views/access.tmpl',
     ]
 
     def update(self, latest_version):
