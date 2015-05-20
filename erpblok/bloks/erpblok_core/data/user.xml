@@ -3,8 +3,11 @@
     <record external_id="main_admin_user">
         <field name="last_name">Administrator</field>
         <field name="login">
-             <field name="login">admin</field>
-             <field name="password">admin</field>
+            <field name="login">admin</field>
+            <field name="password">admin</field>
+        </field>
+        <field name="groups">
+            <record external_id="group_administration" />
         </field>
     </record>
 </records>
