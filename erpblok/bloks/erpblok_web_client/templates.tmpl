@@ -154,21 +154,17 @@
         </div>
     </template>
     <template id="ERPBlokViewMany2ManyChoices">
-        <table role="grid">
-            <tbody>
-            </tbody>
-        </table>
+        <ul class="panel small-block-grid-<%=smallgrid%> medium-block-grid-<%=mediumgrid%> large-block-grid-<%=largegrid%>">
+        </ul>
     </template>
     <template id="ERPBlokViewMany2ManyChoice">
-        <tr>
-            <td>
-                <% if (readonly) { %>
-                    <input type="checkbox" DISABLED/>
-                <% } else { %>
-                    <input type="checkbox" />
-                <% } %>
-                <label><%=label%></label>
-            <td>
-        </tr>
+        <li>
+            <% if (readonly) { %>
+                <input type="checkbox" DISABLED/>
+            <% } else { %>
+                <input type="checkbox" />
+            <% } %>
+            <label><%=label%></label>
+        <li>
     </template>
 </templates>

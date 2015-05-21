@@ -84,9 +84,6 @@ ERPBlok.View.Field.Many2Many = ERPBlok.View.Field.Action.extend({});
 ERPBlok.View.Field.Many2ManyChoices = ERPBlok.View.Field.X2Many.extend({
     template: 'ERPBlokViewMany2ManyChoices',
     render: function() {
-        this._super();
-        this.entries = [];
-        this.changed = false;
         var self = this,
             readonly = this.is_readonly(),
             value = this.get_render_value(),
@@ -94,12 +91,20 @@ ERPBlok.View.Field.Many2ManyChoices = ERPBlok.View.Field.X2Many.extend({
                 model: this.options.model,
                 display: this.options.display || null,
             };
+        $.each(['smallgrid', 'mediumgrid', 'largegrid'], function(i, k){
+            if (!self.options[k]) {
+                self.options[k] = 1;
+            }
+        })
+        this._super();
+        this.entries = [];
+        this.changed = false;
         this.view.rpc('get_relationship_entries', values, function (records) {
             $.each(records, function(i, record) {
                 var entry = new ERPBlok.View.Many2ManyChoice(
                     self, readonly, record[0], record[1]);
                 self.entries.push(entry);
-                entry.$el.appendTo(self.$el.find('tbody'));
+                entry.$el.appendTo(self.$el);
             });
         });
     },
@@ -143,7 +148,7 @@ ERPBlok.View.Many2ManyChoice = ERPBlok.Model.extend({
             }
         });
         this.$el.find('input').change(function() {
-            self.checked = !this.checked;
+            self.checked = self.$el.find('input').prop('checked');
             field.view.changed = true;
         });
     },

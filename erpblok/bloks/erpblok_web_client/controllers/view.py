@@ -75,21 +75,23 @@ class View:
 
     def format_values(self, Model, values):
         fields = Model.fields_description()
-        res = {}
+        vals, x2M = {}, {}
         for k, v in values.items():
+            model = fields[k]['model']
             if fields[k]['primary_key']:
                 continue
+            elif fields[k]['type'] in ('One2Many', 'Many2Many'):
+                x2M[k] = self.registry.get(model).from_multi_primary_keys(*v)
             elif fields[k]['model']:
-                res[k] = self.registry.get(
-                    fields[k]['model']).from_primary_keys(**v)
+                vals[k] = self.registry.get(model).from_primary_keys(**v)
             else:
-                res[k] = v
+                vals[k] = v
 
-        return res
+        return vals, x2M
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def set_entry(self, model=None, primary_keys=None, values=None,
-                  fields=None, **kwargs):
+                  fields=None, autocomit=True, **kwargs):
         Model = self.registry.get(model)
         if primary_keys:
             model = Model.from_primary_keys(**primary_keys)
@@ -97,12 +99,25 @@ class View:
             model = Model()
 
         if values:
-            values = self.format_values(Model, values)
+            vals, x2M = self.format_values(Model, values)
             if primary_keys:
-                model.update(values)
+                if vals:
+                    model.update(vals)
             else:
-                model = Model.insert(**values)
+                model = Model.insert(**vals)
 
+            if x2M:
+                for fname, vals in x2M.items():
+                    with self.registry.session.no_autoflush:
+                        f = getattr(model, fname)
+                        for fv in f:
+                            if fv not in vals:
+                                f.remove(fv)
+                        for val in vals:
+                            if val not in f:
+                                f.append(val)
+
+        if autocomit:
             self.registry.commit()
 
         return {x: self.get_field_value(model, x) for x in fields}
