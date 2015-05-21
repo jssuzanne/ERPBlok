@@ -31,17 +31,41 @@ class View:
         if query.count():
             rs = query.first()
             if rs.ftype in ('Many2One', 'One2One'):
-                return model, value.field_render()
+                return value.field_render()
             else:
-                return model, [x.field_render() for x in value]
+                return [x.field_render() for x in value]
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def get_entries(self, model=None, primary_keys=None, fields=None,
-                    **kwargs):
+                    comefromfield=False, **kwargs):
         Model = self.registry.get(model)
-        query = Model.query()
-        return [{x: self.get_field_value(y, x) for x in primary_keys + fields}
-                for y in query.all()]
+        entries = None
+        if comefromfield:
+            if primary_keys:
+                entries = Model.from_multi_primary_keys(*primary_keys)
+        else:
+            entries = Model.query().all()
+
+        if not fields or not entries:
+            return []
+
+        return [{x: self.get_field_value(y, x) for x in fields}
+                for y in entries]
+
+    @PyramidJsonRPC.rpc_method(request_method='POST')
+    def get_relationship_entries(self, model=None, display=None, **kwargs):
+        Model = self.registry.get(model)
+        entries = []
+        for m in Model.query().all():
+            if display:
+                pks = m.to_primary_keys()
+                val = getattr(m, display)
+                # TODO check if callable
+                entries.append((pks, val))
+            else:
+                entries.append(m.field_render())
+
+        return entries
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def get_entry(self, model=None, primary_keys=None, fields=None, **kwargs):

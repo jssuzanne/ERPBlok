@@ -1,5 +1,6 @@
 from anyblok import Declarations
 from lxml import etree, html
+from copy import deepcopy
 
 
 register = Declarations.register
@@ -104,6 +105,13 @@ class View:
                 for x in view.action.transitions
                 if x.mode == self.__registry_name__}
 
+    def update_relation_ship_description(self, descriptions):
+        Action = self.registry.UI.Action
+        for field in descriptions.values():
+            if field['type'] in ('One2Many', 'Many2Many'):
+                if not field.get('action'):
+                    field['action'] = Action.render_from_scratch(field)
+
 
 @register(Mixin)
 class ViewRenderTemplate:
@@ -116,7 +124,7 @@ class ViewRenderTemplate:
     def get_template_replace_field_attribute(self, k, v, field_description):
         if k == 'name':
             return
-        elif k in ('type',):
+        elif k not in ('id', 'model', 'primary_key'):
             field_description[k] = v
 
     def get_template_replace_field(self, el, fields_description):
@@ -211,9 +219,11 @@ class ViewRenderTemplate:
             view.template, tostring=False)
         tmpl.tag = 'div'
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
-        fields_description = Model.fields_description(fields=fields_name)
+        fields_description = deepcopy(Model.fields_description(
+            fields=fields_name))
         self.get_template_replace(tmpl, fields_description)
         tmpl = html.tostring(tmpl)
+        self.update_relation_ship_description(fields_description)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_name, fields_description]
 
@@ -293,13 +303,16 @@ class List(Mixin.ViewMultiEntries):
                 if not label:
                     label = fields[el.attrib.get('name')]['label']
 
-                el = {
+                _el = {
                     'id': name,
                     'label': label,
                     'colspan': 1,
                 }
-                headers[level].append(el)
-                els.append(el)
+                fields[name].update({x: y for x, y in el.attrib.items()
+                                     if x not in ('label', 'name', 'colspan',
+                                                  'rowspan')})
+                headers[level].append(_el)
+                els.append(_el)
                 ordered_fields.append(name)
 
         for el in els:
@@ -314,10 +327,12 @@ class List(Mixin.ViewMultiEntries):
             view.template, tostring=False)
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
         Model = self.registry.get(view.action.model)
-        fields_description = Model.fields_description(fields=fields_name)
+        fields_description = deepcopy(Model.fields_description(
+            fields=fields_name))
         headers = {}
         ordered_fields, level, _ = self._rc_get_headers(
             fields_description, headers, tmpl, 0)
+        self.update_relation_ship_description(fields_description)
         res.update({
             'fields': fields_name,
             'checkbox': view.is_selectable,
@@ -336,7 +351,8 @@ class List(Mixin.ViewMultiEntries):
         :param action: instance of the model UI.Action
         """
         Model = self.registry.get(action.model)
-        fields = Model.fields_description()
+        fields = deepcopy(Model.fields_description())
+        self.update_relation_ship_description(fields)
         pks = Model.get_primary_keys()
         return {
             'id': self.id,  # arbitrary id

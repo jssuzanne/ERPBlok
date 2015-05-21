@@ -18,10 +18,14 @@ ERPBlok.View.MultiEntries = ERPBlok.View.extend({
         this.do_search();
     },
     do_search: function () {
-        var self = this;
-        this.rpc('get_entries', {'model': this.viewManager.action.value.model,
-                                 'primary_keys': this.options.primary_keys,
-                                 'fields': this.options.fields}, function (records) {
+        var self = this,
+            fields = $.merge($.merge([], this.options.primary_keys),
+                             this.options.fields),
+            values = this.viewManager.action.actionManager.get_entries_values({
+                model: this.viewManager.action.value.model,
+                fields: fields,
+            });
+        this.rpc('get_entries', values, function (records) {
             self.clear_all();
             self.render_records(records);
         });

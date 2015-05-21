@@ -149,15 +149,26 @@
     <template id="ERPBlokViewFieldBinary">
         <img src="<%=value%>"></img>
     </template>
-    <template id="ERPBlokViewOne2Many">
-        <% if (value) { %>
-            <ul>
-                <% for (var i in value) {%>
-                    <li><span class="label round"><%=value[i][1]%></span></li>
+    <template id="ERPBlokViewX2Many">
+        <div class="panel">
+        </div>
+    </template>
+    <template id="ERPBlokViewMany2ManyChoices">
+        <table role="grid">
+            <tbody>
+            </tbody>
+        </table>
+    </template>
+    <template id="ERPBlokViewMany2ManyChoice">
+        <tr>
+            <td>
+                <% if (readonly) { %>
+                    <input type="checkbox" DISABLED/>
+                <% } else { %>
+                    <input type="checkbox" />
                 <% } %>
-            </ul>
-        <% } else {%>
-            <span/>
-        <% } %>
+                <label><%=label%></label>
+            <td>
+        </tr>
     </template>
 </templates>

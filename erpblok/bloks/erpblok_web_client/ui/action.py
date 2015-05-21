@@ -44,3 +44,15 @@ class Action:
             'views': views,
             'selected': selected,
         }
+
+    @classmethod
+    def render_from_scratch(cls, field):
+        action = cls(model=field['model'])
+        selected, views = cls.registry.UI.View.render_from_scratch(action)
+        return {
+            'model': field['model'],
+            'label': field['label'],
+            'dialog': field.get('dialog', False),
+            'views': views,
+            'selected': selected,
+        }

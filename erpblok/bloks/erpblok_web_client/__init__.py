@@ -24,6 +24,7 @@ class ERPBlokWebClient(Blok):
         '/static/jquery-2.1.3.min.js',
         '/static/foundation-5/js/foundation.min.js',
         '/static/client.js',
+        '#BLOK/static/underscore-min.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',
         '#BLOK/static/hashtag-manager.js',

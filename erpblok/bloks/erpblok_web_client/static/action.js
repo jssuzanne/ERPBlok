@@ -18,6 +18,9 @@ ERPBlok.ActionInterface = ERPBlok.Model.extend({
             window.location = '/web/client';
         }
     },
+    get_entries_values: function (values) {
+        return values;
+    },
 });
 ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
     init: function() {
@@ -52,8 +55,8 @@ ERPBlok.ActionManager = ERPBlok.ActionInterface.extend({
 });
 ERPBlok.Action = ERPBlok.Model.extend({
     'rpc_url': '/web/client/action',
-    init: function() {
-        this.actionManager = ERPBlok.actionManager;
+    init: function(parent) {
+        this.actionManager = parent || ERPBlok.actionManager;
         this.Dialog = ERPBlok.Dialog;
     },
     load: function(action) {
