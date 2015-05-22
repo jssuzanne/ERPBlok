@@ -354,6 +354,13 @@ class List(Mixin.ViewMultiEntries):
         fields = deepcopy(Model.fields_description())
         self.update_relation_ship_description(fields)
         pks = Model.get_primary_keys()
+        buttons = []
+        if action.add_new:
+            buttons.append(self.get_button_new())
+
+        if action.add_delete:
+            buttons.append(self.get_button_delete())
+
         return {
             'id': self.id,  # arbitrary id
             'selectable': True,
@@ -363,10 +370,7 @@ class List(Mixin.ViewMultiEntries):
             'fields2display': [x for y, x in fields.items() if y not in pks],
             'headers': [[x for y, x in fields.items() if y not in pks]],
             'checkbox': True,
-            'buttons': [
-                self.get_button_new(),
-                self.get_button_delete(),
-            ],
+            'buttons': buttons,
             'transitions': {
                 'selectRecord': ('open_view', self.registry.UI.View.Form.id),
                 'newRecord': ('open_view', self.registry.UI.View.Form.id),
@@ -504,6 +508,43 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
 
         self.get_template_replace(root, fields)
 
+        buttons = []
+        groups_buttons = []
+        new = self.get_button_new()
+        edit = self.get_button_edit()
+        save = self.get_button_save()
+        cancel = self.get_button_cancel()
+        close = self.get_button_close()
+        if action.add_new and action.add_edit:
+            buttons.append(edit)
+            buttons.append(save)
+            buttons.append(close)
+            buttons.append(cancel)
+            groups_buttons.append(new)
+        elif action.add_new:
+            buttons.append(save)
+            buttons.append(close)
+            buttons.append(cancel)
+            groups_buttons.append(new)
+        elif action.add_edit:
+            buttons.append(edit)
+            buttons.append(save)
+            buttons.append(close)
+            buttons.append(cancel)
+
+        if action.add_delete:
+            groups_buttons.append(self.get_button_delete())
+
+        if groups_buttons:
+            groups_buttons = [
+                {
+                    'label': 'Options',
+                    'id': 'group-options',
+                    'visibility': 'on-readonly',
+                    'buttons': groups_buttons,
+                }
+            ]
+
         return {
             'id': self.id,
             'mode': 'Form',
@@ -512,23 +553,8 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'primary_keys': pks,
             'fields': [x for x in fields.keys() if x not in pks],
             'fields2display': [x for y, x in fields.items() if y not in pks],
-            'buttons': [
-                self.get_button_edit(),
-                self.get_button_save(),
-                self.get_button_close(),
-                self.get_button_cancel(),
-            ],
-            'groups_buttons': [
-                {
-                    'label': 'Options',
-                    'id': 'group-options',
-                    'visibility': 'on-readonly',
-                    'buttons': [
-                        self.get_button_new(),
-                        self.get_button_delete(),
-                    ],
-                },
-            ],
+            'buttons': buttons,
+            'groups_buttons': groups_buttons,
         }
 
 
