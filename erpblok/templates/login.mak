@@ -28,7 +28,7 @@
                         </select>
                         <label for="login">Login</label>
                         <input id="login" type="text" required class="validate"/>
-                        <label for="password">Login</label>
+                        <label for="password">Password</label>
                         <input id="password" type="password" required class="validate"/>
                         % if allow_database_manager:
                             <a href="/database/manager" class="left">Database manager</a>

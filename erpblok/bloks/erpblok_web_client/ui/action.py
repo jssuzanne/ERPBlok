@@ -46,7 +46,10 @@ class Action:
         }
 
     @classmethod
-    def render_from_scratch(cls, field):
+    def render_from_scratch_x2M(cls, field):
+        # FIXME
+        # option of action from html
+        # get view from html
         action = cls(model=field['model'])
         selected, views = cls.registry.UI.View.render_from_scratch(action)
         return {
@@ -54,5 +57,22 @@ class Action:
             'label': field['label'],
             'dialog': field.get('dialog', False),
             'views': views,
+            'selected': selected,
+        }
+
+    @classmethod
+    def render_from_scratch_selection(cls, field):
+        # FIXME
+        # option of action from html
+        # get view from html
+        # multi = True if field['type'] in ('One else False
+        action = cls(model=field['model'])
+        view = cls.registry.UI.View.List().render_from_scratch(action)
+        selected = view['id']
+        return {
+            'model': field['model'],
+            'label': field['label'],
+            'dialog': field.get('dialog', False),
+            'views': [view],
             'selected': selected,
         }

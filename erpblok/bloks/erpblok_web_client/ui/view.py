@@ -106,11 +106,17 @@ class View:
                 if x.mode == self.__registry_name__}
 
     def update_relation_ship_description(self, descriptions):
+        # FIXME check external id
         Action = self.registry.UI.Action
+        x2M = ('One2Many', 'Many2Many')
         for field in descriptions.values():
-            if field['type'] in ('One2Many', 'Many2Many'):
+            if field['type'] in x2M:
                 if not field.get('action'):
-                    field['action'] = Action.render_from_scratch(field)
+                    field['action'] = Action.render_from_scratch_x2M(field)
+            if field['model']:
+                if not field.get('selection_action'):
+                    field['selection_action'] = \
+                        Action.render_from_scratch_selection(field)
 
 
 @register(Mixin)
