@@ -1,6 +1,6 @@
 from anyblok_pyramid.scripts import anyblok_wsgi
 from anyblok.scripts import (interpreter as anyblok_interpreter,
-                             createdb, run_exit)
+                             createdb, run_exit, updatedb)
 from anyblok_pyramid.config import make_config as ap_make_config
 from . import _argsparse  # noqa
 import os
@@ -35,6 +35,13 @@ def erpblok_createdb():
     from anyblok_pyramid.release import version
     description = "ERPBlok - %s create db" % version
     createdb(description, ['config', 'database', 'unittest'],
+             ['AnyBlok', 'ERPBlok'])
+
+
+def erpblok_updatedb():
+    from anyblok_pyramid.release import version
+    updatedb("ERPBlok - update db", version,
+             ['config', 'database', 'unittest'],
              ['AnyBlok', 'ERPBlok'])
 
 
