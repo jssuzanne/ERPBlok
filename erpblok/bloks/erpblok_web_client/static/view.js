@@ -1,5 +1,5 @@
 ERPBlok.ViewManager = ERPBlok.Model.extend({
-    init: function(action) {
+    init: function(action, view_id, pks) {
         this.action = action;
         this.$action = action.$el;
         this.$el = $(tmpl('ERPBlokViewManager', {}));
@@ -10,10 +10,14 @@ ERPBlok.ViewManager = ERPBlok.Model.extend({
         for (var i in action.value.views) {
             this.add(action.value.views[i]);
         }
-        var view_id = action.actionManager.get_hash('view');
+        if (view_id == undefined) {
+            view_id = action.actionManager.get_hash('view');
+        }
         if (view_id) {
-            kwargs = {}
-            var pks = action.actionManager.get_hash('pks');
+            var kwargs = {}
+            if (pks == undefined) {
+                pks = action.actionManager.get_hash('pks');
+            }
             if (pks) {
                 kwargs.id = JSON.parse(pks);
             }

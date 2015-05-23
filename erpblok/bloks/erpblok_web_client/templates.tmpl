@@ -146,6 +146,19 @@
             <input id="<%=id%>" name="<%=id%>" type="password"/>
         <% } %>
     </template>
+    <template id="ERPBlokViewFieldx2One">
+        <div>
+            <% if (value) { %>
+                <% if (readonly) { %>
+                    <a><%=value%></a>
+                <% } else { %>
+                    <input id="<%=id%>" name="<%=id%>"/>
+                <% } %>
+            <% } else { %>
+                <span></span>
+            <% } %>
+        </div>
+    </template>
     <template id="ERPBlokViewFieldBinary">
         <img src="<%=value%>"></img>
     </template>

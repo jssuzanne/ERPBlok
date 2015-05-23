@@ -8,14 +8,17 @@ ERPBlok.View.Field = ERPBlok.Model.extend({
     },
     render: function() {
         var readonly = this.is_readonly();
-        var value = this.get_render_value();
         var values = $.extend({}, {
             readonly: readonly,
             type: this.type},
             this.options,
-            {value: value})
+            this.additional_values())
         this.$el = $(tmpl(this.template, values));
         if (! readonly) this._render_init_input(value);
+    },
+    additional_values: function() {
+        var value = this.get_render_value();
+        return {value: value};
     },
     is_readonly: function () {
         return this.options.readonly || this.view.readonly || false;
@@ -77,7 +80,31 @@ ERPBlok.View.Field.Integer = ERPBlok.View.Field.extend({
 ERPBlok.View.Field.Binary = ERPBlok.View.Field.extend({
     template: 'ERPBlokViewFieldBinary',
 })
-ERPBlok.View.Field.Many2One = ERPBlok.View.Field.extend({});
+ERPBlok.View.Field.Many2One = ERPBlok.View.Field.extend({
+    template: 'ERPBlokViewFieldx2One',
+    get_render_value: function() {
+        if (this.value) {
+            return this.value[1];
+        }
+        return '';
+    },
+    get_value: function() {
+        if (this.value) {
+            return this.value[0];
+        }
+        return '';
+    },
+    render: function() {
+        var self = this;
+        this._super();
+        this.$el.find('a').click(function() {
+            var action = new ERPBlok.Action();
+            action.load(self.options.action,
+                        self.options.action.selected,
+                        JSON.stringify(self.value[0]));
+        });
+    },
+});
 ERPBlok.View.Field.One2One = ERPBlok.View.Field.Many2One.extend({});
 ERPBlok.View.Field.One2Many = ERPBlok.View.Field.Action.extend({});
 ERPBlok.View.Field.Many2Many = ERPBlok.View.Field.Action.extend({});

@@ -59,7 +59,7 @@ ERPBlok.Action = ERPBlok.Model.extend({
         this.actionManager = parent || ERPBlok.actionManager;
         this.Dialog = ERPBlok.Dialog;
     },
-    load: function(action) {
+    load: function(action, view_id, pks) {
         var self = this;
         if ($.isNumeric(action)) {
             this.rpc('load', {'action': action}, function (realAction) {
@@ -78,6 +78,6 @@ ERPBlok.Action = ERPBlok.Model.extend({
             var parent = this.actionManager;
         }
         parent.appendTo(this);
-        var viewManager = new ERPBlok.ViewManager(this);
+        var viewManager = new ERPBlok.ViewManager(this, view_id, pks);
     },
 });

@@ -114,6 +114,9 @@ class View:
                 if not field.get('action'):
                     field['action'] = Action.render_from_scratch_x2M(field)
             if field['model']:
+                if not field.get('action'):
+                    field['action'] = Action.render_from_scratch_x2O(field)
+
                 if not field.get('selection_action'):
                     field['selection_action'] = \
                         Action.render_from_scratch_selection(field)
