@@ -14,7 +14,7 @@ def get_homepage(request):
     session = request.session
     connection_state = session.get('state', 'disconnected')
     connection_database = session.get('database')
-    config_database = ArgsParseManager.get('dbname')
+    config_database = ArgsParseManager.get('db_name')
 
     if connection_database and connection_state == 'connected':
         # redirect => client

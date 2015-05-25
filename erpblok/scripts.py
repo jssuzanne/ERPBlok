@@ -1,6 +1,4 @@
 from anyblok_pyramid.scripts import anyblok_wsgi
-from anyblok.scripts import (interpreter as anyblok_interpreter,
-                             createdb, run_exit, updatedb)
 from anyblok_pyramid.config import make_config as ap_make_config
 from . import _argsparse  # noqa
 import os
@@ -20,32 +18,4 @@ def wsgi():
     from . import client  # noqa
     anyblok_wsgi('Web server for AnyBlok', '0.0.1',
                  ['config', 'database', 'logging', 'database-manager'],
-                 ['AnyBlok', 'ERPBlok'],
                  Configurator=make_config)
-
-
-def interpreter():
-    anyblok_interpreter(
-        'Interpreter', '1.0',
-        argsparse_groups=['config', 'database', 'interpreter', 'logging'],
-        parts_to_load=['AnyBlok', 'ERPBlok'])
-
-
-def erpblok_createdb():
-    from anyblok_pyramid.release import version
-    description = "ERPBlok - %s create db" % version
-    createdb(description, ['config', 'database', 'unittest'],
-             ['AnyBlok', 'ERPBlok'])
-
-
-def erpblok_updatedb():
-    from anyblok_pyramid.release import version
-    updatedb("ERPBlok - update db", version,
-             ['config', 'database', 'unittest'],
-             ['AnyBlok', 'ERPBlok'])
-
-
-def erpblok_nose():
-    from anyblok_pyramid.release import version
-    run_exit("Nose test for ERPBlok", version, ['config', 'database'],
-             ['AnyBlok', 'ERPBlok'])

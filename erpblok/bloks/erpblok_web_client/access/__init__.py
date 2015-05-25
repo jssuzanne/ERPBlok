@@ -1,4 +1,4 @@
-from anyblok import Declarations, reload_module_if_blok_is_reloaded
+from anyblok import Declarations, reload_module_if_blok_is_reloading
 
 
 @Declarations.register(Declarations.Model)
@@ -7,6 +7,6 @@ class Access:
 
 
 from . import group
-reload_module_if_blok_is_reloaded(group)
+reload_module_if_blok_is_reloading(group)
 from . import user
-reload_module_if_blok_is_reloaded(user)
+reload_module_if_blok_is_reloading(user)

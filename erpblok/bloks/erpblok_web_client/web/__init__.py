@@ -1,4 +1,4 @@
-from anyblok import Declarations, reload_module_if_blok_is_reloaded
+from anyblok import Declarations, reload_module_if_blok_is_reloading
 from anyblok.blok import BlokManager
 
 
@@ -118,4 +118,4 @@ class Web:
         return tmpl.get_all_template()
 
 from . import login
-reload_module_if_blok_is_reloaded(login)
+reload_module_if_blok_is_reloading(login)
