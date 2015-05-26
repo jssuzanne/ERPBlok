@@ -16,7 +16,7 @@ class ERPBlokBlokManager(Blok):
 
     def install(self):
         """ Initialize database with the blok information """
-        self.import_cfg_file('xml', 'Model.UI.Menu', 'menu.xml')
+        self.import_file('xml', 'Model.UI.Menu', 'menu.xml')
 
     def update(self, latest_version):
         """ Update the database """
