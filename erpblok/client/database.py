@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from anyblok._argsparse import ArgsParseManager
+from anyblok.config import Configuration
 from pyramid.httpexceptions import (HTTPForbidden,
                                     HTTPFound,
                                     HTTPNotFound,
@@ -21,14 +21,14 @@ def check_allow_database_manager():
     """ raise an execption if the database manager is unactive
     :exception: pyramid.httpexceptions.HTTPNotFound
     """
-    allow_database_manager = ArgsParseManager.get('allow_database_manager',
-                                                  True)
+    allow_database_manager = Configuration.get('allow_database_manager',
+                                               True)
     if not allow_database_manager:
         raise HTTPNotFound()
 
 
 def check_db_manager_password(password):
-    db_manager_password = ArgsParseManager.get('db_manager_password')
+    db_manager_password = Configuration.get('db_manager_password')
     if password != db_manager_password:
         raise HTTPUnauthorized()
 
@@ -39,9 +39,9 @@ def get_database(request):
     """ Return the main page of the database manager """
 
     check_allow_database_manager()
-    title = ArgsParseManager.get('app_name', 'ERPBlok')
-    demo = ArgsParseManager.get('db_manager_demo')
-    blok_manager = ArgsParseManager.get('db_manager_blok_manager')
+    title = Configuration.get('app_name', 'ERPBlok')
+    demo = Configuration.get('db_manager_demo')
+    blok_manager = Configuration.get('db_manager_blok_manager')
     return {'title': title, 'demo': demo, 'blok_manager': blok_manager}
 
 

@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from anyblok._argsparse import ArgsParseManager
+from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render_to_response
@@ -33,7 +33,7 @@ def load_client(request):
     usermenu = registry.Web.get_user_menu()
     quickmenu = registry.Web.get_quick_menu()
     appmenu = registry.Web.get_app_menu()
-    title = ArgsParseManager.get('app_name', 'ERPBlok')
+    title = Configuration.get('app_name', 'ERPBlok')
     templates = registry.Web.get_templates()
     return render_to_response('erpblok:templates/client.mak',
                               {'title': title,

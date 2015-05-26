@@ -1,6 +1,6 @@
 from anyblok_pyramid.scripts import anyblok_wsgi
 from anyblok_pyramid.config import make_config as ap_make_config
-from . import _argsparse  # noqa
+from . import config as localconfig  # noqa
 import os
 
 

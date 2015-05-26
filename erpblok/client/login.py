@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from anyblok._argsparse import ArgsParseManager
+from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from .common import list_databases, login_user, logout
 from pyramid.httpexceptions import HTTPUnauthorized, HTTPFound
@@ -21,8 +21,8 @@ def get_login(request, database=None):
 
     :param database: default database filled by the url
     """
-    title = ArgsParseManager.get('app_name', 'ERPBlok')
-    allow_database_manager = ArgsParseManager.get('allow_database_manager',
+    title = Configuration.get('app_name', 'ERPBlok')
+    allow_database_manager = Configuration.get('allow_database_manager',
                                                   True)
     return {
         'title': title,
@@ -35,7 +35,7 @@ def get_login(request, database=None):
 @Declarations.Pyramid.add_view('login-logo')
 def get_login_logo(request):
     """ Return the logo for thelogin page """
-    url_login_logo = ArgsParseManager.get('url_login_logo')
+    url_login_logo = Configuration.get('url_login_logo')
     if url_login_logo:
         return HTTPFound(location=url_login_logo)
 

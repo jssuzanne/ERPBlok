@@ -1,7 +1,7 @@
 from anyblok import Declarations
 from pyramid.httpexceptions import HTTPFound
 from .common import list_databases
-from anyblok._argsparse import ArgsParseManager
+from anyblok.config import Configuration
 
 
 Declarations.Pyramid.add_route('homepage', '/')
@@ -14,7 +14,7 @@ def get_homepage(request):
     session = request.session
     connection_state = session.get('state', 'disconnected')
     connection_database = session.get('database')
-    config_database = ArgsParseManager.get('db_name')
+    config_database = Configuration.get('db_name')
 
     if connection_database and connection_state == 'connected':
         # redirect => client

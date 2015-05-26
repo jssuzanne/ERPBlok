@@ -1,12 +1,12 @@
 import anyblok
-from anyblok._argsparse import ArgsParseManager
+from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from anyblok.environment import EnvironmentManager
 
 
 def list_databases():
     """ return the name of the databases """
-    drivername = ArgsParseManager.get('db_driver_name')
+    drivername = Configuration.get('db_driver_name')
     bdd = anyblok.BDD[drivername]
     return bdd.listdb()
 
@@ -16,7 +16,7 @@ def create_database(database):
 
     rtype: AnyBlok registry instance
     """
-    drivername = ArgsParseManager.get('db_driver_name')
+    drivername = Configuration.get('db_driver_name')
     bdd = anyblok.BDD[drivername]
     bdd.createdb(database)
     registry = RegistryManager.get(database)
@@ -27,7 +27,7 @@ def drop_database(database):
     """ Close the registry instance of the database and drop the database"""
     registry = RegistryManager.get(database)
     registry.close()
-    drivername = ArgsParseManager.get('db_driver_name')
+    drivername = Configuration.get('db_driver_name')
     bdd = anyblok.BDD[drivername]
     bdd.dropdb(database)
 
