@@ -1,13 +1,10 @@
 from anyblok import Declarations
-
+from anyblok.column import String, Integer
+from anyblok.relationship import Many2Many, Many2One
 
 register = Declarations.register
 Access = Declarations.Model.Access
 Login = Declarations.Model.Web.Login
-Integer = Declarations.Column.Integer
-String = Declarations.Column.String
-Many2One = Declarations.RelationShip.Many2One
-Many2Many = Declarations.RelationShip.Many2Many
 
 
 @register(Access)

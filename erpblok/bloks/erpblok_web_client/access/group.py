@@ -1,9 +1,8 @@
 from anyblok import Declarations
-
+from anyblok.column import String
 
 register = Declarations.register
 Access = Declarations.Model.Access
-String = Declarations.Column.String
 
 
 @register(Access)

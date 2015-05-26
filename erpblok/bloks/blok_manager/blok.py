@@ -1,4 +1,5 @@
 from anyblok import Declarations
+from anyblok.field import Function
 from anyblok.blok import BlokManager
 from anyblok.registry import RegistryManager
 from docutils.core import publish_programmatically
@@ -9,7 +10,6 @@ from os.path import join, isfile
 
 register = Declarations.register
 System = Declarations.Model.System
-Function = Declarations.Field.Function
 
 
 @Declarations.register(Declarations.Model.System)

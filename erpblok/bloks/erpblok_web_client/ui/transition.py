@@ -1,13 +1,11 @@
 from anyblok import Declarations
+from anyblok.column import Integer, String, Selection
+from anyblok.relationship import Many2One
 
 
 register = Declarations.register
 Model = Declarations.Model
 Mixin = Declarations.Mixin
-Integer = Declarations.Column.Integer
-Many2One = Declarations.RelationShip.Many2One
-String = Declarations.Column.String
-Selection = Declarations.Column.Selection
 
 
 @register(Model.UI.Action)

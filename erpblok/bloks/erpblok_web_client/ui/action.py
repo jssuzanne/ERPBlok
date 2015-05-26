@@ -1,11 +1,8 @@
 from anyblok import Declarations
-
+from anyblok.column import String, Boolean, Integer
 
 register = Declarations.register
 Model = Declarations.Model
-Integer = Declarations.Column.Integer
-Boolean = Declarations.Column.Boolean
-String = Declarations.Column.String
 
 
 @register(Model.UI)

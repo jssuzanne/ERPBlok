@@ -1,14 +1,11 @@
 from anyblok import Declarations
-
+from anyblok.column import Integer, String
+from anyblok.relationship import Many2Many, Many2One
 
 register = Declarations.register
 UI = Declarations.Model.UI
 Group = Declarations.Model.Access.Group
 Mixin = Declarations.Mixin
-Integer = Declarations.Column.Integer
-String = Declarations.Column.String
-Many2One = Declarations.RelationShip.Many2One
-Many2Many = Declarations.RelationShip.Many2Many
 
 
 @register(Mixin)

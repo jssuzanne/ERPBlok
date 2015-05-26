@@ -1,14 +1,10 @@
 from anyblok import Declarations
-
+from anyblok.column import String, Boolean, Integer
+from anyblok.relationship import Many2One
 
 register = Declarations.register
 Model = Declarations.Model
 Mixin = Declarations.Mixin
-Integer = Declarations.Column.Integer
-Many2One = Declarations.RelationShip.Many2One
-String = Declarations.Column.String
-Boolean = Declarations.Column.Boolean
-Json = Declarations.Column.Json
 
 
 @register(Mixin)

@@ -1,10 +1,8 @@
 from anyblok import Declarations
-
+from anyblok.column import Integer, String
 
 register = Declarations.register
 Web = Declarations.Model.Web
-Integer = Declarations.Column.Integer
-String = Declarations.Column.String
 
 
 @register(Web)

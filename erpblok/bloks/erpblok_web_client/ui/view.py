@@ -1,4 +1,6 @@
 from anyblok import Declarations
+from anyblok.column import Integer, Boolean, String, Selection
+from anyblok.relationship import Many2One
 from lxml import etree, html
 from copy import deepcopy
 
@@ -6,11 +8,6 @@ from copy import deepcopy
 register = Declarations.register
 Model = Declarations.Model
 Mixin = Declarations.Mixin
-Integer = Declarations.Column.Integer
-Boolean = Declarations.Column.Boolean
-Many2One = Declarations.RelationShip.Many2One
-String = Declarations.Column.String
-Selection = Declarations.Column.Selection
 
 
 @register(Mixin)
