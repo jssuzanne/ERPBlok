@@ -6,7 +6,6 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-@Declarations.register(Declarations.Exception)
 class TemplateException(Exception):
     pass
 
