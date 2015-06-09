@@ -17,7 +17,7 @@ class MixinMenu:
 
 
 @register(UI)
-class Menu(MixinMenu):
+class Menu(Mixin.MixinMenu):
 
     action = Many2One(model=UI.Action, one2many="menus")
     parent = Many2One(model='Model.UI.Menu', one2many='children')
@@ -35,7 +35,7 @@ class Menu(MixinMenu):
 
 
 @register(UI)
-class UserMenu(MixinMenu):
+class UserMenu(Mixin.MixinMenu):
 
     icon = String()
     label = String(nullable=False)
@@ -53,7 +53,7 @@ class UserMenu(MixinMenu):
 
 
 @register(UI)
-class QuickMenu(MixinMenu):
+class QuickMenu(Mixin.MixinMenu):
 
     action = Many2One(model=UI.Action, one2many="quick_menus")
     menu = Integer(foreign_key=(UI.Menu, 'id'))
