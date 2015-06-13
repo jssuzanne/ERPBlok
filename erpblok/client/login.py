@@ -23,7 +23,7 @@ def get_login(request, database=None):
     """
     title = Configuration.get('app_name', 'ERPBlok')
     allow_database_manager = Configuration.get('allow_database_manager',
-                                                  True)
+                                               True)
     return {
         'title': title,
         'databases': list_databases(),
