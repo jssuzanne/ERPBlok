@@ -1,4 +1,4 @@
-from anyblok import Declarations
+from anyblok.declarations import Declarations, hybrid_method
 from anyblok.column import Integer, String
 from anyblok.relationship import Many2Many, Many2One
 
@@ -23,12 +23,12 @@ class Menu(Mixin.MixinMenu):
     parent = Many2One(model='Model.UI.Menu', one2many='children')
     label = String(nullable=False)
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def with_user(self):
         # TODO, add filter by login
         return True
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def without_group(self):
         # TODO, add filter by login
         return True
@@ -41,12 +41,12 @@ class UserMenu(Mixin.MixinMenu):
     label = String(nullable=False)
     action = Many2One(model=UI.Action, one2many="user_menus")
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def with_user(self):
         # TODO, add filter by login
         return True
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def without_group(self):
         # TODO, add filter by login
         return True
@@ -56,16 +56,16 @@ class UserMenu(Mixin.MixinMenu):
 class QuickMenu(Mixin.MixinMenu):
 
     action = Many2One(model=UI.Action, one2many="quick_menus")
-    menu = Integer(foreign_key=(UI.Menu, 'id'))
+    menu = Integer(foreign_key=UI.Menu.use('id'))
     icon = String(nullable=False)
     title = String()
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def with_user(self):
         # TODO, add filter by login
         return True
 
-    @Declarations.hybrid_method()
+    @hybrid_method()
     def without_group(self):
         # TODO, add filter by login
         return True

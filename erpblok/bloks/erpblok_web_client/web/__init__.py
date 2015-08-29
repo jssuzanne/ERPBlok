@@ -1,4 +1,5 @@
-from anyblok import Declarations, reload_module_if_blok_is_reloading
+from anyblok.declarations import Declarations, classmethod_cache
+from anyblok import reload_module_if_blok_is_reloading
 from anyblok.blok import BlokManager
 
 
@@ -40,7 +41,7 @@ class Web:
         """ return the js paths """
         return cls.get_static('js')
 
-    @Declarations.classmethod_cache()
+    @classmethod_cache()
     def get_user_menu(cls):
         """ Return the list of the user menu
 

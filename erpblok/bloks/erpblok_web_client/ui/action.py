@@ -9,7 +9,7 @@ Model = Declarations.Model
 class Action:
 
     id = Integer(primary_key=True)
-    model = String(foreign_key=(Model.System.Model, 'name'), nullable=False)
+    model = String(foreign_key=Model.System.Model.use('name'), nullable=False)
     label = String(nullable=False)
     dialog = Boolean(default=False)
     selected = Integer()
