@@ -22,6 +22,7 @@ ERPBlok = [
 anyblok_pyramid_includeme = [
     'pyramid_beaker=anyblok_pyramid.pyramid_config:pyramid_beaker',
     'pyramid_config=anyblok_pyramid.pyramid_config:pyramid_config',
+    'declare_static=anyblok_pyramid.pyramid_config:declare_static',
     'pyramid_http_config=anyblok_pyramid.pyramid_config:pyramid_http_config',
     'pyramid_jsonrpc_config=anyblok_pyramid.pyramid_config:pyramid_jsonrpc_config',
     'pyramid_mako_and_static=erpblok.pyramid_config:add_mako_and_static',
