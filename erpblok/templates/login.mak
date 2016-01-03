@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-        <link rel="stylesheet" type="text/css" href="/static/foundation-5/css/foundation.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/foundation-6/css/foundation.min.css">
         <link rel="stylesheet" type="text/css" href="/static/erpblok.css">
         <title>${title}</title>
     </head>
@@ -14,7 +14,7 @@
                 <div class="columns small-12 medium-8 medium-offset-2 large-4 large-offset-4">
                     <img src="/login/logo"></img>
                     <div class="section">
-                        <div id="error" class="hide error">
+                        <div id="error" class="hide alert callout">
                         </div>
                         <label for="database">Database</label>
                         <select id="database">
