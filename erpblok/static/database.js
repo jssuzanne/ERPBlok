@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(document).foundation();
+    var elem = new Foundation.OffCanvas($('.off-canvas'));
     var $create = $('li#create');
     var $drop = $('li#drop');
     var $error = $('#error');
@@ -40,6 +40,7 @@ $(document).ready(function(){
     }
     $create.click(function (event) {
         goto_create();
+        elem.close();
     });
     $drop.click(function (event) {
         $("#db_manager_password").val("");
@@ -56,6 +57,7 @@ $(document).ready(function(){
             var $select = $("div#drop #select");
             $select.children().remove();
             $select.append(html);
+            elem.close();
         });
     });
     $("#submit-create").click(function (){
