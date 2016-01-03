@@ -1,14 +1,25 @@
-import anyblok
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from anyblok.environment import EnvironmentManager
+from sqlalchemy import create_engine
+from sqlalchemy_utils.functions import (
+    database_exists, create_database as SU_create_database,
+    drop_database as SU_drop_database)
 
 
 def list_databases():
     """ return the name of the databases """
-    drivername = Configuration.get('db_driver_name')
-    bdd = anyblok.BDD[drivername]
-    return bdd.listdb()
+    url = Configuration.get_url()
+    text = None
+    if url.drivername in ('postgres', 'postgresql'):
+        url = Configuration.get_url(db_name='postgres')
+        text = "SELECT datname FROM pg_database ;"
+
+    if text is None:
+        return []
+
+    engine = create_engine(url)
+    return [x[0] for x in engine.execute(text).fetchall()]
 
 
 def create_database(database):
@@ -16,20 +27,25 @@ def create_database(database):
 
     rtype: AnyBlok registry instance
     """
-    drivername = Configuration.get('db_driver_name')
-    bdd = anyblok.BDD[drivername]
-    bdd.createdb(database)
+    url = Configuration.get_url(db_name=database)
+    if database_exists(url):
+        raise Exception("Database %r already exist")
+
+    db_template_name = Configuration.get('db_template_name', None)
+    SU_create_database(url, template=db_template_name)
     registry = RegistryManager.get(database)
     return registry
 
 
 def drop_database(database):
     """ Close the registry instance of the database and drop the database"""
+    url = Configuration.get_url(db_name=database)
+    if not database_exists(url):
+        raise Exception("Database %r does not already exist")
+
     registry = RegistryManager.get(database)
     registry.close()
-    drivername = Configuration.get('db_driver_name')
-    bdd = anyblok.BDD[drivername]
-    bdd.dropdb(database)
+    SU_drop_database(url)
 
 
 def login_user(request, database, login, password):
