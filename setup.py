@@ -28,6 +28,10 @@ anyblok_pyramid_includeme = [
     'mako_and_static=erpblok.pyramid_config:add_mako_and_static',
 ]
 
+anyblok_pyramid_init = [
+    'load_config=erpblok:load_config',
+]
+
 setup(
     name="ERPBlok",
     version=version,
@@ -45,11 +49,9 @@ setup(
     classifiers=[
     ],
     entry_points={
-        'console_scripts': [
-            'erpblok=erpblok.scripts:wsgi',
-        ],
         'bloks': ERPBlok,
         'anyblok_pyramid.includeme': anyblok_pyramid_includeme,
+        'anyblok_pyramid.init': anyblok_pyramid_init,
     },
     extras_require={},
 )
