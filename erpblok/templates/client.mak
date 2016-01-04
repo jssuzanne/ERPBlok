@@ -59,8 +59,10 @@
                                 </div>
                             </div>
                             <div class="columns large-9">
-                                <div id="breadcrumb" class="breadcrumbs">
-                                </div>
+                                <nav role="navigation">
+                                    <ul id="breadcrumb" class="breadcrumbs">
+                                    </ul>
+                                </nav>
                                 <div id="action-manager">
                                 </div>
                             </div>

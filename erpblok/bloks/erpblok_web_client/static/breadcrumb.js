@@ -3,7 +3,7 @@
         classname: 'BreadCrumb',
         prototype: {
             init: function(actionManager) {
-                this.$el = $('div#breadcrumb');
+                this.$el = $('ul#breadcrumb');
                 this.links = [];
                 this.actionManager = actionManager;
                 this.$last = undefined;
@@ -16,7 +16,7 @@
             add: function(id, label, $node) {
                 var self = this;
                 if (this.$last) {
-                    this.$last.link.removeClass('current');
+                    this.$last.link.removeClass('disabled');
                     this.$last.link.click(function (e) {self.on_click(e);});
                     this.$last.node.addClass('hide')
                     this.links.push(this.$last);
@@ -44,7 +44,7 @@
                         var $link = this.links[i].link,
                             $node = this.links[i].node,
                             hash = this.links[i].hash;
-                        $link.addClass('current');
+                        $link.addClass('disabled');
                         this.$last = this.links[i];
                         $node.removeClass('hide');
 
