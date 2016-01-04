@@ -13,7 +13,7 @@ class ERPBlokWebClient(Blok):
     ]
 
     css = [
-        '/static/foundation-5/css/foundation.min.css',
+        '/static/foundation-6/css/foundation.min.css',
         '/static/foundation-icons/foundation-icons.css',
         '/static/erpblok.css',
         '#BLOK/static/view.css',
@@ -22,7 +22,7 @@ class ERPBlokWebClient(Blok):
 
     js = [
         '/static/jquery-2.1.3.min.js',
-        '/static/foundation-5/js/foundation.min.js',
+        '/static/foundation-6/js/foundation.min.js',
         '/static/client.js',
         '#BLOK/static/underscore-min.js',
         '#BLOK/static/erpblok.js',
