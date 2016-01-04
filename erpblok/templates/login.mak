@@ -30,10 +30,10 @@
                         <input id="login" type="text" required class="validate"/>
                         <label for="password">Password</label>
                         <input id="password" type="password" required class="validate"/>
+                        <a id="submit" class="button expanded" href="#">Login</a>
                         % if allow_database_manager:
                             <a href="/database/manager" class="left">Database manager</a>
                         % endif
-                        <a id="submit" class="button small radius right" href="#">Login</a>
                     </div>
                 </div>
             </div>

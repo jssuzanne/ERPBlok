@@ -86,8 +86,8 @@
 </html>
 <%def name="display_menu()">
     <ul class="menu vertical">
-        <li role="menuitem" class="active" id="create">
-            <a>Create a new database</a>
+        <li role="menuitem" id="create">
+            <a class="is-active">Create a new database</a>
         </li>
         <li role="menuitem" id="drop">
             <a>Drop an existing database</a>

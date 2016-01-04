@@ -1,7 +1,7 @@
 $(document).ready(function(){
     var elem = new Foundation.OffCanvas($('.off-canvas'));
-    var $create = $('li#create');
-    var $drop = $('li#drop');
+    var $create = $('li#create a');
+    var $drop = $('li#drop a');
     var $error = $('#error');
     var $error2 = $('#error2');
     var $error3 = $('#error3');
@@ -31,8 +31,8 @@ $(document).ready(function(){
         $("#db_manager_password").val("");
         $("div#create").removeClass('hide');
         $("div#drop").addClass('hide');
-        $drop.removeClass('active');
-        $create.addClass('active');
+        $drop.removeClass('is-active');
+        $create.addClass('is-active');
         $("div#create #database").val("");
         $("div#create #login").val("admin");
         $("div#create #password").val("");
@@ -46,8 +46,8 @@ $(document).ready(function(){
         $("#db_manager_password").val("");
         $("div#create").addClass('hide');
         $("div#drop").removeClass('hide');
-        $drop.addClass('active');
-        $create.removeClass('active');
+        $drop.addClass('is-active');
+        $create.removeClass('is-active');
         hide_error();
         $.ajax({
             type: "POST",

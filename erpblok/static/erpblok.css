@@ -15,27 +15,14 @@ i.menu-img {
 #main-menu.columns {
     padding: 0;
 }
-aside.left-off-canvas-menu ul.accordion,
-.sidebar ul.accordion {
-    margin-left: 0px;
-}
-aside.left-off-canvas-menu .accordion .accordion-navigation > a,
-.sidebar .accordion .accordion-navigation > a {
-    background: none repeat scroll 0 0 #333;
-    color: rgba(255, 255, 255, 0.7);
-}
-aside.left-off-canvas-menu .accordion .accordion-navigation > .content,
-.sidebar .accordion .accordion-navigation > .content {
-    background: none repeat scroll 0 0 #333;
-    padding: 0;
-    padding-left: 0.9375rem;
-}
-aside.left-off-canvas-menu .accordion .accordion-navigation > .active,
-.sidebar .accordion .accordion-navigation .active {
+
+ul.menu li a.is-active,
+li.is-accordion-submenu-item a.is-active {
     color: green;
 }
-aside.left-off-canvas-menu .accordion .accordion-navigation > a:hover,
-.sidebar .accordion .accordion-navigation > a:hover {
+
+ul.menu li > a:hover,
+li.is-accordion-submenu-item > a:hover {
     background: none repeat scroll 0 0 #222;
 }
 /* end override foundation */

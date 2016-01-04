@@ -12,7 +12,7 @@
         <div class="off-canvas-wrapper">
             <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
                 <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas>
-                    <ul class="menu vertical nested is-active" id="accordion-menu-small">
+                    <ul class="menu vertical nested side-menu" id="accordion-menu-small">
                         ${add_side_menus(appmenu)}
                     </ul>
                 </div>
@@ -52,7 +52,7 @@
                              <div id="main-menu" class="columns large-3 show-for-large">
                                 <div>
                                     <div class="sidebar">
-                                        <ul class="menu vertical nested is-active" id="accordion-menu-large">
+                                        <ul class="menu vertical nested side-menu" id="accordion-menu-large">
                                             ${add_side_menus(appmenu)}
                                         </ul>
                                     </div>
@@ -77,14 +77,14 @@
 </html>
 <%def name="add_side_menus(menus)">
      % for menu, name, submenus, in menus:
-        <li>
+        <li class="side-menu-${menu}">
             % if submenus:
-                <a id="amenu${menu}" href="#menu${menu}">${name}</a>
-                <ul class="menu vertical nested">
+                <a href="#menu${menu}">${name}</a>
+                <ul class="menu vertical nested side-menu-${menu}">
                     ${add_side_menus(submenus)}
                 </ul>
             % else:
-                <a id="menu${menu}" href="#menu=${menu}&clean-breadcrumbs=1" class="side-menu">${name}</a>
+                <a id="menu${menu}" href="#menu=${menu}&clean-breadcrumbs=1">${name}</a>
             % endif
         </li>
     % endfor
