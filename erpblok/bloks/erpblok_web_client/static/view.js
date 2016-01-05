@@ -6,7 +6,7 @@
                 this.action = action;
                 this.$action = action.$el;
                 this.$el = $(tmpl('ERPBlokViewManager', {}));
-                this.$buttons = this.$el.find('ul.view-buttons');
+                this.$buttons = this.$el.find('div.view-buttons');
                 this.$el.appendTo(action.$el);
                 this.views = {};
                 this.active_view = undefined;

@@ -12,6 +12,9 @@ class Login:
     login = String(nullable=False)
     password = String(nullable=False)
 
+    def __str__(self):
+        return self.login
+
     @classmethod
     def update_admin(cls, login, password):
         """ Change the login and password of the main administrator """

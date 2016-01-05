@@ -36,6 +36,9 @@
                 }
             },
             on_click: function (event) {
+                if ($(event.currentTarget).hasClass('disabled')) {
+                    return;
+                }
                 this.$last.link.remove();
                 this.$last.node.remove();
                 var link = event.currentTarget;

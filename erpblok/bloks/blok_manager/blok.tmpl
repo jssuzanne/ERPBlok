@@ -3,16 +3,16 @@
         <expr if="fields.state.get_value() == 'uninstalled'">
             <button data-function="rpc_call"
                     data-method="install_blok"
-                    class="small success">Install this blok</button>
+                    class="button expanded success">Install this blok</button>
         </expr>
         <expr else>
             <button data-function="rpc_call"
                     data-method="uninstall_blok"
-                    class="small alert">Uninstall this blok</button>
+                    class="button expanded alert">Uninstall this blok</button>
             <expr if="fields.version.get_value() != fields.installed_version.get_value()">
                 <button data-function="rpc_call"
                         data-method="upgrade_blok"
-                        class="small">Upgrade this blok</button>
+                        class="button expanded">Upgrade this blok</button>
             </expr>
         </expr>
     </template>

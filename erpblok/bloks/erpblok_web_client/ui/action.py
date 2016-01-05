@@ -85,7 +85,15 @@ class Action:
         # get view from html
         # multi = True if field['type'] in ('One else False
         action = cls.action_from_description(field)
-        view = cls.registry.UI.View.Form().render_from_scratch(action)
+        View = cls.registry.UI.View
+        query = View.query().join(cls, (cls.id == View.ui_action_id))
+        query = query.filter(cls.model == field['model'])
+        query = query.filter(View.mode == 'Model.UI.View.Form')
+        if query.count():
+            view = query.first().render()
+        else:
+            view = cls.registry.UI.View.Form().render_from_scratch(action)
+
         selected = view['id']
         return {
             'model': field['model'],

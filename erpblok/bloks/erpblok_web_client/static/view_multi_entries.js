@@ -120,8 +120,7 @@
                 });
                 // two way (2nd)
                 $.each(two_way_link, function(id, field) {
-                    field.field.render();
-                    field.field.$el.appendTo(field.parents);
+                    field.field.render(field.parents);
                 });
                 this.$el.find('button').click(function(event) {
                     event.stopPropagation();

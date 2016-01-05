@@ -55,8 +55,7 @@
                 });
                 // two way (2nd)
                 $.each(two_way_link, function(id, field) {
-                    field.field.render();
-                    field.field.$el.appendTo(field.parents);
+                    field.field.render(field.parents);
                 });
                 $el.find('button').click(function(event) {
                     var func = event.currentTarget.dataset.function;

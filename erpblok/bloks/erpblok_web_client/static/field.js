@@ -2,14 +2,16 @@
     AnyBlokJS.register({
         classname: 'Field',
         prototype: {
+            rpc_url: '/web/client/field',
             template: 'ERPBlokViewField',
             type: 'text',
             init : function(view, options) {
+                this._super()
                 this.view = view;
                 this.options = options;
                 this.changed = false;
             },
-            render: function() {
+            render: function($parentel) {
                 var readonly = this.is_readonly();
                 var values = $.extend({}, {
                     readonly: readonly,
@@ -17,7 +19,8 @@
                     this.options,
                     this.additional_values())
                 this.$el = $(tmpl(this.template, values));
-                if (! readonly) this._render_init_input(value);
+                if (! readonly) this._render_init_input(this.value);
+                this.$el.appendTo($parentel);
             },
             additional_values: function() {
                 var value = this.get_render_value();
@@ -61,8 +64,8 @@
         classname: 'Field.Action',
         extend: ['Field.X2Many'],
         prototype: {
-            render: function() {
-                this._super();
+            render: function($parentel) {
+                this._super($parentel);
                 var action = AnyBlokJS.new('Action', this);
                 action.load(this.options.action);
                 action.$el.appendTo(this.$el);
@@ -110,29 +113,25 @@
     });
     AnyBlokJS.register({
         classname: 'Field.Many2One',
-        extend: ['Field'],
+        extend: ['RPC', 'Field'],
         prototype: {
             template: 'ERPBlokViewFieldx2One',
             get_render_value: function() {
-                if (this.value) {
-                    return this.value[1];
-                }
-                return '';
+                return this.render_value || '';
             },
-            get_value: function() {
-                if (this.value) {
-                    return this.value[0];
-                }
-                return '';
-            },
-            render: function() {
+            render: function($parentel) {
                 var self = this;
-                this._super();
-                this.$el.find('a').click(function() {
-                    var action = AnyBlokJS.new('Action');
-                    action.load(self.options.action,
-                                self.options.action.selected,
-                                JSON.stringify(self.value[0]));
+                var _super = this._super;
+                this.rpc('many2x_render', {model: this.options.model, primary_keys: this.value},
+                         function(render_value) {
+                    self.render_value = render_value;
+                    _super.apply(self, $parentel);
+                    self.$el.find('a').click(function() {
+                        var action = AnyBlokJS.new('Action');
+                        action.load(self.options.action,
+                                    self.options.action.selected,
+                                    JSON.stringify(self.value[0]));
+                    });
                 });
             },
         },
@@ -157,7 +156,7 @@
         extend: ['Field.X2Many'],
         prototype: {
             template: 'ERPBlokViewMany2ManyChoices',
-            render: function() {
+            render: function($parentel) {
                 var self = this,
                     readonly = this.is_readonly(),
                     value = this.get_render_value(),
@@ -180,6 +179,7 @@
                         entry.$el.appendTo(self.$el);
                     });
                 });
+                this.$el.appendTo($parentel);
             },
             get_render_value: function() {
                 var vals = [];

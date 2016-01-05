@@ -23,8 +23,7 @@
     </template>
     <template id="ERPBlokViewManager">
         <div class="row view-manager">
-            <div class="columns large-7">
-                <ul class="button-group radius view-buttons"></ul>
+            <div class="columns large-7 button-group view-buttons">
             </div>
             <div class="columns large-3 medium-7">
             </div>
@@ -36,29 +35,24 @@
         </div>
     </template>
     <template id="ERPBlokViewManagerButton">
-        <li>
-            <a class="view-button button small <%=visibility%>"
-               data-function="<%=fnct%>"
-               data-method="<%=method%>"><%=label%></a>
-        </li>
+        <a class="view-button button <%=visibility%> hollow"
+           data-function="<%=fnct%>"
+           data-method="<%=method%>"><%=label%></a>
     </template>
     <template id="ERPBlokViewManagerGroup">
-        <li>
-            <button data-dropdown="<%=id%>" aria-controls="<%=id%>"
-                    aria-expanded="false"
-                    class="button dropdown small <%=visibility%>"><%=label%></button>
-            <br>
-            <ul id="<%=id%>" data-dropdown-content class="f-dropdown"
-                aria-hidden="true">
-                <% for ( var i = 0; i < buttons.length; i++ ) { %>
-                    <li>
-                        <a class="view-button <%=buttons[i].visibility%>"
-                           data-function="<%=buttons[i].fnct%>"
-                           data-params="<%=buttons[i].params%>"><%=buttons[i].label%></a>
-                    </li>
-                <% } %>
-            </ul>
-        </li>
+            <button data-toggle="<%=id%>"
+                    class="button dropdown <%=visibility%>"><%=label%></button>
+            <div class="dropdown-pane" id="<%=id%>" data-dropdown>
+                <ul class="menu vertical">
+                    <% for ( var i = 0; i < buttons.length; i++ ) { %>
+                        <li>
+                            <a class="view-button button verticale <%=buttons[i].visibility%>"
+                               data-function="<%=buttons[i].fnct%>"
+                               data-params="<%=buttons[i].params%>"><%=buttons[i].label%></a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
     </template>
     <template id="ERPBlokView">
         <div id="<%=id%>" class="row view <%=class_name%>"/>
@@ -167,17 +161,17 @@
         </div>
     </template>
     <template id="ERPBlokViewMany2ManyChoices">
-        <ul class="panel small-block-grid-<%=smallgrid%> medium-block-grid-<%=mediumgrid%> large-block-grid-<%=largegrid%>">
-        </ul>
+        <div class="panel row small-up-<%=smallgrid%> medium-up-<%=mediumgrid%> large-up-<%=largegrid%>">
+        </div>
     </template>
     <template id="ERPBlokViewMany2ManyChoice">
-        <li>
+        <div class="column">
             <% if (readonly) { %>
                 <input type="checkbox" DISABLED/>
             <% } else { %>
                 <input type="checkbox" />
             <% } %>
             <label><%=label%></label>
-        <li>
+        </div>
     </template>
 </templates>
