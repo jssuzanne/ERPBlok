@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-        <link rel="stylesheet" type="text/css" href="/static/foundation-6/css/foundation.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/foundation-6.1.0/css/foundation.min.css">
         <link rel="stylesheet" type="text/css" href="/static/erpblok.css">
         <title>${title}</title>
     </head>
@@ -80,7 +80,7 @@
             </div>
         </div>
         <script type="text/javascript" src="/static/jquery-2.1.3.min.js" ></script>
-        <script type="text/javascript" src="/static/foundation-6/js/foundation.min.js"></script>
+        <script type="text/javascript" src="/static/foundation-6.1.0/js/foundation.min.js"></script>
         <script type="text/javascript" src="/static/database.js" ></script>
     </body>
 </html>
