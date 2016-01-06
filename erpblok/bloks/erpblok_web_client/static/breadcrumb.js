@@ -23,7 +23,7 @@
                 }
                 // FIXME get the active menu and save it in last
                 this.$last = {
-                    link: $(tmpl('ERPBlokBreadCrumb', {'id': id, 'label': label})),
+                    link: $($.templates('#ERPBlokBreadCrumb').render({'id': id, 'label': label})),
                     node: $node,
                     hash: this.get_hashTag(),
                 };

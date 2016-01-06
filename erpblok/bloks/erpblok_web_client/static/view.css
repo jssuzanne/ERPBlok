@@ -1,3 +1,8 @@
+div.row.action,
+div.row.view {
+    margin-left: 0;
+    margin-right: 0;
+}
 nav.view-selector {
     border: 2px solid #dedede;
     border-radius: 4px;

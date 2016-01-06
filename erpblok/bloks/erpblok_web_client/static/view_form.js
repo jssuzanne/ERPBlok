@@ -43,9 +43,9 @@
                         options: this.options,
                     };
                 this.$el.children().remove();
-                var $el = $(tmpl(this.options.template, values));
+                var $el = $($.templates(this.options.template).render(values));
                 $el.appendTo(this.$el);
-    
+
                 // two way (first)
                 var two_way_link = {};
                 $.each(fields, function(id, field) {

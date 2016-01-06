@@ -58,7 +58,8 @@ class Template:
         tmpl = deepcopy(self.compiled[name])
         if self.forclient:
             tmpl.tag = 'script'
-            tmpl.set('type', 'text/html')
+            if tmpl.attrib.get('type') is None:
+                tmpl.set('type', 'text/html')
 
         if tostring:
             res = html.tostring(tmpl)

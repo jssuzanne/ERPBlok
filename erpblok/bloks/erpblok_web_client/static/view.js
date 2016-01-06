@@ -5,7 +5,7 @@
             init: function(action, view_id, pks) {
                 this.action = action;
                 this.$action = action.$el;
-                this.$el = $(tmpl('ERPBlokViewManager', {}));
+                this.$el = $($.templates('#ERPBlokViewManager').render({}));
                 this.$buttons = this.$el.find('div.view-buttons');
                 this.$el.appendTo(action.$el);
                 this.views = {};
@@ -70,11 +70,11 @@
                 }
             },
             add_buttons: function(button) {
-                var $el = $(tmpl('ERPBlokViewManagerButton', button));
+                var $el = $($.templates('#ERPBlokViewManagerButton').render(button));
                 $el.appendTo(this.$buttons);
             },
             add_group: function(group) {
-                var $el = $(tmpl('ERPBlokViewManagerGroup', group));
+                var $el = $($.templates('#ERPBlokViewManagerGroup').render(group));
                 $el.appendTo(this.$buttons);
             },
         },
@@ -93,15 +93,15 @@
                 this.readonly = true;
             },
             getNavEl: function(view_id) {
-                return $(tmpl('ERPBlokViewSelector',
-                              {'id': this.options.id,
-                               'title_selector': this.title_selector,
-                               'icon_selector': this.icon_selector,
-                               'selectable': this.options.selectable}));
+                return $($.templates('#ERPBlokViewSelector').render(
+                    {'id': this.options.id,
+                     'title_selector': this.title_selector,
+                     'icon_selector': this.icon_selector,
+                     'selectable': this.options.selectable}));
             },
             getViewEl: function() {
-                var $el = $(tmpl('ERPBlokView',
-                            {id: this.options.id, class_name: this.class_name}));
+                var $el = $($.templates('#ERPBlokView').render(
+                    {id: this.options.id, class_name: this.class_name}));
                 this.$el = $el;
                 return $el;
             },

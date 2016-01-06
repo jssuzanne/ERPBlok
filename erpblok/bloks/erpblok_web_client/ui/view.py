@@ -182,25 +182,18 @@ class ViewRenderTemplate:
             else:
                 el.tail = tail
 
-        endop = '%(sop)s } %(eop)s' % dict(sop='__start_value_operator__',
-                                           eop='__end_value_operator__')
+        endop = '{{/if}}'
 
         for k, v in el.attrib.items():
             if k == "if":
-                head = '%(sop)s if (%(expr)s) { %(eop)s' % dict(
-                    sop='__start_value_operator__', expr=v,
-                    eop='__end_value_operator__')
+                head = '{{if %(expr)s }}' % dict(expr=v)
                 replace(k, head, endop, notailifnextin=('else', 'elif'))
 
             elif k == "else":
-                head = '%(sop)s } else { %(eop)s' % dict(
-                    sop='__start_value_operator__',
-                    eop='__end_value_operator__')
+                head = '{{else}}'
                 replace(k, head, endop)
             elif k == "elif":
-                head = '%(sop)s } else if (%(expr)s) { %(eop)s' % dict(
-                    sop='__start_value_operator__', expr=v,
-                    eop='__end_value_operator__')
+                head = '{{else %(expr)s }}' % dict(expr=v)
                 replace(k, head, endop, notailifnextin=('else', 'elif'))
 
     def get_template_replace(self, tmpl, fields_description):

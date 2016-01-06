@@ -18,9 +18,12 @@
                     type: this.type},
                     this.options,
                     this.additional_values())
-                this.$el = $(tmpl(this.template, values));
+                this.render_template(values);
                 if (! readonly) this._render_init_input(this.value);
                 this.$el.appendTo($parentel);
+            },
+            render_template: function(values) {
+                this.$el = $($.templates('#' + this.template).render(values));
             },
             additional_values: function() {
                 var value = this.get_render_value();
@@ -109,6 +112,10 @@
         extend: ['Field'],
         prototype: {
             template: 'ERPBlokViewFieldBinary',
+            render_template: function($parentel) {
+                this._super($parentel);
+                this.$el.attr('src', this.get_render_value())
+            },
         },
     });
     AnyBlokJS.register({
@@ -212,7 +219,7 @@
                 this.label = label;
                 this.field = field;
                 this.checked = false;
-                this.$el = $(tmpl('ERPBlokViewMany2ManyChoice', {
+                this.$el = $($.templates('#ERPBlokViewMany2ManyChoice').render({
                     options: field.options,
                     label: label,
                     readonly: readonly,

@@ -29,6 +29,12 @@
                     }
                 });
             },
+            render_template: function () {
+                this.$el = $($.templates('#' + this.template).render());
+                var $el = $($.templates(this.view.options.template).render(
+                   this.get_values_for_template()));
+                $el.appendTo(this.$el.find('.view-contnair'))
+            },
         },
     });
 }) ();

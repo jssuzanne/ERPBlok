@@ -25,6 +25,7 @@ class ERPBlokWebClient(Blok):
         '/static/foundation-6.1.0/js/foundation.min.js',
         '/static/client.js',
         '#BLOK/static/anyblok-js.js',
+        '#BLOK/static/jsviews.min.js',
         '#BLOK/static/underscore-min.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',
@@ -39,7 +40,6 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_list.js',
         '#BLOK/static/view_thumbnails.js',
         '#BLOK/static/view_form.js',
-        '#BLOK/static/template.js',
         '#BLOK/static/notification/notification.js',
     ]
 

@@ -82,7 +82,7 @@
                     return;
                 }
                 this.value = action;
-                this.$el = $(tmpl('ERPBlokAction', {'id': action.id}));
+                this.$el = $($.templates('#ERPBlokAction').render({id: action.id}))
                 if (action.dialog) {
                     var parent = AnyBlokJS.new(this.Dialog);
                 } else {

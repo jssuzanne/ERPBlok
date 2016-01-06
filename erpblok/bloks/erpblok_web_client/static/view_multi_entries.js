@@ -13,7 +13,7 @@
                     values = {id: this.options.id,
                               options: this.options,
                               class_name: this.class_name};
-                var $el = $(tmpl(this.template, values));
+                var $el = $($.templates('#' + this.template).render(values));
                 this.$el = $el;
                 return $el;
             },
@@ -110,7 +110,7 @@
             render: function() {
                 var self = this;
                 this.fields = this.get_fields();
-                this.$el = $(tmpl(this.template, this.get_values_for_template()));
+                this.render_template();
                 // two way (first)
                 var two_way_link = {};
                 $.each(this.fields, function(id, field) {
@@ -128,6 +128,9 @@
                     var method = event.currentTarget.dataset.method || undefined;
                     self.view[func](self.id, method);
                 });
+            },
+            render_template: function () {
+                this.$el = $($.templates('#' + this.template).render(this.get_values_for_template()));
             },
             get_fields: function () {
                 var self = this,
