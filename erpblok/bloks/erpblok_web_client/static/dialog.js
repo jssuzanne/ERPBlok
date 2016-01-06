@@ -9,8 +9,10 @@
         extend: ['ActionInterface'],
         prototype: {
             init: function() {
-                this.$el = $(tmpl('ERPBlokDialog', {'id': get_dialog_id()}));
+                this._super();
+                this.$el = $($.templates('#ERPBlokDialog').render({'id': get_dialog_id()}));
                 this.$el.appendTo($('body'));
+                this.elem = new Foundation.Reveal(this.$el);
             },
             set_title: function(title) {
                 this.$el.find('h2.dialog-title').text(title);
@@ -18,19 +20,21 @@
             set_html: function(html) {
                 this.$el.find('div.dialog-content').html(html);
             },
-    
+
             add_close_button: function() {
                 var self = this;
-                var $button = $(tmpl('ERPBlokDialogClose', {}));
-                $button.appendTo(this.$el.find('div.dialog-content'));
+                var $button = $($.templates('#ERPBlokDialogClose').render());
+                $button.appendTo(this.$el.find('div.close-button'));
                 $button.click(function (e) {
-                    self.$el.foundation('reveal', 'close');
-                    setTimeout(function(){self.$el.remove()}, 1000);
+                    self.elem.close();
                 });
             },
             open: function() {
-                this.$el.foundation('reveal', 'open');
+                this.elem.open();
+            },
+            destroy: function () {
+                setTimeout(function(){self.$el.remove()}, 1000);
             },
         },
     });
-});
+}) ();

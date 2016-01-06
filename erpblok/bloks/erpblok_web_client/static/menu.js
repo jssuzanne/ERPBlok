@@ -71,6 +71,7 @@
                     dialog.set_html(dialog_html);
                     dialog.add_close_button();
                     dialog.open();
+                    dialog.destroy();
                 });
             },
             do_logout: function() {
