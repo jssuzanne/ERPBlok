@@ -20,31 +20,32 @@
                     <ul class="menu vertical" id="topbar-menu-small">
                         ${top_nav_menus_quick_small()}
                         ${top_nav_menus_user_small()}
+                        <li><a class="button logout">Log out</a></li>
                     </ul>
                 </div>
                 <div class="off-canvas-content" data-off-canvas-content>
-                    <div class="top-bar show-for-large">
-                        <div class="top-bar-left">
-                            <ul class="title-area">
-                                <li class="menu-text">
-                                    <h1><a href="#">${title}</a></h1>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="top-bar-right">
-                            <ul class="dropdown menu" id="topbar-menu-large" data-dropdown-menu>
-                                ${top_nav_menus_quick_large()}
-                                ${top_nav_menus_user_large()}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="title-bar hide-for-large">
+                    <div class="title-bar">
                         <div class="title-bar-left">
-                            <button class="menu-icon" type="button" data-toggle="offCanvasLeft"></button>
-                            <span class="title-bar-title">${title}</span>
+                            <div class="show-for-large">
+                                <button class="menu-icon toggle-menu" type="button"></button>
+                                <span class="title-bar-title">${title}</span>
+                            </div>
+                            <div class="hide-for-large">
+                                <button class="menu-icon" type="button" data-toggle="offCanvasLeft"></button>
+                                <span class="title-bar-title">${title}</span>
+                            </div>
                         </div>
                         <div class="title-bar-right">
-                            <button class="menu-icon" type="button" data-toggle="offCanvasRight"></button>
+                            <div class="show-for-large">
+                                <ul class="dropdown menu" id="topbar-menu-large" data-dropdown-menu>
+                                    ${top_nav_menus_quick_large()}
+                                    ${top_nav_menus_user_large()}
+                                    <li><a class="button logout">Log out</a></li>
+                                </ul>
+                            </div>
+                            <div class="hide-for-large">
+                                <button class="menu-icon" type="button" data-toggle="offCanvasRight"></button>
+                            </div>
                         </div>
                     </div>
                     <section role="main" class="scroll-container">
@@ -58,7 +59,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="columns large-9">
+                            <div id="main-app" class="columns large-9">
                                 <nav role="navigation">
                                     <ul id="breadcrumb" class="breadcrumbs">
                                     </ul>
@@ -145,52 +146,50 @@
     % endif
 </%def>
 <%def name="top_nav_menus_user_large()">
-        <li>
-            <a href="#">User setting</a>
-            <ul id="dropdown-usermenu" class="menu">
-                % for function, action, icon, name in usermenu:
-                    <li>
-                        <a
-                            % if function:
-                                data-function="${function}"
-                            % endif
-                            % if action:
-                                data-action="${action}"
-                            % endif
-                            % if icon:
-                                ><i class="${icon}"></i>${name}
-                            % else:
-                                >${name}
-                            % endif
-                        </a>
-                    </li>
-                % endfor
-            </ul>
-        </li>
-    </ul>
+    <li>
+        <a href="#">User setting</a>
+        <ul id="dropdown-usermenu" class="menu">
+            % for function, action, icon, name in usermenu:
+                <li>
+                    <a
+                        % if function:
+                            data-function="${function}"
+                        % endif
+                        % if action:
+                            data-action="${action}"
+                        % endif
+                        % if icon:
+                            ><i class="${icon}"></i>${name}
+                        % else:
+                            >${name}
+                        % endif
+                    </a>
+                </li>
+            % endfor
+        </ul>
+    </li>
 </%def>
 <%def name="top_nav_menus_user_small()">
-        <li>
-            <a href="#">User setting</a>
-            <ul id="dropdown-usermenu" class="menu vertical">
-                % for function, action, icon, name in usermenu:
-                    <li>
-                        <a
-                            % if function:
-                                data-function="${function}"
-                            % endif
-                            % if action:
-                                data-action="${action}"
-                            % endif
-                            % if icon:
-                                ><i class="${icon}"></i>${name}
-                            % else:
-                                >${name}
-                            % endif
-                        </a>
-                    </li>
-                % endfor
-            </ul>
-        </li>
-    </ul>
+    <li>
+        <a href="#">User setting</a>
+        <ul id="dropdown-usermenu" class="menu vertical">
+            % for function, action, icon, name in usermenu:
+                <li>
+                    <a
+                        % if function:
+                            data-function="${function}"
+                        % endif
+                        % if action:
+                            data-action="${action}"
+                        % endif
+                        % if icon:
+                            ><i class="${icon}"></i>${name}
+                        % else:
+                            >${name}
+                        % endif
+                    </a>
+                </li>
+            % endfor
+        </ul>
+    </li>
 </%def>

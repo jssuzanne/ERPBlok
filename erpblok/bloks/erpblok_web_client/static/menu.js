@@ -74,14 +74,6 @@
                     dialog.destroy();
                 });
             },
-            do_logout: function() {
-                $.ajax({type: "POST",
-                        url: "/login/disconnect",
-                        data: {}})
-                .done(function (url) {
-                    window.location = url;
-                });
-            },
         },
     });
     AnyBlokJS.register({
