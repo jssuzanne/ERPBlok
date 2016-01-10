@@ -147,7 +147,7 @@
 </%def>
 <%def name="top_nav_menus_user_large()">
     <li>
-        <a href="#">User setting</a>
+        <a href="#">${username}</a>
         <ul id="dropdown-usermenu" class="menu">
             % for function, action, icon, name in usermenu:
                 <li>
@@ -171,7 +171,7 @@
 </%def>
 <%def name="top_nav_menus_user_small()">
     <li>
-        <a href="#">User setting</a>
+        <a href="#">${username}</a>
         <ul id="dropdown-usermenu" class="menu vertical">
             % for function, action, icon, name in usermenu:
                 <li>

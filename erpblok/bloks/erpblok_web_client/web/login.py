@@ -9,8 +9,8 @@ Web = Declarations.Model.Web
 class Login:
 
     id = Integer(primary_key=True)
-    login = String(nullable=False)
-    password = String(nullable=False)
+    login = String(nullable=False, unique=True)
+    password = String(nullable=False, unique=True)
 
     def __str__(self):
         return self.login
@@ -37,3 +37,15 @@ class Login:
             return True
         else:
             return False
+
+    @classmethod
+    def username(cls, login, password):
+        """ Verify if the login / password allow to found a user
+
+        :param login: login of the user
+        :param password: password of the use
+        :rtype: Boolean True if the user is found else False
+        """
+        query = cls.query().filter(cls.login == login)
+        self = query.filter(cls.password == password).one()
+        return str(self.user).strip()
