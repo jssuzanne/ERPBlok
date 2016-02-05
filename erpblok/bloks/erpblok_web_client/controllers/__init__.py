@@ -1,11 +1,11 @@
 from anyblok import reload_module_if_blok_is_reloading
 
 
-from . import menu
+from . import menu  # noqa
 reload_module_if_blok_is_reloading(menu)
-from . import action
+from . import action  # noqa
 reload_module_if_blok_is_reloading(action)
-from . import view
+from . import view  # noqa
 reload_module_if_blok_is_reloading(view)
-from . import field
+from . import field  # noqa
 reload_module_if_blok_is_reloading(field)

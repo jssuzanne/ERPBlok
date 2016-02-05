@@ -118,5 +118,5 @@ class Web:
         tmpl.compile()
         return tmpl.get_all_template()
 
-from . import login
+from . import login  # noqa
 reload_module_if_blok_is_reloading(login)
