@@ -28,7 +28,7 @@ anyblok_pyramid_includeme = [
     'mako_and_static=erpblok.pyramid_config:add_mako_and_static',
 ]
 
-anyblok_pyramid_init = [
+anyblok_init = [
     'load_config=erpblok:load_config',
 ]
 
@@ -51,7 +51,7 @@ setup(
     entry_points={
         'bloks': ERPBlok,
         'anyblok_pyramid.includeme': anyblok_pyramid_includeme,
-        'anyblok_pyramid.init': anyblok_pyramid_init,
+        'anyblok.init': anyblok_init,
     },
     extras_require={},
 )
