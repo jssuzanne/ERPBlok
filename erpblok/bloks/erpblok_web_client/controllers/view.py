@@ -77,7 +77,7 @@ class View:
             vals, x2M = self.format_values(Model, values)
             if primary_keys:
                 if vals:
-                    model.update(vals)
+                    model.update(**vals)
             else:
                 model = Model.insert(**vals)
 
