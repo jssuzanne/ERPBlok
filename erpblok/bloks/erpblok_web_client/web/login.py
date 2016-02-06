@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from anyblok.column import Integer, String
+from anyblok.column import Integer, String, Password, Boolean
 
 register = Declarations.register
 Web = Declarations.Model.Web
@@ -10,7 +10,9 @@ class Login:
 
     id = Integer(primary_key=True)
     login = String(nullable=False, unique=True)
-    password = String(nullable=False, unique=True)
+    password = Password(nullable=False, unique=True,
+                        crypt_context={'schemes': ['md5_crypt']})
+    active = Boolean(default=True)
 
     def __str__(self):
         return self.login
@@ -32,11 +34,13 @@ class Login:
         :rtype: Boolean True if the user is found else False
         """
         query = cls.query().filter(cls.login == login)
-        query = query.filter(cls.password == password)
+        query = query.filter(cls.active.is_(True))
         if query.count():
-            return True
-        else:
-            return False
+            for self in query.all():
+                if self.password == password:
+                    return True
+
+        return False
 
     @classmethod
     def username(cls, login, password):
@@ -47,5 +51,7 @@ class Login:
         :rtype: Boolean True if the user is found else False
         """
         query = cls.query().filter(cls.login == login)
-        self = query.filter(cls.password == password).one()
-        return str(self.user).strip()
+        query = query.filter(cls.active.is_(True))
+        return [str(x.user).strip()
+                for x in query.all()
+                if x.password == password][0]
