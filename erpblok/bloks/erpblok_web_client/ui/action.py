@@ -68,15 +68,10 @@ class Action:
         # get view from html
         # multi = True if field['type'] in ('One else False
         action = cls.action_from_description(field)
-        view = cls.registry.UI.View.List().render_from_scratch(action)
-        selected = view['id']
-        return {
-            'model': field['model'],
-            'label': field['label'],
-            'dialog': field.get('dialog', False),
-            'views': [view],
-            'selected': selected,
-        }
+        if action:
+            return action.id
+
+        return None
 
     @classmethod
     def render_from_scratch_x2O(cls, field):
