@@ -34,7 +34,6 @@
                 var view = this.get_view_cls(view);
                 var $navEl = view.getNavEl();
                 $navEl.click(function (event) {
-                    self.action.actionManager.update_hash({readonly: undefined});
                     self.select_view(event.currentTarget.id);
                 });
                 $navEl.appendTo(this.$el.find('ul'));
@@ -51,7 +50,6 @@
                 var viewName = 'View.' + view.mode;
                 if (AnyBlokJS.class_names[viewName])
                     return AnyBlokJS.new(viewName, this, view);
-                console.log(view.mode)
                 return AnyBlokJS.new('View', this, view);
             },
             select_view: function (view_id, kwargs) {
@@ -106,10 +104,6 @@
                 return $el;
             },
             render: function(args) {
-                var readonly = document.ERPBlokClient.actionManager.client.hashTagManager.get('readonly') || true;
-                if (Boolean(readonly) != this.readonly) {
-                    this.toggleReadonly();
-                }
                 this.display_buttons();
             },
             transition: function(name, kwargs) {
@@ -123,7 +117,6 @@
                     console.warn(err);
                 }
                 if (selectRecord[0] == 'open_view') {
-                    this.viewManager.action.actionManager.update_hash({readonly: undefined});
                     this.viewManager.select_view(selectRecord[1], kwargs);
                 }
             },
@@ -156,7 +149,6 @@
                 this.applyReadOnly();
             },
             applyReadOnly: function () {
-                this.viewManager.action.actionManager.update_hash({readonly: this.readonly});
                 this.hide_show_buttons();
             },
             hide_show_buttons: function() {

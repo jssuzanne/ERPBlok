@@ -26,6 +26,7 @@ anyblok_pyramid_includeme = [
     'http_config=anyblok_pyramid.pyramid_config:pyramid_http_config',
     'jsonrpc_config=anyblok_pyramid.pyramid_config:pyramid_jsonrpc_config',
     'mako_and_static=erpblok.pyramid_config:add_mako_and_static',
+    'declare_json_adapter=erpblok.pyramid_config:declare_json_data_adapter',
 ]
 
 anyblok_init = [
