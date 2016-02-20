@@ -1,3 +1,83 @@
+window.ERPBlok = null;
+(function () {
+    var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/; 
+
+    class ERPBLOK {
+        constructor () {
+            this.classes = {};
+            this.react_classes = {};
+            this.mixins = {};
+        };
+        extend (classname, cls, prototype) {  
+            var A = null;
+            if (cls == undefined) {
+                function init (self) {
+                }
+                A = new Function('init', 'return function ' + classname + ' () {init(this);}')(init);
+                A.prototype = Object.create(prototype);
+            } else {
+                A = cls;
+                for (var name in prototype) {
+                    A.prototype[name] = typeof prototype[name] == "function" &&            
+                                        fnTest.test(prototype[name]) ?                     
+                        (function(name, super_fn, fn) {                         
+                            return function() {
+                                var tmp = this._super;                          
+                                this._super = super_fn;                         
+                                var ret = fn.apply(this, arguments);            
+                                this._super = tmp;                              
+                                return ret;                                     
+                            };                                                  
+                        })(name, A.prototype[name], prototype[name]) :                 
+                        prototype[name]; 
+                }
+            }
+            return A
+        };
+        add_prototype_for (classname, prototype={}, isareactclass=true) {
+            var parent = undefined;
+            if (isareactclass) {
+                parent = this.react_classes[classname];
+            } else {
+                parent = this.classes[classname];
+            }
+            var cls = this.extend(classname, parent, prototype);
+            if (isareactclass) {
+                this.react_classes[classname] = cls;
+            } else {
+                this.classes[classname] = cls;
+            }
+        };
+        add_mixin (mixinname, prototype={}) {
+            var parent = this.mixins[mixinname];
+            var A  = this.extend(mixinname, parent, prototype);
+            this.mixins[mixinname] = A;
+        }
+        apply_mixin (classname, mixinname, isreactclass=true) {
+            var mixin = this.mixins[mixinname];
+            if (mixin) {
+                mixin = mixin.prototype;
+            }
+            this.add_prototype_for(classname, mixin, isreactclass);
+        }
+        get_class_for (classname) {
+            return this.classes[classname];
+        };
+        compile_react_classes() {
+            var self = this;
+            for (var classname in this.react_classes) {
+                var cls = self.react_classes[classname],
+                    prototype = React.Component.prototype;
+                window[classname] = self.extend(classname, cls, prototype);
+            }
+        };
+    };
+
+    window.ERPBlok = new ERPBLOK()
+}) ();
+
+// var ERPBlok = new ERPBLOK();
+/*
 (function () {
     AnyBlokJS.register({
         classname: 'ERPBlok',
@@ -47,3 +127,4 @@
         },
     });
 }) ();
+*/

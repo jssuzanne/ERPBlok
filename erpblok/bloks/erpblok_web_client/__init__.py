@@ -1,4 +1,5 @@
 from anyblok.blok import Blok, BlokManager
+from erpblok.client.template import Template
 
 
 class ERPBlokWebClient(Blok):
@@ -10,6 +11,32 @@ class ERPBlokWebClient(Blok):
         'anyblok-core',
         'anyblok-io',
         'pyramid',
+    ]
+
+    # Define the static for the login page
+    login_css = [
+        '#BLOK/static/foundation-6.1.0/css/foundation.min.css',
+        '#BLOK/static/foundation-icons/foundation-icons.css',
+        '#BLOK/static/erpblok.css',
+    ]
+
+    login_js = [
+        '#BLOK/static/react.min.js',
+        '#BLOK/static/react-dom.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js',
+        #'#BLOK/static/babel-core/5.8.34/browser.min.js',
+        '#BLOK/static/jquery-2.1.3.min.js',
+        '#BLOK/static/jsviews.min.js',
+    ]
+
+    login_js_babel = [
+        '#BLOK/static/erpblok.js',
+        '#BLOK/static/template.js',
+        '#BLOK/static/login.js',
+    ]
+
+    login_templates = [
+        'login_templates.tmpl',
     ]
 
     css = [
@@ -49,7 +76,7 @@ class ERPBlokWebClient(Blok):
 
     def load(self):
         from os.path import join
-        tmpl = self.registry.UI.Template()
+        tmpl = Template()
         Blok = self.registry.System.Blok
         for blok in Blok.list_by_state('installed'):
             b = BlokManager.get(blok)

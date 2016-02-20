@@ -1,4 +1,3 @@
-from anyblok import Declarations
 from lxml import html, etree
 from copy import deepcopy
 from logging import getLogger
@@ -10,19 +9,18 @@ class TemplateException(Exception):
     pass
 
 
-@Declarations.register(Declarations.Model.UI)
 class Template:
     """ html templating framework, the need is to manipulate web template.
 
     ::
 
-        tmpl = registry.UI.Template()
+        tmpl = Template()
         tmpl.load_file(file_pointer_1)
         tmpl.load_file(file_pointer_2)
         tmpl.load_file(file_pointer_3)
         tmpl.load_file(file_pointer_N)
         tmpl.compîle()
-        tmpl.get_amm_template()
+        tmpl.get_all_template()
 
     """
 

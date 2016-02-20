@@ -4,6 +4,9 @@ from anyblok.registry import RegistryManager
 from .common import list_databases, login_user, logout
 from pyramid.httpexceptions import HTTPUnauthorized, HTTPFound
 from pyramid.response import Response
+from anyblok.blok import BlokManager
+from os.path import join
+from .template import Template
 
 
 Declarations.Pyramid.add_route('login', '/login')
@@ -14,21 +17,53 @@ Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
                                request_method='POST')
 
 
+def format_static(blok, static_url):
+    """ Replace the attribute #BLOK by the real name of the blok """
+    if static_url.startswith('#BLOK'):
+        return '/' + blok + static_url[5:]
+    else:
+        return static_url
+
+
+def get_static(static_type):
+    res = []
+    for blok_name in BlokManager.ordered_bloks:
+        blok = BlokManager.get(blok_name)
+        if hasattr(blok, static_type):
+            for static_url in getattr(blok, static_type):
+                res.append(format_static(blok_name, static_url))
+
+    return res
+
+
+def get_templates_from(attr):
+    tmpl = Template(forclient=True)
+    for blok_name in BlokManager.ordered_bloks:
+        blok = BlokManager.get(blok_name)
+        if hasattr(blok, attr):
+            bpath = BlokManager.getPath(blok_name)
+            for template in getattr(blok, attr):
+                with open(join(bpath, template), 'r') as fp:
+                    tmpl.load_file(fp)
+
+    tmpl.compile()
+    return tmpl.get_all_template()
+
+
 @Declarations.Pyramid.add_view('login',
-                               renderer='erpblok:templates/login.mak')
+                               renderer='erpblok:templates/client2.mak')
 def get_login(request, database=None):
     """ Display the login page
 
     :param database: default database filled by the url
     """
     title = Configuration.get('app_name', 'ERPBlok')
-    allow_database_manager = Configuration.get('allow_database_manager',
-                                               True)
     return {
         'title': title,
-        'databases': list_databases(),
-        'database': database,
-        'allow_database_manager': allow_database_manager,
+        'css': get_static('login_css'),
+        'js': get_static('login_js'),
+        'js_babel': get_static('login_js_babel'),
+        'templates': get_templates_from('login_templates'),
     }
 
 

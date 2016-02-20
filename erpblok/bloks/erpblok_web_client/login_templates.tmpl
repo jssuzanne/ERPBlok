@@ -1,0 +1,27 @@
+<templates>
+    <!--
+        It is the templating for client
+
+        The client templating come from
+        http://www.jsviews.com/#d.templates
+    -->
+    <template id="Client" type="text/x-jsrender">
+        <div class="row">
+            <div class="columns small-12 medium-8 medium-offset-2 large-4 large-offset-4">
+                <ClientLogo />
+                <div class="section">
+                    <div id="error" class="hide alert callout">
+                    </div>
+                    <label for="login">Login</label>
+                    <input id="login" type="text" required class="validate"/>
+                    <label for="password">Password</label>
+                    <input id="password" type="password" required class="validate"/>
+                    <a id="submit" class="button expanded" href="#">Login</a>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="clientlogo" type="text/x-jsrender">
+        <img src="/login/logo"></img>
+    </template>
+</templates>

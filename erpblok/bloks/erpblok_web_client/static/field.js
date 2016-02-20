@@ -58,8 +58,11 @@
     });
     AnyBlokJS.register({
         classname: 'Field.X2Many',
-        extend: ['Field'],
+        extend: ['ActionInterface', 'Field'],
         prototype: {
+            init: function(view, options) {
+                this._super(view, options);
+            },
             template: 'ERPBlokViewX2Many',
         },
     });
