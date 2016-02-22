@@ -1,77 +1,33 @@
 window.ERPBlok = null;
 (function () {
-    var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/; 
+    AnyBlokJS.register({classname: 'React', prototype: React.Component.prototype})
 
-    class ERPBLOK {
-        constructor () {
-            this.classes = {};
-            this.react_classes = {};
-            this.mixins = {};
-        };
-        extend (classname, cls, prototype) {  
-            var A = null;
-            if (cls == undefined) {
-                function init (self) {
-                }
-                A = new Function('init', 'return function ' + classname + ' () {init(this);}')(init);
-                A.prototype = Object.create(prototype);
-            } else {
-                A = cls;
-                for (var name in prototype) {
-                    A.prototype[name] = typeof prototype[name] == "function" &&            
-                                        fnTest.test(prototype[name]) ?                     
-                        (function(name, super_fn, fn) {                         
-                            return function() {
-                                var tmp = this._super;                          
-                                this._super = super_fn;                         
-                                var ret = fn.apply(this, arguments);            
-                                this._super = tmp;                              
-                                return ret;                                     
-                            };                                                  
-                        })(name, A.prototype[name], prototype[name]) :                 
-                        prototype[name]; 
-                }
+    var ERPBLOK = function () {this.init()};
+    ERPBLOK.prototype = Object.create({
+        init: function () {
+            this.react_classes = [];
+        },
+        declare_react_class: function (classname) {
+            if (this.react_classes.indexOf(classname) == -1) {
+                this.react_classes.push(classname);
             }
-            return A
-        };
-        add_prototype_for (classname, prototype={}, isareactclass=true) {
-            var parent = undefined;
-            if (isareactclass) {
-                parent = this.react_classes[classname];
-            } else {
-                parent = this.classes[classname];
+        },
+        compile_react_classes: function () {
+            for (var index in this.react_classes) {
+                var classname = this.react_classes[index];
+                AnyBlokJS.register({classname: classname, extend: ['React']})
+                window[classname] = AnyBlokJS.compile(classname);
+                window[classname].prototype.constructor = function () {
+                    if (this.init) {
+                        this.init();
+                    }
+                    React.Component.prototype.constructor.apply(this, arguments);
+                    var r = this.getInitialState ? this.getInitialState() : null;
+                    this.state = r
+                };
             }
-            var cls = this.extend(classname, parent, prototype);
-            if (isareactclass) {
-                this.react_classes[classname] = cls;
-            } else {
-                this.classes[classname] = cls;
-            }
-        };
-        add_mixin (mixinname, prototype={}) {
-            var parent = this.mixins[mixinname];
-            var A  = this.extend(mixinname, parent, prototype);
-            this.mixins[mixinname] = A;
-        }
-        apply_mixin (classname, mixinname, isreactclass=true) {
-            var mixin = this.mixins[mixinname];
-            if (mixin) {
-                mixin = mixin.prototype;
-            }
-            this.add_prototype_for(classname, mixin, isreactclass);
-        }
-        get_class_for (classname) {
-            return this.classes[classname];
-        };
-        compile_react_classes() {
-            var self = this;
-            for (var classname in this.react_classes) {
-                var cls = self.react_classes[classname],
-                    prototype = React.Component.prototype;
-                window[classname] = self.extend(classname, cls, prototype);
-            }
-        };
-    };
+        },
+    });
 
     window.ERPBlok = new ERPBLOK()
 }) ();

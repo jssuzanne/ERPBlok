@@ -1,0 +1,5 @@
+.reveal {
+    overflow-y: auto;
+    max-height: 100%;
+    position: fixed;
+}

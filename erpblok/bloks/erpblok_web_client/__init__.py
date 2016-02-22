@@ -23,15 +23,18 @@ class ERPBlokWebClient(Blok):
     login_js = [
         '#BLOK/static/react.min.js',
         '#BLOK/static/react-dom.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js',
-        #'#BLOK/static/babel-core/5.8.34/browser.min.js',
+        '#BLOK/static/babel-core/5.8.34/browser.min.js',
         '#BLOK/static/jquery-2.1.3.min.js',
+        '#BLOK/static/foundation-6.1.0/js/foundation.min.js',
         '#BLOK/static/jsviews.min.js',
+        '#BLOK/static/anyblok-js.js',
+        '#BLOK/static/erpblok.js',
     ]
 
     login_js_babel = [
-        '#BLOK/static/erpblok.js',
         '#BLOK/static/template.js',
+        '#BLOK/static/fields.js',
+        '#BLOK/static/modals.js',
         '#BLOK/static/login.js',
     ]
 
@@ -39,6 +42,7 @@ class ERPBlokWebClient(Blok):
         'login_templates.tmpl',
     ]
 
+    # Define client page
     css = [
         '/static/foundation-6.1.0/css/foundation.min.css',
         '/static/foundation-icons/foundation-icons.css',

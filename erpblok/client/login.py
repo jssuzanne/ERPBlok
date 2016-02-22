@@ -11,6 +11,7 @@ from .template import Template
 
 Declarations.Pyramid.add_route('login', '/login')
 Declarations.Pyramid.add_route('login-logo', '/login/logo')
+Declarations.Pyramid.add_route('login-databases', '/login/databases')
 Declarations.Pyramid.add_route('login-connect', '/login/connect',
                                request_method='POST')
 Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
@@ -55,7 +56,6 @@ def get_templates_from(attr):
 def get_login(request, database=None):
     """ Display the login page
 
-    :param database: default database filled by the url
     """
     title = Configuration.get('app_name', 'ERPBlok')
     return {
@@ -75,6 +75,12 @@ def get_login_logo(request):
         return HTTPFound(location=url_login_logo)
 
     return HTTPFound(location="/static/login-logo.png")
+
+
+@Declarations.Pyramid.add_view('login-databases', request_method="GET",
+                               renderer="json")
+def get_databases(request):
+    return list_databases()
 
 
 @Declarations.Pyramid.add_view('login-connect')

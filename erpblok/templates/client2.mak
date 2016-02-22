@@ -9,7 +9,18 @@
         % endfor
     </head>
     <body>
-        <div id="ERPBLOKMAINAPP"></div>
+        <div class="top-bar">
+            <div id="topbarleft" class="top-bar-left">
+            </div>
+            <div id="topbarright" class="top-bar-right">
+            </div>
+        </div>
+        <div id="app">
+        </div>
+        <div class="reveal" id="revealtopbarleft" data-reveal>
+        </div>
+        <div class="reveal" id="revealtopbarright" data-reveal>
+        </div>
         % for x in js:
             <script type="text/javascript" src="${x}" ></script>
         % endfor
@@ -18,7 +29,8 @@
         % endfor
         <script type="text/babel">
             ERPBlok.compile_react_classes();
-            ReactDOM.render(<Client />, document.getElementById('ERPBLOKMAINAPP'));  
+            document.ERPBlokClient = AnyBlokJS.new('Client');
+            document.ERPBlokClient.load();
         </script>
         ${templates | n}
     </body>
