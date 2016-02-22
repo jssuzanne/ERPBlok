@@ -15,7 +15,7 @@ class ERPBlokWebClient(Blok):
 
     # Define the static for the login page
     login_css = [
-        '#BLOK/static/foundation-6.1.0/css/foundation.min.css',
+        '#BLOK/static/foundation-6.1.2/css/foundation.min.css',
         '#BLOK/static/foundation-icons/foundation-icons.css',
         '#BLOK/static/erpblok.css',
     ]
@@ -25,7 +25,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/react-dom.min.js',
         '#BLOK/static/babel-core/5.8.34/browser.min.js',
         '#BLOK/static/jquery-2.1.3.min.js',
-        '#BLOK/static/foundation-6.1.0/js/foundation.min.js',
+        '#BLOK/static/foundation-6.1.2/js/foundation.min.js',
         '#BLOK/static/jsviews.min.js',
         '#BLOK/static/anyblok-js.js',
         '#BLOK/static/erpblok.js',
