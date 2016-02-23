@@ -51,8 +51,7 @@ def get_templates_from(attr):
     return tmpl.get_all_template()
 
 
-@Declarations.Pyramid.add_view('login',
-                               renderer='erpblok:templates/client2.mak')
+@Declarations.Pyramid.add_view('login', renderer='erpblok:client.mak')
 def get_login(request, database=None):
     """ Display the login page
 
@@ -80,7 +79,19 @@ def get_login_logo(request):
 @Declarations.Pyramid.add_view('login-databases', request_method="GET",
                                renderer="json")
 def get_databases(request):
-    return list_databases()
+    res = [
+        {
+            'label': 'Databases',
+            'icon': 'fi-database large',
+            'menus': [{'id': x, 'label': x} for x in list_databases()],
+        },
+        {
+            'label': 'Tools',
+            'icon': 'fi-menu',
+            'menus': [{'id': 'new', 'label': 'New database'}],
+        },
+    ]
+    return res
 
 
 @Declarations.Pyramid.add_view('login-connect')

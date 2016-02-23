@@ -33,8 +33,8 @@
         },
         selectDB: function (value) {
             this.closeRemoval();
-            this.revealButton.setState({label: value.id});
-            this.database = value.id;
+            this.revealButton.setState({label: value});
+            this.database = value;
         },
         selectedDB: function () {
             return {
@@ -45,14 +45,8 @@
         openReveal: function (menuname) {
             var self = this;
             $.ajax({type: 'GET',
-                    url: '/login/databases'}).done(function (databases) {
-                var dbs = [];
-                for (var index in databases) {
-                    dbs.push({icon: 'fi-database large', 
-                              label: databases[index],
-                              id: databases[index]})
-                }
-                self.revealModal.setState({menus: dbs});
+                    url: '/login/databases'}).done(function (menus) {
+                self.revealModal.setState({menus: menus});
                 self.leftModal.open();
             });
         },
