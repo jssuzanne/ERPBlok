@@ -70,8 +70,16 @@
         isReadonly: function (fieldname) {
             return false;
         },
+        add_error: function (msg) {
+            var $error = this.$el.find('#error'),
+                $node = $('<div>' + msg + '</div>');
+            $error.removeClass("hide");
+            $error.children().remove()
+            $node.appendTo($error);
+        },
         load_auth: function () {
             var $el = this.render_template();
+            this.$el = $el;
             $el.appendTo($('#app'));
             for (var field in this.fields) {
                 ReactDOM.render(<Field options={this.fields[field]}
@@ -83,7 +91,7 @@
             var self = this,
                 hash = window.location.hash;
             $el.find('#submit').click(function (event) {
-                var $error = $el.find('#error'),
+                var
                     database = self.database,
                     login = self.fields.login.value,
                     password = self.fields.password.value;
@@ -92,20 +100,27 @@
                             url:"/login/connect",
                             data: {database: database, login: login, password: password}})
                     .fail(function (xhr, status) {
-                        $error.removeClass("hide");
-                        $error.children().remove()
-                        var $node = null;
                         if (xhr.status == 401) {
-                            $node = $('<div>Wrong Login or Password</div>');
+                            self.add_error('Wrong Login or Password');
                         } else {
-                            $node = $('<div>Unknown error</div>');
+                            self.add_error('Unknown error');
                         }
-                        $node.appendTo($error);
-                        self.hashTagManager.update({database: database})
                     })
                     .done(function (url) {
                         window.location = url + hash;
                     });
+                } else {
+                    var misseddata = []
+                    if (! database) {
+                        misseddata.push('Database');
+                    }
+                    if (! login) {
+                        misseddata.push('Login');
+                    }
+                    if (! password) {
+                        misseddata.push('Password');
+                    }
+                    self.add_error('Miss ' + misseddata.toString())
                 }
             });
         },

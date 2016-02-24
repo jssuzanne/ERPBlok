@@ -11,10 +11,7 @@ Configuration.applications['gunicorn']['configuration_groups'].append(
 
 @Configuration.add('database-manager', label="Database manager")
 def add_database(group):
-    group.add_argument('--db-manager-password', dest='db_manager_password',
-                       default='admin')
-    group.add_argument('--db-manager-demo', dest='db_manager_demo',
-                       action='store_true')
-    group.add_argument('--db-manager-blok-manager',
-                       dest='db_manager_blok_manager',
-                       action='store_true')
+    group.add_argument('--db-filter')
+    group.add_argument('--db-manager-password', default='admin')
+    group.add_argument('--db-manager-demo', action='store_true')
+    group.add_argument('--db-manager-blok-manager', action='store_true')

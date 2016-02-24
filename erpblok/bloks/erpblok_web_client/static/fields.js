@@ -41,13 +41,24 @@
         render_ro: function () {
             return <span>{this.state.value}</span>
         },
+        get_style: function () {
+            var style = {};
+            if (! this.props.options.nullable) {
+                style['background-color'] = 'lightblue';
+                if (!this.state.value) {
+                    style['border'] = '3px solid red';
+                }
+            }
+            return style;
+        },
         render_rw: function () {
-            var required = this.props.options.nullable ? false : true;
-            var placeholder = this.props.options.placeholder || '';
+            var required = this.props.options.nullable ? false : true,
+                placeholder = this.props.options.placeholder || '';
             return <input type={this.input_type}
                           required={required}
                           placeholder={placeholder}
                           value={this.state.value}
+                          style={this.get_style()}
                           onChange={this.handleChange.bind(this)}
                     />
         },

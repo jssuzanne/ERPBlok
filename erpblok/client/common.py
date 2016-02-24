@@ -10,16 +10,21 @@ from sqlalchemy_utils.functions import (
 def list_databases():
     """ return the name of the databases """
     url = Configuration.get_url()
+    db_filter = Configuration.get('db_filter')
     text = None
     if url.drivername in ('postgres', 'postgresql'):
         url = Configuration.get_url(db_name='postgres')
-        text = "SELECT datname FROM pg_database ;"
+        text = "SELECT datname FROM pg_database"
+
+        #if db_filter:
+        #    text += " where datname like '%s'" % db_filter
 
     if text is None:
         return []
 
     engine = create_engine(url)
-    return [x[0] for x in engine.execute(text).fetchall()]
+    return [x[0] for x in engine.execute(text).fetchall()
+            if x[0] not in ('template1', 'template0', 'postgres')]
 
 
 def create_database(database):

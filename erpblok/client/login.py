@@ -87,8 +87,14 @@ def get_databases(request):
         },
         {
             'label': 'Tools',
-            'icon': 'fi-menu',
-            'menus': [{'id': 'new', 'label': 'New database'}],
+            'icon': 'fi-widget',
+            'menus': [{'id': 'manage_db',
+                       'label': 'Manage databases',
+                       'icon': 'fi-wrench',
+                       'description': "Create new or drop exising ERPBlok "
+                                      "database. You may also insall or "
+                                      "uninstall some low level management "
+                                      "bloks"}],
         },
     ]
     return res
