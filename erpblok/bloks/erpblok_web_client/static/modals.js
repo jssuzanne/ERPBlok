@@ -83,6 +83,9 @@
                         if (menu.label.indexOf(filterText) !== -1) {
                             panels.push(menu);
                         }
+                        if (menu.description && menu.description.indexOf(filterText) !== -1) {
+                            panels.push(menu);
+                        }
                     } else {
                         panels.push(menu);
                     }

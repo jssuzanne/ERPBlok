@@ -1,6 +1,9 @@
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from anyblok.environment import EnvironmentManager
+from anyblok.blok import BlokManager
+from os.path import join
+from .template import Template
 from sqlalchemy import create_engine
 from sqlalchemy_utils.functions import (
     database_exists, create_database as SU_create_database,
@@ -16,8 +19,9 @@ def list_databases():
         url = Configuration.get_url(db_name='postgres')
         text = "SELECT datname FROM pg_database"
 
-        #if db_filter:
-        #    text += " where datname like '%s'" % db_filter
+        if db_filter:
+            db_filter = db_filter.replace('%', '%%')
+            text += " where datname like '%s'" % db_filter
 
     if text is None:
         return []
@@ -86,3 +90,36 @@ def logout(request):
     request.session['password'] = ""
     request.session['state'] = "disconnected"
     request.session.save()
+
+
+def format_static(blok, static_url):
+    """ Replace the attribute #BLOK by the real name of the blok """
+    if static_url.startswith('#BLOK'):
+        return '/' + blok + static_url[5:]
+    else:
+        return static_url
+
+
+def get_static(static_type):
+    res = []
+    for blok_name in BlokManager.ordered_bloks:
+        blok = BlokManager.get(blok_name)
+        if hasattr(blok, static_type):
+            for static_url in getattr(blok, static_type):
+                res.append(format_static(blok_name, static_url))
+
+    return res
+
+
+def get_templates_from(attr):
+    tmpl = Template(forclient=True)
+    for blok_name in BlokManager.ordered_bloks:
+        blok = BlokManager.get(blok_name)
+        if hasattr(blok, attr):
+            bpath = BlokManager.getPath(blok_name)
+            for template in getattr(blok, attr):
+                with open(join(bpath, template), 'r') as fp:
+                    tmpl.load_file(fp)
+
+    tmpl.compile()
+    return tmpl.get_all_template()

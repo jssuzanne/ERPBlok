@@ -2,39 +2,48 @@
     AnyBlokJS.register({classname: 'Client', extend: ['Template'], prototype: {
         template: 'Client',
         init: function () {
+            this.UrlSearchManager = AnyBlokJS.new('UrlSearchManager');
             this.init_foundation();
             this.fields = {
                 login: {
                     id: 'login',
                     type: 'string',
-                    nullable: false,
+                    nullable: true,
                     placeholder: 'Enter your login ...',
                     value: '',
                 },
                 password: {
                     id: 'password',
                     type: 'password',
-                    nullable: false,
+                    nullable: true,
                     placeholder: 'Enter the associated password ...',
                     value: '',
                 },
             };
-            this.database = null
         },
         init_foundation: function () {
             this.leftModal = new Foundation.Reveal($('#revealtopbarleft'));
         },
         load: function () {
-            this.load_db_selector();
             this.load_auth();
+            this.load_db_selector();
         },
         closeRemoval: function () {
             this.leftModal.close();
         },
+        fnct_manage_db: function () {
+            window.location = '/database/manager';
+        },
         selectDB: function (value) {
             this.closeRemoval();
-            this.revealButton.setState({label: value});
-            this.database = value;
+            this.$el.find('#error').addClass("hide");
+            var fnct = 'fnct_' + value;
+            if (this[fnct]) {
+                this[fnct]();
+            } else {
+                this.revealButton.setState({label: value});
+                this.database = value;
+            }
         },
         selectedDB: function () {
             return {
@@ -59,6 +68,10 @@
                 <MenuRevealModal select={this.selectDB.bind(this)}
                                  close={this.closeRemoval.bind(this)} />,
                 document.getElementById('revealtopbarleft'));
+            var default_db = this.UrlSearchManager.get('database');
+            if (default_db) {
+                this.selectDB(default_db);
+            }
         },
         initField: function (fieldname, instance) {
             this.fields[fieldname].instance = instance;
@@ -110,17 +123,9 @@
                         window.location = url + hash;
                     });
                 } else {
-                    var misseddata = []
                     if (! database) {
-                        misseddata.push('Database');
+                        self.add_error('Miss database');
                     }
-                    if (! login) {
-                        misseddata.push('Login');
-                    }
-                    if (! password) {
-                        misseddata.push('Password');
-                    }
-                    self.add_error('Miss ' + misseddata.toString())
                 }
             });
         },

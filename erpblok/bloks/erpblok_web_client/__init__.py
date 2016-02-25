@@ -13,14 +13,13 @@ class ERPBlokWebClient(Blok):
         'pyramid',
     ]
 
-    # Define the static for the login page
-    login_css = [
+    # Define the static for all pages
+    global_css = [
         '#BLOK/static/foundation-6.1.2/css/foundation.min.css',
         '#BLOK/static/foundation-icons/foundation-icons.css',
         '#BLOK/static/erpblok.css',
     ]
-
-    login_js = [
+    global_js = [
         '#BLOK/static/react.min.js',
         '#BLOK/static/react-dom.min.js',
         '#BLOK/static/babel-core/5.8.34/browser.min.js',
@@ -31,10 +30,21 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/erpblok.js',
     ]
 
-    login_js_babel = [
+    global_js_babel = [
         '#BLOK/static/template.js',
         '#BLOK/static/fields.js',
         '#BLOK/static/modals.js',
+    ]
+
+    # Define the static for the login page
+    login_css = [
+    ]
+
+    login_js = [
+    ]
+
+    login_js_babel = [
+        '#BLOK/static/url-search-manager.js',
         '#BLOK/static/login.js',
     ]
 
