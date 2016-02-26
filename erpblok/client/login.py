@@ -50,7 +50,9 @@ def get_databases(request):
             'icon': 'fi-database large',
             'menus': [{'id': x, 'label': x} for x in list_databases()],
         },
-        {
+    ]
+    if Configuration.get('allow_database_manager'):
+        res.append({
             'label': 'Tools',
             'icon': 'fi-widget',
             'menus': [{'id': 'manage_db',
@@ -60,8 +62,8 @@ def get_databases(request):
                                       "database. You may also insall or "
                                       "uninstall some low level management "
                                       "bloks"}],
-        },
-    ]
+        })
+
     return res
 
 
