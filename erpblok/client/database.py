@@ -114,7 +114,7 @@ def get_databases(request):
 
 @Declarations.Pyramid.add_view('database-createdb')
 def post_create_database(request, database=None, login=None, password=None,
-                         db_manager_password=None, install_bloks=None):
+                         db_manager_password=None, install_bloks=None, **kwargs):
     """ Create a new database, and initialize it
 
     :param database: name of the database to create
@@ -132,6 +132,7 @@ def post_create_database(request, database=None, login=None, password=None,
     registry.commit()
 
     if install_bloks:
+        install_bloks = install_bloks.split(',')
         registry.upgrade(install=install_bloks)
         registry.commit()
 

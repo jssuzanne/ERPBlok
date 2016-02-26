@@ -18,6 +18,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/foundation-6.1.2/css/foundation.min.css',
         '#BLOK/static/foundation-icons/foundation-icons.css',
         '#BLOK/static/erpblok.css',
+        '#BLOK/static/fields.css',
     ]
     global_js = [
         '#BLOK/static/react.min.js',
@@ -53,7 +54,9 @@ class ERPBlokWebClient(Blok):
     # Define the static for database page
 
     database_css = []
-    database_js = []
+    database_js = [
+        '#BLOK/static/notification/notification.js',
+    ]
     database_js_babel = [
         '#BLOK/static/database.js',
     ]

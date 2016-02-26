@@ -63,6 +63,17 @@
             }
             return style;
         },
+        get_className: function () {
+            var className='';
+            if (!this.props.options.nullable) {
+                if (!this.state.value) {
+                    className = 'fieldNotNull fieldEmpty'
+                } else {
+                    className = 'fieldNotNull'
+                }
+            }
+            return className
+        },
         render_rw: function () {
             var required = this.props.options.nullable ? false : true,
                 placeholder = this.props.options.placeholder || '';
@@ -90,8 +101,8 @@
             this.props.options.selections.forEach(function (selection) {
                 options.push(<option value={selection[0]}>{selection[1]}</option>)
             });
-            // add css class for nullable
             return (<select value={this.state.value} 
+                            className={this.get_className()}
                             onChange={this.handleChange.bind(this)} >
                         {options}
                     </select>)

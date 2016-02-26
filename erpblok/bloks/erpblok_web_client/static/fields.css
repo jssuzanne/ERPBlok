@@ -1,0 +1,8 @@
+select.fieldNotNull ,
+input.fieldNotNull {
+    background-color: lightblue;
+}
+select.fieldEmpty,
+input.fieldEmpty {
+    border: 3px solid red;
+}

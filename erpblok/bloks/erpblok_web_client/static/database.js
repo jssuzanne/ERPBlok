@@ -33,21 +33,42 @@
                 <MenuRevealModal select={this.selectMenu.bind(this)}
                                  close={this.closeRemoval.bind(this)} />,
                 document.getElementById('revealtopbarleft'));
-            // this.open_create_page();
-            this.open_drop_page();
+            this.open_create_page();
         },
         return_to_login_page: function () {
             window.location = '/';
         },
-        render_template: function(template, values={}) {
+        render_template: function(template, onClick, values={}) {
             this.template = template;
             var $el = this._super(values),
+                self = this,
                 $app = $('#app');
 
             $app.children().remove();
             // maybe drop also the react instance
             $el.appendTo($app);
+            $el.find('a#submit').click(function (event) {
+                if (self.validate_required_fields()) {
+                    onClick($el);
+                }
+            });
             return $el
+        },
+        validate_required_fields: function () {
+            var onErrorField = []
+            for (var index in this.fields) {
+                if (this.fields[index].nullable === false) {
+                    if (!this.fields[index].value) {
+                        onErrorField.push(this.fields[index].id);
+                    }
+                }
+            }
+            if (onErrorField.length != 0) {
+                notify_error('Some fields miss',
+                             'Please fill the fields : ' + onErrorField.toString())
+                return false;
+            }
+            return true;
         },
         applyReactField: function ($el, fields){
             this.fields = fields;
@@ -62,11 +83,50 @@
         open_create_page: function() {
             this.revealButton.setState({icon: 'fi-plus', 
                                         label: 'Create a new database'});
-            var self= this;
+            var self= this,
+                installable_bloks = [];
+            var onClick = function ($el) {
+                $el.find('.alert').addClass('hide');
+                if (self.fields.password.value != self.fields.password2.value) {
+                    $el.find('#error2').removeClass('hide');
+                } else if (database && login && password) {
+                    var install_bloks = [];
+                    for (var index in installable_bloks) {
+                        if (self.fields[installable_bloks[index]].value) {
+                            install_bloks.push(installable_bloks[index]);
+                        }
+                    } 
+                    $.ajax({type: "POST",
+                            url:"/database/manager/create",
+                            data: {database: self.fields.database.value, 
+                                   login: self.fields.login.value, 
+                                   password: self.fields.password.value,
+                                   install_bloks: install_bloks.toString(),
+                                   db_manager_password: self.fields.db_manager_password.value}})
+                    .fail(function (xhr, status) {
+                        if (xhr.status == 401) {
+                            $el.find('#error3').removeClass("hide");
+                        }
+                        if (xhr.status == 403) {
+                            $el.find('#error').removeClass("hide");
+                        }
+                    })
+                    .done(function (url) {
+                        window.location = url;
+                    });
+                }
+            }
             $.ajax({type: 'GET',
                     url: '/database/addons'}).done(function (addons) {
-                var $el = self.render_template('ClientCreateDB', {addons: addons});
+                var $el = self.render_template('ClientCreateDB', onClick, {addons: addons});
                 var fields = {
+                    db_manager_password: {
+                        id: 'db_manager_password',
+                        type: 'Password',
+                        nullable: false,
+                        placeholder: 'Enter the administrator password ...',
+                        value: '',
+                    },
                     database: {
                         id: 'database',
                         type: 'String',
@@ -103,6 +163,7 @@
                         type: 'Boolean',
                         value: addon.value,
                     }
+                    installable_bloks.push(addon.id);
                 }
                 self.applyReactField($el, fields);
             });
@@ -110,11 +171,32 @@
         open_drop_page: function() {
             this.revealButton.setState({icon: 'fi-trash', 
                                         label: 'Drop an existing database'});
-            var $el = this.render_template('ClientDropDB');
             var self= this;
+            var onClick = function ($el) {
+                $.ajax({type: "POST",
+                        url:"/database/manager/drop",
+                        data: {database: self.fields.database.value, 
+                        db_manager_password:self.fields.db_manager_password.value}})
+                .fail(function (xhr, status) {
+                    if (xhr.status == 401) {
+                        $el.find('#error').removeClass("hide");
+                    }
+                }).done (function () {
+                    self.open_create_page();
+                });
+            }
+            var $el = this.render_template('ClientDropDB', onClick);
             $.ajax({type: 'GET',
                     url: '/database/selection'}).done(function (field) {
-                var fields = {}
+                var fields = {
+                    db_manager_password: {
+                        id: 'db_manager_password',
+                        type: 'Password',
+                        nullable: false,
+                        placeholder: 'Enter the administrator password ...',
+                        value: '',
+                    },
+                }
                 fields[field.id] = field;
                 self.applyReactField($el, fields);
             });
@@ -129,40 +211,5 @@
         isReadonly: function (fieldname) {
             return false;
         },
-        /*
-        load_auth: function () {
-            var $el = this.render_template();
-            this.$el = $el;
-            $el.appendTo($('#app'));
-            }
-            var self = this,
-                hash = window.location.hash;
-            $el.find('#submit').click(function (event) {
-                var
-                    database = self.database,
-                    login = self.fields.login.value,
-                    password = self.fields.password.value;
-                if (database && login && password) {
-                    $.ajax({type: "POST",
-                            url:"/login/connect",
-                            data: {database: database, login: login, password: password}})
-                    .fail(function (xhr, status) {
-                        if (xhr.status == 401) {
-                            self.add_error('Wrong Login or Password');
-                        } else {
-                            self.add_error('Unknown error');
-                        }
-                    })
-                    .done(function (url) {
-                        window.location = url + hash;
-                    });
-                } else {
-                    if (! database) {
-                        self.add_error('Miss database');
-                    }
-                }
-            });
-        },
-        */
     }});
 }) ();

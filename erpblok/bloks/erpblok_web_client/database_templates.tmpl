@@ -17,6 +17,8 @@
                 <div id="error3" data-alert class="hide alert callout">
                     Wrong database manager password
                 </div>
+                <label for="db_manager_password">Adminitrator password</label>
+                <field id="db_manager_password" />
                 <label for="database">Name of the database</label>
                 <field id="database"/>
                 <label for="login">Login of the administrator</label>
@@ -39,16 +41,21 @@
                         </div>
                     {{/for}}
                 </fieldset>
-                <a id="submit-create" class="button expanded" href="#">Create</a>
+                <a id="submit" class="button expanded" href="#">Create</a>
             </div>
         </div>
     </template>
     <template id="ClientDropDB" type="text/x-jsrender">
         <div class="row">
             <div class="columns small-12 medium-8 medium-offset-2 large-4 large-offset-4">
+                <div id="error" data-alert class="hide alert callout">
+                    Wrong database manager password
+                </div>
+                <label for="db_manager_password">Adminitrator password</label>
+                <field id="db_manager_password" />
                 <label for="database">Select the database to drop</label>
                 <field id="database" />
-                <a id="submit-drop" class="button expanded" href="#">Drop</a>
+                <a id="submit" class="button expanded" href="#">Drop</a>
             </div>
         </div>
     </template>
