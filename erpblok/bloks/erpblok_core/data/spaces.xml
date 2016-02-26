@@ -2,7 +2,7 @@
 <records>
     <record external_id="setting_space">
         <field name="label">User</field>
-        <field name="icon">fi-wrench</field>
+        <field name="icon">fi-results-demographics</field>
         <field name="description">Configure the users and access rules</field>
         <field name="category" external_id="setting_space_category" />
     </record>

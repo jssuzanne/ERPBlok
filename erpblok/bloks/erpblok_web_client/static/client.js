@@ -29,8 +29,14 @@
             this.closeLeftRemoval();
             this.hashTagManager.update({space: value});
             var self = this;
-            $.ajax({type: 'POST',
-                    url: '/client/space/description?space=' + value}).done(function (space) {
+            $.ajax({type: 'POST', url: '/client/space/description?space=' + value})
+            .fail(function (xhr, status) {
+                if (xhr.status == 403) {
+                    notify_error('Forbidden access',
+                                 'You try to access at an unauthorized action');
+                }
+            })
+            .done(function (space) {
                 self.leftrevealButton.setState({icon: space.icon, label: space.label});
             });
         },

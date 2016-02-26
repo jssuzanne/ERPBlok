@@ -21,18 +21,6 @@ class Space:
             'icon': self.icon,
         }
 
-    @classmethod
-    def get_descriptions(cls, category):
-        return [
-            {
-                'id': self.id,
-                'label': self.label,
-                'icon': self.icon,
-                'description': self.description,
-            }
-            for self in cls.query().filter(cls.category == category).order_by(cls.order).all()
-        ]
-
 
 @Declarations.register(Declarations.Model.Web.Space)
 class Category:
@@ -42,17 +30,3 @@ class Category:
     icon = String()
     order = Integer(nullable=False, default=100)
     groups = Many2Many(model=Declarations.Model.Access.Group)
-
-    @classmethod
-    def get_descriptions(cls):
-        res = []
-        for category in cls.query().order_by(cls.order).all():
-            spaces = cls.registry.Web.Space.get_descriptions(category)
-            if spaces:
-                res.append({
-                    'id': category.label,
-                    'icon': category.icon,
-                    'label': category.label,
-                    'menus': spaces})
-
-        return res

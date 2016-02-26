@@ -151,7 +151,9 @@
                              style={{cursor: 'pointer'}} >
                             <div className="row">
                                 <div className="column small-2 medium-2 large-2">
-                                    <i className={this.props.icon} />
+                                    <h4>
+                                        <i className={this.props.icon} />
+                                    </h4>
                                 </div>
                                 <div className="column small-10 medium-10 large-10">
                                     <h5>{this.props.label}</h5>
