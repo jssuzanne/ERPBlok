@@ -75,10 +75,9 @@ def post_login_connect(request, database=None, login=None, password=None):
     :rtype: redirection if login/password is right else HTTPUnauthorized
     """
     registry = RegistryManager.get(database)
-    authentificated = registry.Web.Login.check_authentification(
-        login, password)
-    if authentificated:
-        if login_user(request, database, login, password):
+    user_id = registry.Web.Login.check_authentification(login, password)
+    if user_id:
+        if login_user(request, database, login, password, user_id):
             return Response(request.route_url('web-client'))
 
     return HTTPUnauthorized()

@@ -65,22 +65,16 @@ class ERPBlokWebClient(Blok):
     ]
 
     # Define client page
-    css = [
-        '/static/foundation-6.1.0/css/foundation.min.css',
-        '/static/foundation-icons/foundation-icons.css',
-        '/static/erpblok.css',
+    client_css = [
         '#BLOK/static/view.css',
         '#BLOK/static/view_list.css',
     ]
 
-    js = [
-        '/static/jquery-2.1.3.min.js',
-        '/static/foundation-6.1.0/js/foundation.min.js',
-        '/static/client.js',
-        '#BLOK/static/anyblok-js.js',
-        '#BLOK/static/jsviews.min.js',
+    client_js = [
         '#BLOK/static/underscore-min.js',
-        '#BLOK/static/erpblok.js',
+    ]
+
+    client_js_babel = [
         '#BLOK/static/rpc.js',
         '#BLOK/static/hashtag-manager.js',
         '#BLOK/static/menu.js',
@@ -94,9 +88,10 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_thumbnails.js',
         '#BLOK/static/view_form.js',
         '#BLOK/static/notification/notification.js',
+        '#BLOK/static/client.js',
     ]
 
-    template = [
+    client_templates = [
         'templates.tmpl',
     ]
 
@@ -120,8 +115,8 @@ class ERPBlokWebClient(Blok):
     @classmethod
     def import_declaration_module(cls):
         from . import core  # noqa
-        from . import web  # noqa
         from . import access  # noqa
+        from . import web  # noqa
         from . import ui  # noqa
         from . import controllers  # noqa
 
@@ -129,10 +124,10 @@ class ERPBlokWebClient(Blok):
     def reload_declaration_module(cls, reload):
         from . import core
         reload(core)
-        from . import web
-        reload(web)
         from . import access
         reload(access)
+        from . import web
+        reload(web)
         from . import ui
         reload(ui)
         from . import controllers

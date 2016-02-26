@@ -1,6 +1,5 @@
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
-from anyblok.environment import EnvironmentManager
 from anyblok.blok import BlokManager
 from os.path import join
 from .template import Template
@@ -57,7 +56,7 @@ def drop_database(database):
     SU_drop_database(url)
 
 
-def login_user(request, database, login, password):
+def login_user(request, database, login, password, user_id):
     """ Log the user
 
     The informations of the user are saved in the request if the user is found
@@ -71,16 +70,8 @@ def login_user(request, database, login, password):
     request.session['database'] = database
     request.session['login'] = login
     request.session['password'] = password
+    request.session['user_id'] = user_id
     request.session['state'] = "connected"
-    registry = RegistryManager.get(database)
-    User = registry.Access.User
-    Login = registry.Web.Login
-    query = User.query().join(Login)
-    query = query.filter(Login.login == login)
-    if not query.count():
-        return False
-
-    EnvironmentManager.set('user', query.first())
     request.session.save()
     return True
 
@@ -88,6 +79,8 @@ def login_user(request, database, login, password):
 def logout(request):
     """ Remove the user information of the login """
     request.session['password'] = ""
+    request.session['login'] = ""
+    request.session['user_id'] = ""
     request.session['state'] = "disconnected"
     request.session.save()
 

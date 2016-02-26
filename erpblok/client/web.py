@@ -30,20 +30,14 @@ def load_client(request):
 
     css = registry.Web.get_css()
     js = registry.Web.get_js()
-    usermenu = registry.Web.get_user_menu()
-    quickmenu = registry.Web.get_quick_menu()
-    appmenu = registry.Web.get_app_menu()
+    js_babel = registry.Web.get_js_babel()
     # TODO see in system.parmeter if they are no data for title
     title = Configuration.get('app_name', 'ERPBlok')
-    username = registry.Web.Login.username(login, password)
     templates = registry.Web.get_templates()
-    return render_to_response('erpblok:templates/client.mak',
+    return render_to_response('erpblok:client.mak',
                               {'title': title,
                                'css': css,
                                'js': js,
-                               'quickmenu': quickmenu,
-                               'usermenu': usermenu,
-                               'appmenu': appmenu,
+                               'js_babel': js_babel,
                                'templates': templates,
-                               'username': username,
                                }, request=request)

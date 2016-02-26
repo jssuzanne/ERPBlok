@@ -136,7 +136,8 @@ def post_create_database(request, database=None, login=None, password=None,
         registry.upgrade(install=install_bloks)
         registry.commit()
 
-    login_user(request, database, login, password)
+    user = registry.IO.Mapping.get('Model.Access.User', 'main_admin_user')
+    login_user(request, database, login, password, user.id)
     return Response(request.route_url('web-client'))
 
 

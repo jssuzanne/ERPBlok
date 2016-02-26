@@ -38,20 +38,7 @@ class Login:
         if query.count():
             for self in query.all():
                 if self.password == password:
-                    return True
+                    if self.user:
+                        return self.user.id
 
         return False
-
-    @classmethod
-    def username(cls, login, password):
-        """ Verify if the login / password allow to found a user
-
-        :param login: login of the user
-        :param password: password of the use
-        :rtype: Boolean True if the user is found else False
-        """
-        query = cls.query().filter(cls.login == login)
-        query = query.filter(cls.active.is_(True))
-        return [str(x.user).strip()
-                for x in query.all()
-                if x.password == password][0]

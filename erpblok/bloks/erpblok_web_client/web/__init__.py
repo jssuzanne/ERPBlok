@@ -1,6 +1,7 @@
-from anyblok.declarations import Declarations, classmethod_cache
+from anyblok.declarations import Declarations
 from anyblok import reload_module_if_blok_is_reloading
 from anyblok.blok import BlokManager
+from erpblok.client.template import Template
 
 
 @Declarations.register(Declarations.Model)
@@ -34,89 +35,38 @@ class Web:
     @classmethod
     def get_css(cls):
         """ Return the css paths """
-        return cls.get_static('css')
+        return cls.get_static('global_css') + cls.get_static('client_css')
 
     @classmethod
     def get_js(cls):
         """ return the js paths """
-        return cls.get_static('js')
-
-    @classmethod_cache()
-    def get_user_menu(cls):
-        """ Return the list of the user menu
-
-        list format is [[function, action, icon, label], ...]
-        """
-        UserMenu = cls.registry.UI.UserMenu
-        query = query2 = UserMenu.query()
-        query = query.filter(UserMenu.with_user())
-        query2 = query2.filter(UserMenu.without_group())
-        query.union_all(query2)
-        query = query.order_by(UserMenu.order)
-        res = []
-        for menu in query.all():
-            res.append([
-                menu.function,
-                menu.action.id if menu.action else None,
-                menu.icon,
-                menu.label])
-        return res
+        return cls.get_static('global_js') + cls.get_static('client_js')
 
     @classmethod
-    def get_quick_menu(cls):
-        """ Return the list of the quick menu
-
-        list format is [[function, action, menu, icon, title], ...]
-        """
-        QuickMenu = cls.registry.UI.QuickMenu
-        # FIXME action is not a column but a relation ship (get_user_menu)
-        query = query2 = QuickMenu.query(
-            'function', 'ui_action_id', 'menu', 'icon', 'title')
-        query = query.filter(QuickMenu.with_user())
-        query2 = query2.filter(QuickMenu.without_group())
-        query.union_all(query2)
-        query = query.order_by(QuickMenu.order)
-        return query.all()
-
-    @classmethod
-    def get_app_menu(cls):
-        res = []
-        Menu = cls.registry.UI.Menu
-        query = Menu.query()
-        query = query2 = query.filter(Menu.ui_menu_id.is_(None))
-        query = query.filter(Menu.with_user())
-        query2 = query2.filter(Menu.without_group())
-        query.union_all(query2)
-        query = query.order_by(Menu.order)
-        for m in query.all():
-            res.append((m.id, m.label, cls.get_recurse_app_menu(m)))
-
-        return res
-
-    @classmethod
-    def get_recurse_app_menu(cls, node):
-        res = []
-        for m in node.children:
-            res.append((m.id, m.label, cls.get_recurse_app_menu(m)))
-
-        return res
+    def get_js_babel(cls):
+        """ return the babel paths """
+        return cls.get_static('global_js_babel') + cls.get_static('client_js_babel')
 
     @classmethod
     def get_templates(cls):
         """ Return the list of the web client template to load """
         from os.path import join
-        tmpl = cls.registry.UI.Template(forclient=True)
+        tmpl = Template(forclient=True)
         Blok = cls.registry.System.Blok
         for blok in Blok.list_by_state('installed'):
             b = BlokManager.get(blok)
-            if hasattr(b, 'template'):
+            if hasattr(b, 'client_templates'):
                 bpath = BlokManager.getPath(blok)
-                for template in b.template:
+                for template in b.client_templates:
                     with open(join(bpath, template), 'r') as fp:
                         tmpl.load_file(fp)
 
         tmpl.compile()
         return tmpl.get_all_template()
 
+from . import space  # noqa
+reload_module_if_blok_is_reloading(space)
 from . import login  # noqa
 reload_module_if_blok_is_reloading(login)
+from . import user  # noqa
+reload_module_if_blok_is_reloading(user)

@@ -46,7 +46,7 @@
     </record>
     <record external_id="action_user">
         <field name="label">Users</field>
-        <field name="model">Model.Access.User</field>
+        <field name="model">Model.Web.User</field>
         <field name="views">
             <record external_id="view_access_user_tree">
                 <field name="selectable">1</field>
