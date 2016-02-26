@@ -2,17 +2,27 @@
     ERPBlok.declare_react_class('MenuRevealButton')
     AnyBlokJS.register({classname: 'MenuRevealButton', prototype: {
         getInitialState: function () {
-            return this.props.getter();
+            if (this.props.getter) {
+                return this.props.getter();
+            }
+            return {icon: '', label: ''};
         },
         render: function () {
             return (<ul className="menu">
                         <li className="menu-text">
                             <h3>
-                                <a onClick={this.props.click} >
-                                    <i className={this.state.icon} />
-                                    {this.state.label}
+                                <a onClick={this.props.click} > 
+                                    {this.props.label}
                                 </a>
                             </h3>
+                        </li>
+                        <li className="menu-text">
+                            <h2>
+                                <span >
+                                    <i className={this.state.icon} />
+                                    {this.state.label}
+                                </span>
+                            </h2>
                         </li>
                     </ul>)
         },

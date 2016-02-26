@@ -37,11 +37,9 @@ class ERPBlokWebClient(Blok):
     ]
 
     # Define the static for the login page
-    login_css = [
-    ]
+    login_css = []
 
-    login_js = [
-    ]
+    login_js = []
 
     login_js_babel = [
         '#BLOK/static/url-search-manager.js',
@@ -50,6 +48,17 @@ class ERPBlokWebClient(Blok):
 
     login_templates = [
         'login_templates.tmpl',
+    ]
+
+    # Define the static for database page
+
+    database_css = []
+    database_js = []
+    database_js_babel = [
+        '#BLOK/static/database.js',
+    ]
+    database_templates = [
+        'database_templates.tmpl',
     ]
 
     # Define client page

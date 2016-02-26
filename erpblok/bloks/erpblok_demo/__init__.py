@@ -1,4 +1,5 @@
 from anyblok.blok import Blok
+from anyblok.config import Configuration
 
 
 class ERPBlokDemo(Blok):
@@ -9,6 +10,13 @@ class ERPBlokDemo(Blok):
         'anyblok-io-xml',
         'erpblok-core',
     ]
+
+    setting_blok_description = {
+        'label': 'Demo datas',
+        'description': 'Install the demo datas to start with some data in the '
+                       'goal to test ERPBlok',
+        'value': Configuration.get('db_manager_demo'),
+    }
 
     def install(self):
         """ Initialize database with the blok information """

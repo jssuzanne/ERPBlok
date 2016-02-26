@@ -1,4 +1,5 @@
 from anyblok.blok import Blok
+from anyblok.config import Configuration
 
 
 class ERPBlokBlokManager(Blok):
@@ -9,6 +10,13 @@ class ERPBlokBlokManager(Blok):
         'anyblok-core',
         'anyblok-io-xml',
     ]
+
+    setting_blok_description = {
+        'label': 'Blok Manager',
+        'description': 'Allow to install, update or unstall bloks from the '
+                       'application',
+        'value': Configuration.get('db_manager_blok_manager'),
+    }
 
     views = [
         'blok.tmpl',

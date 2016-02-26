@@ -7,14 +7,14 @@
             this.fields = {
                 login: {
                     id: 'login',
-                    type: 'string',
+                    type: 'String',
                     nullable: true,
                     placeholder: 'Enter your login ...',
                     value: '',
                 },
                 password: {
                     id: 'password',
-                    type: 'password',
+                    type: 'Password',
                     nullable: true,
                     placeholder: 'Enter the associated password ...',
                     value: '',
@@ -41,14 +41,8 @@
             if (this[fnct]) {
                 this[fnct]();
             } else {
-                this.revealButton.setState({label: value});
+                this.revealButton.setState({icon: 'fi-database', label: value});
                 this.database = value;
-            }
-        },
-        selectedDB: function () {
-            return {
-                icon: 'fi-database large',
-                label: 'Select a database',
             }
         },
         openReveal: function (menuname) {
@@ -61,7 +55,7 @@
         },
         load_db_selector: function () {
             this.revealButton = ReactDOM.render(
-                <MenuRevealButton getter={this.selectedDB.bind(this)} 
+                <MenuRevealButton label="Selected database => "
                                   click={this.openReveal.bind(this)}/>,
                 document.getElementById('topbarleft'));
             this.revealModal = ReactDOM.render(
@@ -87,7 +81,7 @@
             var $error = this.$el.find('#error'),
                 $node = $('<div>' + msg + '</div>');
             $error.removeClass("hide");
-            $error.children().remove()
+            $error.children().remove();
             $node.appendTo($error);
         },
         load_auth: function () {
