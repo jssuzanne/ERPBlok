@@ -4,9 +4,10 @@
         init: function () {
             this.init_foundation();
             this.hashTagManager = AnyBlokJS.new('HashTagManager', this);
+            this.errorManager = AnyBlokJS.new('ErrorManager', this);
             var self = this;
-            this.hashTagManager.onAdd('space', function(newSpace) {self.selectLeftMenu(newSpace);}); 
-            this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectLeftMenu(newSpace);}); 
+            this.hashTagManager.onAdd('space', function(newSpace) {self.selectLeftMenu(newSpace);});
+            this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectLeftMenu(newSpace);});
         },
         init_foundation: function () {
             this.leftModal = new Foundation.Reveal($('#revealtopbarleft'));
@@ -32,8 +33,7 @@
             $.ajax({type: 'POST', url: '/client/space/description?space=' + value})
             .fail(function (xhr, status) {
                 if (xhr.status == 403) {
-                    notify_error('Forbidden access',
-                                 'You try to access at an unauthorized action');
+                    self.errorManager.open(xhr.responseText);
                 }
             })
             .done(function (space) {
@@ -44,7 +44,6 @@
             var self = this;
             $.ajax({type: 'POST',
                     url: '/client/space/menus'}).done(function (menus) {
-                console.log(menus)
                 self.leftrevealModal.setState({menus: menus});
                 self.leftModal.open();
             });

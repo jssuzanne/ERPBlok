@@ -77,6 +77,7 @@ class ERPBlokWebClient(Blok):
     client_js_babel = [
         '#BLOK/static/rpc.js',
         '#BLOK/static/hashtag-manager.js',
+        '#BLOK/static/error-manager.js',
         '#BLOK/static/menu.js',
         '#BLOK/static/breadcrumb.js',
         '#BLOK/static/action.js',

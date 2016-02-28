@@ -21,6 +21,12 @@
         </div>
         <div class="reveal" id="revealtopbarright" data-reveal>
         </div>
+        <div class="reveal" id="errormanager" data-reveal>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true"></span>
+            </button>
+            <div></div>
+        </div>
         % for x in js:
             <script type="text/javascript" src="${x}" ></script>
         % endfor

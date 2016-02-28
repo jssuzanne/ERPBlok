@@ -28,7 +28,8 @@ class Space:
 
         category = space.category
         if category.groups and not user.has_groups(category.groups.name):
-            raise exc.HTTPForbidden()
+            return exc.HTTPForbidden(
+                "You can not acces at the space: %s" % space.label)
 
         return space.get_description()
 
