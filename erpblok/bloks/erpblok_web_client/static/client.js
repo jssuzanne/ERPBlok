@@ -37,6 +37,7 @@
                 }
             })
             .done(function (space) {
+                console.log(space);
                 self.leftrevealButton.setState({icon: space.icon, label: space.label});
             });
         },

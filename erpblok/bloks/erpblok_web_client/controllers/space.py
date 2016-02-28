@@ -18,6 +18,22 @@ PyramidHTTP.add_route('client_space_menus',
 @register(PyramidHTTP)
 class Space:
 
+    def define_menus_for(self, user, parents, menus):
+        for menu in menus:
+            if menu.groups and not user.has_groups(menu.groups):
+                continue
+
+            val = {
+                'id': menu.id,
+                'label': menu.label,
+                'action': menu.action and menu.action.id or None,
+                'children': [],
+            }
+            if menu.children:
+                self.define_menus_for(user, val['children'], menu.children)
+
+            parents.append(val)
+
     @PyramidHTTP.view(renderer='json')
     def client_space_description(self, space=None):
         user_id = self.request.session['user_id']
@@ -31,7 +47,17 @@ class Space:
             return exc.HTTPForbidden(
                 "You can not acces at the space: %s" % space.label)
 
-        return space.get_description()
+        res = {
+            'id': space.id,
+            'label': space.label,
+            'icon': space.icon,
+            'menu_position': space.menu_position,
+            'menus': [],
+        }
+        if space.menus:
+            self.define_menus_for(user, res['menus'], space.menus)
+
+        return res
 
     @PyramidHTTP.view(renderer='json')
     def client_space_menus(self):

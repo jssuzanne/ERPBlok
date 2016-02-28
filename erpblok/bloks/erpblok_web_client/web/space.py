@@ -1,5 +1,5 @@
 from anyblok import Declarations
-from anyblok.column import Integer, String, Text
+from anyblok.column import Integer, String, Text, Selection
 from anyblok.relationship import Many2One, Many2Many
 
 
@@ -13,13 +13,10 @@ class Space:
     order = Integer(nullable=False, default=100)
     category = Many2One(model="Model.Web.Space.Category", nullable=False)
     groups = Many2Many(model=Declarations.Model.Access.Group)
-
-    def get_description(self):
-        return {
-            'id': self.id,
-            'label': self.label,
-            'icon': self.icon,
-        }
+    menu_position = Selection(selections=[('top', 'On the top'),
+                                          ('left', 'On the left'),
+                                          ('right', 'On the right')],
+                              default='left', nullable=False)
 
 
 @Declarations.register(Declarations.Model.Web.Space)
