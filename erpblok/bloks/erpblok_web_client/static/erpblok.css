@@ -3,3 +3,10 @@
     max-height: 100%;
     position: fixed;
 }
+div.row {
+    max-width: 100%;
+}
+menu ul a.is-active {
+    background-color: #2199e8;
+    color: white;
+}

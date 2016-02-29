@@ -17,11 +17,11 @@
         </div>
         <div id="app">
         </div>
-        <div class="reveal" id="revealtopbarleft" data-reveal>
+        <div class="reveal large" id="revealtopbarleft" data-reveal>
         </div>
-        <div class="reveal" id="revealtopbarright" data-reveal>
+        <div class="reveal large" id="revealtopbarright" data-reveal>
         </div>
-        <div class="reveal" id="errormanager" data-reveal>
+        <div class="reveal large" id="errormanager" data-reveal>
             <button class="close-button" data-close aria-label="Close reveal" type="button">
                 <span aria-hidden="true"></span>
             </button>

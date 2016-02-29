@@ -29,11 +29,11 @@
                     }
                 });
             },
-            render_template: function () {
-                this.$el = $($.templates('#' + this.template).render());
-                var $el = $($.templates(this.view.options.template).render(
-                   this.get_values_for_template()));
-                $el.appendTo(this.$el.find('.view-contnair'))
+            render_template: function (value={}) {
+                var $el = this._super()
+                var $subel = $($.templates(this.view.options.template).render(values));
+                $subel.appendTo($el.find('.view-contnair'))
+                return $el;
             },
         },
     });

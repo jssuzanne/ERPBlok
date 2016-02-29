@@ -1,9 +1,11 @@
 (function () {
     AnyBlokJS.register({
         classname: 'BreadCrumb',
+        extend: ['Template'],
         prototype: {
-            init: function(actionManager) {
-                this.$el = $('ul#breadcrumb');
+            template: 'BreadCrumb',
+            init: function(actionManager, $el) {
+                this.$el = $el.find('ul#breadcrumb');
                 this.links = [];
                 this.actionManager = actionManager;
                 this.$last = undefined;
@@ -23,7 +25,7 @@
                 }
                 // FIXME get the active menu and save it in last
                 this.$last = {
-                    link: $($.templates('#ERPBlokBreadCrumb').render({'id': id, 'label': label})),
+                    link: this.render_template({'id': id, 'label': label}),
                     node: $node,
                     hash: this.get_hashTag(),
                 };

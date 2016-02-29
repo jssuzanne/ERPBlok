@@ -1,11 +1,13 @@
 (function () {
     AnyBlokJS.register({
         classname: 'ViewManager',
+        extend: ['Template'],
         prototype: {
+            template: 'ViewManager',
             init: function(action, view_id, pks) {
                 this.action = action;
                 this.$action = action.$el;
-                this.$el = $($.templates('#ERPBlokViewManager').render({}));
+                this.$el = this.render_template();
                 this.$buttons = this.$el.find('div.view-buttons');
                 this.$el.appendTo(action.$el);
                 this.views = {};
@@ -79,7 +81,8 @@
     });
     AnyBlokJS.register({
         classname: 'View',
-        extend: ['RPC'],
+        extend: ['RPC', 'Template'],
+        template: 'View',
         prototype: {
             rpc_url: '/web/client/view',
             icon_selector: 'fi-alert',
@@ -98,10 +101,8 @@
                      'selectable': this.options.selectable}));
             },
             getViewEl: function() {
-                var $el = $($.templates('#ERPBlokView').render(
-                    {id: this.options.id, class_name: this.class_name}));
-                this.$el = $el;
-                return $el;
+                this.$el = this.render_template({id: this.options.id, class_name: this.class_name});
+                return this.$el;
             },
             render: function(args) {
                 this.display_buttons();
@@ -172,7 +173,7 @@
                     $.each(this.options.groups_buttons, function (i, group) {
                         self.viewManager.add_group(group);
                     });
-    
+
                     // this is uggly, wait if the next version allow to init only
                     // the dropdown
                     $(document).foundation();

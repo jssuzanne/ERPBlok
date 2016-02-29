@@ -90,6 +90,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/view_form.js',
         '#BLOK/static/notification/notification.js',
         '#BLOK/static/client.js',
+        '#BLOK/static/space.js',
     ]
 
     client_templates = [

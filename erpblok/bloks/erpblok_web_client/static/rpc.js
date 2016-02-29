@@ -8,12 +8,13 @@
                 return this.requestID;
             },
             send_json_rpc_request: function(url, method, params, done, fail) {
-                var request = {
-                    'method': method,
-                    'params': params,
-                    'id': this.getRequestID(),
-                    'jsonrpc': '2.0',
-                };
+                var self = this,
+                    request = {
+                        'method': method,
+                        'params': params,
+                        'id': this.getRequestID(),
+                        'jsonrpc': '2.0',
+                    };
                 $.post(url, JSON.stringify(request), function (response) {
                     if (response.result) {
                         if (done) {
@@ -22,6 +23,10 @@
                     } else if (response.error) {
                         if (fail) {
                             fail(response.error);
+                        } else {
+                            if (self.client) {
+                                self.client.errorManager.open(response.error);
+                            }
                         }
                     }
                 }, "json");

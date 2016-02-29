@@ -5,28 +5,26 @@
         The client templating come from
         http://www.jsviews.com/#d.templates
     -->
-    <template id="ERPBlokAction" type="text/x-jsrender">
-        <div id="action-{{:id}}" class="row action"/>
-    </template>
-    <template id="ERPBlokBreadCrumb" type="text/x-jsrender">
-        <li id="{{:id}}" class="disabled">{{:label}}</li>
-    </template>
-    <template id="ERPBlokDialog" type="text/x-jsrender">
-        <div id="modal{{:id}}" class="reveal" data-reveal>
-            <div class="row panel">
-                <div class="columns small-11 medium-11 large-11">
-                    <h2 class="dialog-title"></h2>
-                </div>
-                <div class="columns small-1 medium-1 large-1 close-button">
+    <template id="Space_left_Menu" type="text/x-jsrender">
+        <div class="row space">
+            <div class="columns large-3">
+                <menu>
+            </div>
+            <div class="columns large-9">
+                <ul id="breadcrumb">
+                </ul>
+                <div id="action-manager">
                 </div>
             </div>
-            <div class="dialog-content"></div>
         </div>
     </template>
-    <template id="ERPBlokDialogClose" type="text/x-jsrender">
-        <a class="close-reveal-modal float-right" aria-label="Close">&#215;</a>
+    <template id="BreadCrumb" type="text/x-jsrender">
+        <li id="{{:id}}" class="disabled">{{:label}}</li>
     </template>
-    <template id="ERPBlokViewManager" type="text/x-jsrender">
+    <template id="Action" type="text/x-jsrender">
+        <div id="action-{{:id}}" class="row action"/>
+    </template>
+    <template id="ViewManager" type="text/x-jsrender">
         <div class="row view-manager">
             <div class="columns large-7 button-group view-buttons">
             </div>
@@ -57,7 +55,7 @@
                 </div>
             </div>
     </template>
-    <template id="ERPBlokView" type="text/x-jsrender">
+    <template id="View" type="text/x-jsrender">
         <div id="{{:id}}" class="row view {{:class_name}}"/>
     </template>
     <template id="ERPBlokViewSelector" type="text/x-jsrender">
@@ -69,7 +67,7 @@
             </a>
         </li>
     </template>
-    <template id="ERPBlokViewList" extend="ERPBlokView" type="text/x-jsrender">
+    <template id="ViewList" extend="View" type="text/x-jsrender">
         <xpath action="insert" expression="./div">
             <table role="grid">
                 <thead>
@@ -97,7 +95,7 @@
             </table>
         </xpath>
     </template>
-    <template id="ERPBlokViewListLine" type="text/x-jsrender">
+    <template id="ViewListLine" type="text/x-jsrender">
         <tr class="view-list-line">
             {{if options.checkbox}}
                 <td>
@@ -111,7 +109,22 @@
             {{/for}}
         </tr>
     </template>
-    <template id="ERPBlokViewThumbnails" extend="ERPBlokView" type="text/x-jsrender">
+    <template id="ERPBlokDialog" type="text/x-jsrender">
+        <div id="modal{{:id}}" class="reveal" data-reveal>
+            <div class="row panel">
+                <div class="columns small-11 medium-11 large-11">
+                    <h2 class="dialog-title"></h2>
+                </div>
+                <div class="columns small-1 medium-1 large-1 close-button">
+                </div>
+            </div>
+            <div class="dialog-content"></div>
+        </div>
+    </template>
+    <template id="ERPBlokDialogClose" type="text/x-jsrender">
+        <a class="close-reveal-modal float-right" aria-label="Close">&#215;</a>
+    </template>
+    <template id="ERPBlokViewThumbnails" extend="View" type="text/x-jsrender">
         <xpath action="insert" expression="./div">
             <div id="thumbnails-{{:id}}" class="row thumbnails" data-equalizer>
             </div>

@@ -6,7 +6,7 @@
             title_selector: 'List view',
             icon_selector: 'fi-list',
             class_name: 'view-list',
-            template: 'ERPBlokViewList',
+            template: 'ViewList',
             getViewEl: function() {
                 var self = this;
                 var $el = this._super();
@@ -47,7 +47,7 @@
         classname: 'View.List.Line',
         extend: ['View.Entry'],
         prototype: {
-            template: 'ERPBlokViewListLine',
+            template: 'ViewListLine',
             init: function(view, record) {
                 this._super(view, record);
                 this.selected = false;

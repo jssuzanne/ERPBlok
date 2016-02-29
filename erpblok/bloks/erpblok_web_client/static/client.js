@@ -8,6 +8,10 @@
             var self = this;
             this.hashTagManager.onAdd('space', function(newSpace) {self.selectLeftMenu(newSpace);});
             this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectLeftMenu(newSpace);});
+            this.hashTagManager.onAdd('menu', function(newMenu) {self.selectMenu(newMenu);});
+            this.hashTagManager.onChange('menu', function(newMenu, oldMenu) {self.selectMenu(newMenu);});
+            this.hashTagManager.onAdd('action', function(newAction) {self.callAction(newAction);});
+            this.hashTagManager.onChange('action', function(newAction, oldAction) {self.callAction(newAction);});
         },
         init_foundation: function () {
             this.leftModal = new Foundation.Reveal($('#revealtopbarleft'));
@@ -21,7 +25,19 @@
                 self.load_right_reveal(user)
                 self.hashTagManager.changed(self.hashTagManager.toObject(window.location.hash), {});
             });
-
+        },
+        selectMenu: function (menu) {
+            if (this.current_space) {
+                this.current_space.load_menu(menu);
+            }
+        },
+        callAction: function (action) {
+            if (this.current_space) {
+                this.current_space.callAction(action);
+            }
+        },
+        load_menu: function (menu) {
+            this.hashTagManager.update({menu: menu});
         },
         closeLeftRemoval: function () {
             this.leftModal.close();
@@ -32,13 +48,15 @@
             var self = this;
             $.ajax({type: 'POST', url: '/client/space/description?space=' + value})
             .fail(function (xhr, status) {
-                if (xhr.status == 403) {
-                    self.errorManager.open(xhr.responseText);
-                }
+                self.errorManager.open(xhr.responseText);
             })
             .done(function (space) {
-                console.log(space);
                 self.leftrevealButton.setState({icon: space.icon, label: space.label});
+                if (self.current_space) {
+                    self.current_space.unload();
+                }
+                self.current_space = AnyBlokJS.new('Space', self, space);
+                self.current_space.load();
             });
         },
         openLeftReveal: function (menuname) {

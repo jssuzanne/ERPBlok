@@ -30,10 +30,10 @@
         classname: 'ActionManager',
         extend: ['ActionInterface'],
         prototype: {
-            init: function(client) {
+            init: function(client, $el) {
                 this.client = client;
-                this.breadcrumb = AnyBlokJS.new('BreadCrumb', this);
-                this.$el = $('#action-manager');
+                this.breadcrumb = AnyBlokJS.new('BreadCrumb', this, $el);
+                this.$el = $el.find('#action-manager');
             },
             load: function(action_id) {
                 var action = AnyBlokJS.new('Action');
@@ -64,10 +64,12 @@
     });
     AnyBlokJS.register({
         classname: 'Action',
+        extend: ['Template', 'RPC'],
         prototype: {
-            'rpc_url': '/web/client/action',
-            init: function(parent) {
-                this.actionManager = parent || document.ERPBlokClient.actionManager;
+            rpc_url: '/web/client/action',
+            template: 'Action',
+            init: function(actionManager) {
+                this.actionManager = actionManager;
                 this.Dialog = 'Dialog';
             },
             load: function(action, view_id, pks) {
@@ -82,7 +84,7 @@
                     return;
                 }
                 this.value = action;
-                this.$el = $($.templates('#ERPBlokAction').render({id: action.id}))
+                this.$el = this.render_template({id: action.id});
                 if (action.dialog) {
                     var parent = AnyBlokJS.new(this.Dialog);
                 } else {

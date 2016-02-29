@@ -38,26 +38,34 @@ class Space:
     def client_space_description(self, space=None):
         user_id = self.request.session['user_id']
         user = self.registry.Web.User.query().get(user_id)
-        space = self.registry.Web.Space.query().get(space)
-        if space.groups and not user.has_groups(space.groups.name):
-            raise
+        _space = self.registry.Web.Space.query().get(space)
+        try:
+            if _space is None:
+                return exc.HTTPNotFound(
+                    "The space (id = %s) is not found" % space)
 
-        category = space.category
-        if category.groups and not user.has_groups(category.groups.name):
-            return exc.HTTPForbidden(
-                "You can not acces at the space: %s" % space.label)
+            if _space.groups and not user.has_groups(_space.groups.name):
+                return exc.HTTPForbidden(
+                    "You can not acces at the space: %s" % _space.label)
 
-        res = {
-            'id': space.id,
-            'label': space.label,
-            'icon': space.icon,
-            'menu_position': space.menu_position,
-            'menus': [],
-        }
-        if space.menus:
-            self.define_menus_for(user, res['menus'], space.menus)
+            category = _space.category
+            if category.groups and not user.has_groups(category.groups.name):
+                return exc.HTTPForbidden(
+                    "You can not acces at the space's category: %s" % category.label)
 
-        return res
+            res = {
+                'id': _space.id,
+                'label': _space.label,
+                'icon': _space.icon,
+                'menu_position': _space.menu_position,
+                'menus': [],
+            }
+            if _space.menus:
+                self.define_menus_for(user, res['menus'], _space.menus)
+
+            return res
+        except Exception as e:
+            return exc.HTTPInternalServerError(str(e))
 
     @PyramidHTTP.view(renderer='json')
     def client_space_menus(self):
