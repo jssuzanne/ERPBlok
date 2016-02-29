@@ -32,7 +32,7 @@
         prototype: {
             init: function(client, $el) {
                 this.client = client;
-                this.breadcrumb = AnyBlokJS.new('BreadCrumb', this, $el);
+                this.breadcrumb = AnyBlokJS.new('BreadCrumbManager', this, $el);
                 this.$el = $el.find('#action-manager');
             },
             load: function(action_id) {
@@ -44,7 +44,7 @@
             },
             appendTo: function (action) {
                 action.$el.appendTo(this.$el);
-                this.breadcrumb.add(action.value.id, action.value.label, action.$el);
+                this.breadcrumb.add(action);
             },
             select_view: function(view, kwargs) {
                 if (kwargs != undefined && kwargs.id != undefined) {

@@ -8,9 +8,9 @@
             init: function() {
                 var self = this;
                 this.load_callback();
-                 window.addEventListener("hashchange", function(e) {
-                     self.changed(self.toObject(e.newURL), self.toObject(e.oldURL));
-                 });
+                window.addEventListener("hashchange", function(e) {
+                    self.changed(self.toObject(e.newURL), self.toObject(e.oldURL));
+                });
             },
             toObject: function (paramString) {
                 var params = {};

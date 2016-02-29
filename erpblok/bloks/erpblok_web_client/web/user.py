@@ -35,7 +35,8 @@ class User:
                 'menus': [
                     {
                         'id': 'return_to_login_page',
-                        'label': 'Close and return to the login page',
+                        'label': 'Log out',
+                        'description': 'Close and return to the login page',
                     },
                 ],
             },

@@ -14,7 +14,7 @@ class SideMenu:
         """ Return the main information for a specific menu in case of
         open the accordion menu, add active class one the rigth menu and
         the action or function to user"""
-        res = dict(nodemenu=[], activemenu=None)
+        res = dict(nodemenu=[], activemenu=None, action=None)
         try:
             Menu = self.registry.UI.Menu
 
@@ -27,6 +27,7 @@ class SideMenu:
             if m:
                 if m.action:
                     res['activemenu'] = m.id
+                    res['action'] = m.action.id
                     if m.parent:
                         recurse_parent(m.parent)
 

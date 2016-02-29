@@ -10,19 +10,19 @@
         render: function () {
             return (<ul className="menu">
                         <li className="menu-text">
-                            <h3>
+                            <h5>
                                 <a onClick={this.props.click} > 
                                     {this.props.label}
                                 </a>
-                            </h3>
+                            </h5>
                         </li>
                         <li className="menu-text">
-                            <h2>
+                            <h4>
                                 <span >
                                     <i className={this.state.icon} />
                                     {this.state.label}
                                 </span>
-                            </h2>
+                            </h4>
                         </li>
                     </ul>)
         },
@@ -127,10 +127,10 @@
             });
             return (<fieldset className="fieldset">
                         <legend>
-                            <h3>
+                            <h5>
                                 <i className={this.props.icon} />
                                 {this.props.label}
-                            </h3>
+                            </h5>
                         </legend>
                         <div className="row small-up-1 medium-up-2 large-up-4">
                             {panels}
@@ -151,18 +151,18 @@
                              style={{cursor: 'pointer'}} >
                             <div className="row">
                                 <div className="column small-2 medium-2 large-2">
-                                    <h4>
+                                    <h5>
                                         <i className={this.props.icon} />
-                                    </h4>
+                                    </h5>
                                 </div>
                                 <div className="column small-10 medium-10 large-10">
-                                    <h5>{this.props.label}</h5>
+                                    <h6>{this.props.label}</h6>
                                 </div>
                             </div>
                             <div className="row">
-                                <span>
+                                <small>
                                     {this.props.description}
-                                </span>
+                                </small>
                             </div>
                         </div>
                     </div>)

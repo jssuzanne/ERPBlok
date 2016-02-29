@@ -10,8 +10,6 @@
             this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectLeftMenu(newSpace);});
             this.hashTagManager.onAdd('menu', function(newMenu) {self.selectMenu(newMenu);});
             this.hashTagManager.onChange('menu', function(newMenu, oldMenu) {self.selectMenu(newMenu);});
-            this.hashTagManager.onAdd('action', function(newAction) {self.callAction(newAction);});
-            this.hashTagManager.onChange('action', function(newAction, oldAction) {self.callAction(newAction);});
         },
         init_foundation: function () {
             this.leftModal = new Foundation.Reveal($('#revealtopbarleft'));

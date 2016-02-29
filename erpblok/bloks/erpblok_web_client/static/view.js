@@ -60,7 +60,7 @@
                     this.views[this.active_view].$nav.removeClass('active');
                     this.views[this.active_view].$view.addClass('hide');
                 }
-                if (view_id) {
+                if (view_id && this.views[view_id]) {
                     this.views[view_id].$nav.addClass('active');
                     this.views[view_id].$view.removeClass('hide');
                     this.views[view_id].view.last_view = this.active_view || this.action.value.selected;

@@ -1,6 +1,6 @@
 (function () {
-    ERPBlok.declare_react_class('Menu')
-    AnyBlokJS.register({classname: 'Menu', prototype: {
+    ERPBlok.declare_react_class('SideMenu')
+    AnyBlokJS.register({classname: 'SideMenu', prototype: {
         render: function () {
             var menus = [],
                 self = this;
@@ -16,16 +16,33 @@
                     </ul>)
         },
     }});
+    ERPBlok.declare_react_class('TopMenu')
+    AnyBlokJS.register({classname: 'TopMenu', prototype: {
+        render: function () {
+            var menus = [],
+                self = this;
+            this.props.menus.forEach(function (menu) {
+                if (menu.children.length == 0) {
+                    menus.push(<MenuLeaf space={self.props.space} options={menu}/>)
+                } else {
+                    menus.push(<MenuNode space={self.props.space} options={menu}/>)
+                }
+            });
+            return (<ul className="menu" >
+                        {menus}
+                    </ul>)
+        },
+    }});
     ERPBlok.declare_react_class('MenuLeaf')
     AnyBlokJS.register({classname: 'MenuLeaf', prototype: {
         render: function () {
             var id = this.props.options.id,
                 action = this.props.options.action,
                 space = this.props.space,
-                href = '#space=' + space + '&menu=' + id + '&action=' + action,
-                menuid = 'menu' + this.props.options.id;
+                href = '#clean-breadcrumbs=true&space=' + space + '&menu=' + id + '&action=' + action,
+                clsmenu = 'menu-' + this.props.options.id;
             return (<li>
-                        <a href={href} id={menuid}>
+                        <a href={href} className={clsmenu}>
                             <h6>{this.props.options.label}</h6>
                         </a>
                     </li>)

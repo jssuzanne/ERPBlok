@@ -6,20 +6,49 @@
         http://www.jsviews.com/#d.templates
     -->
     <template id="Space_left_Menu" type="text/x-jsrender">
+        <div class="row hide-for-large">
+            <menu class="top-menu" />
+        </div>
         <div class="row space">
-            <div class="columns large-3">
-                <menu>
+            <div class="columns large-3 show-for-large">
+                <menu class="side-menu">
             </div>
             <div class="columns large-9">
-                <ul id="breadcrumb">
-                </ul>
+                <div id="breadcrumb">
+                </div>
                 <div id="action-manager">
                 </div>
             </div>
         </div>
     </template>
-    <template id="BreadCrumb" type="text/x-jsrender">
-        <li id="{{:id}}" class="disabled">{{:label}}</li>
+    <template id="Space_right_Menu" type="text/x-jsrender">
+        <div class="row hide-for-large">
+            <menu class="top-menu" />
+        </div>
+        <div class="row space">
+            <div class="columns large-9">
+                <div id="breadcrumb">
+                </div>
+                <div id="action-manager">
+                </div>
+            </div>
+            <div class="columns large-3 show-for-large">
+                <menu class="side-menu">
+            </div>
+        </div>
+    </template>
+    <template id="Space_top_Menu" type="text/x-jsrender">
+        <div class="row">
+            <menu class="top-menu" />
+        </div>
+        <div class="row space">
+            <div class="columns">
+                <div id="breadcrumb">
+                </div>
+                <div id="action-manager">
+                </div>
+            </div>
+        </div>
     </template>
     <template id="Action" type="text/x-jsrender">
         <div id="action-{{:id}}" class="row action"/>

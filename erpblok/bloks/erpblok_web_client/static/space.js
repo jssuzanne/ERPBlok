@@ -22,12 +22,19 @@
             var $app = $('#app');
             this.$el.appendTo($app);
             if (this.options.menus.length != 0) {
-                this.menu = ReactDOM.render(
-                    <Menu menus={this.options.menus}
+                ReactDOM.render(
+                    <TopMenu menus={this.options.menus}
                           space={this.options.id}
                           select={this.selectMenu.bind(this)}/>,
-                    this.$el.find('menu')[0]);
-                this.Fel = new Foundation.AccordionMenu(this.$el);
+                    this.$el.find('menu.top-menu')[0]);
+                if (this.$el.find('menu.side-menu').length != 0) {
+                    ReactDOM.render(
+                        <SideMenu menus={this.options.menus}
+                              space={this.options.id}
+                              select={this.selectMenu.bind(this)}/>,
+                        this.$el.find('menu.side-menu')[0]);
+                }
+                this.Fel = new Foundation.AccordionMenu(this.$el.find('menu'));
                 var menu = this.client.hashTagManager.get('menu'),
                     action = this.client.hashTagManager.get('action');
                 if (!menu && this.options.default_menu) {
@@ -35,7 +42,9 @@
                 } else {
                     this.load_menu(menu);
                 }
-                this.callAction(action);
+                if (action) {
+                    this.callAction(action);
+                }
             }
         },
         load_menu: function (menu) {
@@ -48,9 +57,8 @@
                 self.collapse_all();
                 self.uncollapse_menus(res.nodemenu);
                 self.active_menu(res.activemenu);
-                if (self.client.hashTagManager.get('breadcrumb')) {
-                    self.client.hashTagManager.update({breadcrumb: undefined});
-                    return;
+                if (res.activemenu) {
+                    self.callAction(res.action);
                 }
             });
         },
@@ -64,7 +72,7 @@
             this.$el.find('menu').find('.is-active').removeClass('is-active');
         },
         active_menu: function(menu_id) {
-            this.$el.find('menu').find('a#menu' + menu_id).addClass('is-active');
+            this.$el.find('menu').find('a.menu-' + menu_id).addClass('is-active');
         },
         callAction: function(action_id) {
             var action = AnyBlokJS.new('Action', this.actionManager);
