@@ -88,6 +88,7 @@
             icon_selector: 'fi-alert',
             title_selector: 'undefined',
             class_name: 'view-undefined',
+            template: 'View',
             init: function(viewManager, options) {
                 this.viewManager = viewManager;
                 this.options = options;

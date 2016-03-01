@@ -42,7 +42,8 @@
                 } else {
                     this.load_menu(menu);
                 }
-                if (action) {
+                // action can be load by menu, but the action can be different
+                if (action && action != this.client.hashTagManager.get('action')) {
                     this.callAction(action);
                 }
             }
