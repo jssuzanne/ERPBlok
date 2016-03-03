@@ -87,6 +87,13 @@
                     self.parse_call_result(result);
                 });
             },
+            get_field: function(field_id){
+                for (var i in this.options.fields2display) {
+                    if (this.options.fields2display[i].id == field_id) {
+                        return this.options.fields2display[i];
+                    }
+                }
+            },
         },
     });
     AnyBlokJS.register({
@@ -102,13 +109,27 @@
                 for (var i in primary_keys) {
                     this.id[primary_keys[i]] = record[primary_keys[i]];
                 }
+                this.readonly = true;
+                this.fields = {};
+                this.fields_by_ids = {};
             },
             initField: function (field_id, instance) {
+                var field_name = this.view.get_field(field_id).field_name;
+                if (this.fields[field_name] == undefined) {
+                    this.fields[field_name] = [];
+                }
+                this.fields[field_name].push(instance);
+                this.fields_by_ids[field_id] = instance;
             },
             isReadonly: function (field_id) {
-                return true;
+                var field = this.view.get_field(field_id);
+                return this.readonly || field.readonly || false;
             },
             updateField: function (field_id, value) {
+                var field_name = this.view.get_field(field_id).field_name;
+                for (var i in this.fields[field_name]) {
+                    this.fields[field_name][i].setState({value: value});
+                }
             },
             apply_react_componente: function (options, $el) {
                 ReactDOM.render(<Field options={options}

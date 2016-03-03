@@ -39,7 +39,6 @@ class View(Mixin.ViewType):
     add_delete = Boolean(default=True)
     add_new = Boolean(default=True)
     add_edit = Boolean(default=True)
-    is_selectable = Boolean(default=True)  # Only for multi
 
     def render(self):
         """ Return the View render"""
@@ -343,12 +342,21 @@ class List(Mixin.ViewMultiEntries):
 
         return ordered_fields, maxlevel, nbel
 
+    def get_tmpl_attribute_format_bool(self, tmpl, key, default=False):
+        value = tmpl.attrib.get(key, str(default))
+        if value.lower() in ('true', '1'):
+            return True
+        else:
+            return False
+
     def render(self, view):
         """ Specific render for a list view """
         res = super(List, self).render(view)
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
+        checkbox = self.get_tmpl_attribute_format_bool(tmpl, 'checkbox', True)
+        inline = self.get_tmpl_attribute_format_bool(tmpl, 'inline', False)
         Model = self.registry.get(view.action.model)
         fields_description = deepcopy(Model.fields_description(
             fields=fields_name))
@@ -358,7 +366,8 @@ class List(Mixin.ViewMultiEntries):
         self.update_relation_ship_description(fields_description)
         res.update({
             'fields': fields_name,
-            'checkbox': view.is_selectable,
+            'checkbox': checkbox,
+            'inline': inline,
             'fields2display': ordered_fields,
             'headers': list(headers.values()),
             'buttons': self.get_buttons(view),

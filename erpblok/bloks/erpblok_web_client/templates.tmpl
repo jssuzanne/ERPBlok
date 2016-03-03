@@ -100,13 +100,20 @@
         <xpath action="insert" expression="./div">
             <table role="grid">
                 <thead>
-                    {{for options.headers ~checkbox=options.checkbox ~length= options.headers.length}}
+                    {{for options.headers ~checkbox=options.checkbox
+                                          ~length=options.headers.length
+                                          ~inline=options.inline}}
                         <tr>
                             {{if #index == 0}}
                                 {{if ~checkbox}}
                                     <th width="10px"
                                         rowspan="{{:~length}}">
                                         <input type="checkbox" id="all_checkbox"></input>
+                                    </th>
+                                {{/if}}
+                                {{if ~inline}}
+                                    <th width="10px"
+                                        rowspan="{{:~length}}">
                                     </th>
                                 {{/if}}
                             {{/if}}
@@ -131,7 +138,11 @@
                     <input type="checkbox" id="line_checkbox"></input>
                 </td>
             {{/if}}
-                    {{:fields}}
+            {{if options.inline}}
+                <td>
+                    <inline-crud-buttons></inline-crud-buttons>
+                </td>
+            {{/if}}
             {{for fields}}
                 <td id="{{:id}}" class="selectable">
                     <field id="{{:id}}" />
@@ -166,24 +177,6 @@
             <div class="sticker panel radius selectable view-contnair">
             </div>
         </div>
-    </template>
-    <template id="ERPBlokViewField" type="text/x-jsrender">
-        {{if readonly}}
-            <span>{{:value}}</span>
-        {{else}}
-            <input id="{{:id}}" name="{{:id}}" type="{{:type}}"/>
-        {{/if}}
-    </template>
-    <template id="ERPBlokViewFieldPassword" type="text/x-jsrender">
-        {{if readonly}}
-            {{if value}}
-                <span> *** Unreadable protected value *** </span>
-            {{else}}
-                <span ></span>
-            {{/if}}
-        {{else}}
-            <input id="{{:id}}" name="{{:id}}" type="password"/>
-        {{/if}}
     </template>
     <template id="ERPBlokViewFieldx2One" type="text/x-jsrender">
         <div>
