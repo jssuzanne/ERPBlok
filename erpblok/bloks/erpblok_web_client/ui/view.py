@@ -273,7 +273,29 @@ class List(Mixin.ViewMultiEntries):
     id = 1000001
     mode_name = 'List'
 
-    def _rc_get_headers(self, fields, headers, node, level):
+    def _rc_get_headers_parent_options(self, el, parent_options):
+        options = parent_options.copy()
+        for k in ('readonly', 'nullable'):
+            if k in el.attrib:
+                options[k] = self.attrib[k]
+
+        return options
+
+    def _rc_get_headers_get_field(self, fields, name, el, options, counter):
+        field = fields[name].copy()
+        field.update(options)
+        field.update({x: y for x, y in el.attrib.items()
+                      if x not in ('label', 'name', 'colspan',
+                                   'rowspan')})
+        field['field_name'] = field['id']
+        field['id'] += '-%d' % counter
+        return field
+
+    def _rc_get_headers(self, fields, headers, node, level, options=None,
+                        counter=0):
+        if options is None:
+            options = {}
+
         maxlevel = level
         nbel = 0
         els = []
@@ -285,7 +307,9 @@ class List(Mixin.ViewMultiEntries):
                 continue
             elif el.tag.lower() == 'group':
                 subfields, submaxlevel, subnbel = self._rc_get_headers(
-                    fields, headers, el, level + 1)
+                    fields, headers, el, level + 1,
+                    options=self._rc_get_headers_parent_options(el, options),
+                    counter=counter)
                 if submaxlevel > maxlevel:
                     maxlevel = submaxlevel
 
@@ -307,12 +331,12 @@ class List(Mixin.ViewMultiEntries):
                     'label': label,
                     'colspan': 1,
                 }
-                fields[name].update({x: y for x, y in el.attrib.items()
-                                     if x not in ('label', 'name', 'colspan',
-                                                  'rowspan')})
                 headers[level].append(_el)
                 els.append(_el)
-                ordered_fields.append(name)
+                counter += 1
+                field = self._rc_get_headers_get_field(
+                    fields, name, el, options, counter)
+                ordered_fields.append(field)
 
         for el in els:
             el['rowspan'] = maxlevel - level + 1
@@ -335,7 +359,7 @@ class List(Mixin.ViewMultiEntries):
         res.update({
             'fields': fields_name,
             'checkbox': view.is_selectable,
-            'fields2display': [fields_description[x] for x in ordered_fields],
+            'fields2display': ordered_fields,
             'headers': list(headers.values()),
             'buttons': self.get_buttons(view),
             'buttons': self.get_buttons(view),

@@ -106,7 +106,7 @@
             initField: function (field_id, instance) {
             },
             isReadonly: function (field_id) {
-                return false;
+                return true;
             },
             updateField: function (field_id, value) {
             },
@@ -124,7 +124,7 @@
                 this.view.appendToView(this);
                 $.each(this.view.options.fields2display, function (i, field) {
                     var options = $.extend(
-                        {}, field, {value: self.record[field.id]});
+                        {}, field, {value: self.record[field.field_name]});
                     var $els = self.$el.find('field#' + field.id);
                     for (i=0; i<$els.length; i++) {
                         self.apply_react_componente(options, $els[i]);
