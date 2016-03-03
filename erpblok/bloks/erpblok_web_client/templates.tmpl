@@ -131,9 +131,10 @@
                     <input type="checkbox" id="line_checkbox"></input>
                 </td>
             {{/if}}
-            {{for fields ~fields=fields}}
-                <td id="{{:~fields[#index]}}" class="selectable">
-                    <div id="{{:~fields[#index]}}" class="field"></div>
+                    {{:fields}}
+            {{for fields}}
+                <td id="{{:id}}" class="selectable">
+                    <field id="{{:id}}" />
                 </td>
             {{/for}}
         </tr>

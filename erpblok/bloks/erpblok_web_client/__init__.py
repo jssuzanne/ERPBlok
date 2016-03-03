@@ -84,7 +84,6 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/dialog.js',
         '#BLOK/static/view.js',
         '#BLOK/static/view_multi_entries.js',
-        '#BLOK/static/field.js',
         '#BLOK/static/view_list.js',
         '#BLOK/static/view_thumbnails.js',
         '#BLOK/static/view_form.js',

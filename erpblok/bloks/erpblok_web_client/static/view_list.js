@@ -75,13 +75,6 @@
                     }
                 });
             },
-            get_values_for_template: function() {
-                var fields = [];
-                $.each(this.fields, function (name, field) {
-                    fields.push(name);
-                });
-                return {fields: fields, options: this.view.options}
-            },
         },
     });
 }) ();

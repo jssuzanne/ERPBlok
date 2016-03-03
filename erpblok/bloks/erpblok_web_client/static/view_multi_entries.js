@@ -13,9 +13,8 @@
                     values = {id: this.options.id,
                               options: this.options,
                               class_name: this.class_name};
-                var $el = this.render_template(values);
-                this.$el = $el;
-                return $el;
+                this.$el = this.render_template(values);
+                return this.$el;
             },
             render: function (args) {
                 this._super(args);
@@ -31,7 +30,10 @@
                     });
                 this.rpc('get_entries', values, function (records) {
                     self.clear_all();
-                    self.render_records(records);
+                    self.records = records;
+                    for (var i in records) {
+                        self.render_record(records[i]);
+                    }
                 });
             },
             clear_all: function() {
@@ -44,21 +46,15 @@
                     this.entries = [];
                 }
             },
-            render_records: function(records) {
-                for (var i in records) {
-                    this.render_record(records[i]);
-                }
-            },
-            appendToView: function(line) {
-            },
-            get_entry: function (record) {
-                return AnyBlokJS.new('View.Entry', this, record);
+            appendToView: function(entry) {},
+            get_entry: function (index) {
+                return AnyBlokJS.new('View.Entry', this, index);
             },
             render_record: function(record) {
-                var line = this.get_entry(record);
-                line.render();
-                this.appendToView(line);
-                this.entries.push(line);
+                var entry = this.get_entry(record);
+                entry.render();
+                this.appendToView(entry);
+                this.entries.push(entry);
             },
             on_new_entry: function () {
                 this.transition('newRecord', {});
@@ -107,20 +103,32 @@
                     this.id[primary_keys[i]] = record[primary_keys[i]];
                 }
             },
+            initField: function (field_id, instance) {
+            },
+            isReadonly: function (field_id) {
+                return false;
+            },
+            updateField: function (field_id, value) {
+            },
+            apply_react_componente: function (options, $el) {
+                ReactDOM.render(<Field options={options}
+                                       init_field={this.initField.bind(this)}
+                                       is_readonly={this.isReadonly.bind(this)}
+                                       update_field={this.updateField.bind(this)} />,
+                                $el);
+            },
             render: function() {
                 var self = this;
                 this.fields = this.get_fields();
                 this.$el = this.render_template(this.get_values_for_template());
-                // two way (first)
-                var two_way_link = {};
-                $.each(this.fields, function(id, field) {
-                    var key = 'div#' + id + '.field';
-                    var $field = self.$el.find(key);
-                    two_way_link[id] = {parents: $field, field: field}
-                });
-                // two way (2nd)
-                $.each(two_way_link, function(id, field) {
-                    field.field.render(field.parents);
+                this.view.appendToView(this);
+                $.each(this.view.options.fields2display, function (i, field) {
+                    var options = $.extend(
+                        {}, field, {value: self.record[field.id]});
+                    var $els = self.$el.find('field#' + field.id);
+                    for (i=0; i<$els.length; i++) {
+                        self.apply_react_componente(options, $els[i]);
+                    }
                 });
                 this.$el.find('button').click(function(event) {
                     event.stopPropagation();
@@ -131,11 +139,9 @@
             },
             get_fields: function () {
                 var self = this,
-                    fields = {};
+                    fields = [];
                 $.each(this.view.options.fields2display, function (i, field) {
-                    var f  = self.view.get_field_cls(field);
-                    f.set_value(self.record[field.id]);
-                    fields[field.id] = f;
+                    fields.push({id: field.id})
                 });
                 return fields;
             },
