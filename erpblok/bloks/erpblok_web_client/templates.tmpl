@@ -55,9 +55,9 @@
     </template>
     <template id="ViewManager" type="text/x-jsrender">
         <div class="row view-manager">
-            <div class="columns large-7 button-group view-buttons">
+            <div class="columns large-6 view-buttons">
             </div>
-            <div class="columns large-3 medium-7">
+            <div class="columns large-4 medium-7">
             </div>
             <div class="columns large-2 medium-5">
                 <nav class="view-selector">
@@ -65,24 +65,6 @@
                 </nav>
             </div>
         </div>
-    </template>
-    <template id="ERPBlokViewManagerButton" type="text/x-jsrender">
-        <a class="view-button button {{:visibility}}"
-           data-function="{{:fnct}}"
-           data-method="{{:method}}">{{:label}}</a>
-    </template>
-    <template id="ERPBlokViewManagerGroup" type="text/x-jsrender">
-            <button data-toggle="{{:id}}"
-                    class="button dropdown {{:visibility}}">{{:label}}</button>
-            <div class="dropdown-pane" id="{{:id}}" data-dropdown>
-                <div class="menu vertical">
-                    {{for buttons}}
-                        <a class="view-button button verticale {{:visibility}}"
-                           data-function="{{:fnct}}"
-                           data-params="{{:params}}">{{:label}}</a>
-                    {{/for}}
-                </div>
-            </div>
     </template>
     <template id="View" type="text/x-jsrender">
         <div id="{{:id}}" class="row view {{:class_name}}"/>

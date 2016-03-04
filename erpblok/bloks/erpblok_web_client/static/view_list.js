@@ -51,21 +51,7 @@
             },
             hide_show_buttons: function() {
                 var checked = this.$el.find('input#line_checkbox:checked').length;
-                this.viewManager.$buttons.find('.on-readonly').addClass('hide');
-                this.viewManager.$buttons.find('.on-selected').addClass('hide');
-                this.viewManager.$buttons.find('.on-readwrite').addClass('hide');
-                if (this.readonly && checked) {
-                    this.viewManager.$buttons.find('.on-readonly.on-selected, .on-readonly:not(.on-selected)').removeClass('hide');
-                } else if (this.readonly) {
-                    this.viewManager.$buttons.find('.on-readonly:not(.on-selected)').removeClass('hide');
-                } else {
-                    if (checked) {
-                        this.viewManager.$buttons.find('.on-selected:not(.on-readonly)').removeClass('hide');
-                        this.viewManager.$buttons.find('.on-readwrite').removeClass('hide');
-                    } else {
-                        this.viewManager.$buttons.find('.on-readwrite:not(.on-selected)').removeClass('hide');
-                    }
-                }
+                this.viewManager.topButtons.setState({selected: checked});
             },
         },
     });
@@ -201,8 +187,9 @@
     }});
     AnyBlokJS.register({classname: 'InlineCrudButton', prototype: {
         icon: undefined,
+        title: '',
         render:  function () {
-            return (<li title="Modify the line">
+            return (<li title={this.title}>
                         <a onClick={this.onClick.bind(this)}>
                             <i className={this.icon} />
                         </a>
@@ -214,6 +201,7 @@
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-page-edit',
+        title: 'Modify the line',
         onClick: function (event) {
             this.props.line.openLine();
         },
@@ -223,6 +211,7 @@
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-save',
+        title: 'Save the line',
         onClick: function (event) {
             this.props.line.closeLineWithSave();
         },
@@ -232,6 +221,7 @@
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-x-circle',
+        title: 'Cancel the modification',
         onClick: function (event) {
             this.props.line.closeLineWithoutSave();
         },
@@ -241,6 +231,7 @@
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-trash',
+        title: 'Remove the line',
         onClick: function (event) {
             this.props.line.removeLine();
         },

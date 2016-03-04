@@ -371,7 +371,6 @@ class List(Mixin.ViewMultiEntries):
             'fields2display': ordered_fields,
             'headers': list(headers.values()),
             'buttons': self.get_buttons(view),
-            'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
             'transitions': self.get_transitions(view),
         })
@@ -403,6 +402,7 @@ class List(Mixin.ViewMultiEntries):
             'headers': [[x for y, x in fields.items() if y not in pks]],
             'checkbox': True,
             'buttons': buttons,
+            'groups_buttons': [],
             'transitions': {
                 'selectRecord': ('open_view', self.registry.UI.View.Form.id),
                 'newRecord': ('open_view', self.registry.UI.View.Form.id),
