@@ -20,8 +20,34 @@
             appendToView: function(line) {
                 line.$el.appendTo(this.$el.find('tbody'));
             },
-            get_entry: function (record) {
-                return AnyBlokJS.new('View.List.Line', this, record);
+            get_entry: function (record, readonly=true) {
+                return AnyBlokJS.new('View.List.Line', this, record, readonly);
+            },
+            render_records: function (records) {
+                this._super(records);
+                var self = this;
+                if (this.options.inline) {
+                    var colspan = this.options.fields2display.length + 1;
+                    if (this.options.checkbox) rowspaw ++;
+                    this.$nodeAdd = $('<tr><td colspan=' + colspan + '><a><i class="fi-page-add" />Add new line</a></td></tr>')
+                    this.$nodeAdd.appendTo(this.$el.find('tbody'));
+                    this.$nodeAdd.find('a').click(function (event) {
+                        self.add_new_line();
+                    });
+                }
+            },
+            add_new_line: function () {
+                var self = this;
+                $.each(this.entries, function (i, line) {
+                    line.closeLineWithoutSave();
+                });
+                this.rpc('new_entry', {model: this.viewManager.action.value.model,
+                                       fields: this.options.fields}, function (record) {
+                    var line = self.render_record(record, false);
+                    line.id = {}; // force to have no id because it a new
+                    line.$el.insertBefore(self.$nodeAdd);
+                    $(line.$el.find('field input')[0]).focus();
+                });
             },
             hide_show_buttons: function() {
                 var checked = this.$el.find('input#line_checkbox:checked').length;
@@ -48,8 +74,8 @@
         extend: ['View.Entry'],
         prototype: {
             template: 'ViewListLine',
-            init: function(view, record) {
-                this._super(view, record);
+            init: function(view, record, readonly=true) {
+                this._super(view, record, readonly);
                 this.selected = false;
                 this.changed_record = {};
             },
@@ -72,7 +98,7 @@
                 })
                 if (this.view.options.inline) {
                     this.inline_buttons = ReactDOM.render(
-                        <InlineCrudButtons line={this}/>,
+                        <InlineCrudButtons readonly={this.readonly} line={this}/>,
                         this.$el.find('inline-crud-buttons')[0]);
                 } else {
                     this.$el.find('td.selectable').click(function () {
@@ -102,6 +128,16 @@
                 });
                 this.inline_buttons.setState({readonly: this.readonly});
             },
+            pressEnter: function () {
+                var self = this;
+                this.rpc('set_entry', {model: self.view.viewManager.action.value.model,
+                                       primary_keys: self.id,
+                                       values: self.changed_record,
+                                       fields: this.view.options.fields}, function (record) {
+                    self.updateLine(record);
+                    self.view.add_new_line();
+                });
+            },
             openLine: function() {
                 this.readonly = false;
                 this.applyChange();
@@ -110,21 +146,42 @@
                 this.readonly = true;
                 this.changed_record = {};
                 this.applyChange();
+                if (Object.getOwnPropertyNames(this.id).length == 0) {
+                    // No id == no record in the database
+                    this.view.remove_entry(this);
+                }
+            },
+            updateLine: function(record) {
+                this.readonly = true;
+                this.record = record;
+                this.changed_record = {};
+                this.applyChange();
+                if (Object.getOwnPropertyNames(this.id).length == 0) {
+                    this.compute_id();
+                }
             },
             closeLineWithSave: function() {
-                this.readonly = true;
-                // call rpc save line
-                this.applyChange();
+                var self = this;
+                this.rpc('set_entry', {model: self.view.viewManager.action.value.model,
+                                       primary_keys: self.id,
+                                       values: self.changed_record,
+                                       fields: this.view.options.fields}, function (record) {
+                    self.updateLine(record);
+                });
             },
             removeLine: function() {
-                // call rpc remove line
+                var self = this;
+                this.rpc('del_entries', {model: self.view.viewManager.action.value.model,
+                                         primary_keys: [self.id]}, function (removed) {
+                    if (removed) self.view.remove_entry(self);
+                });
             },
         },
     });
     ERPBlok.declare_react_class('InlineCrudButtons')
     AnyBlokJS.register({classname: 'InlineCrudButtons', prototype: {
         getInitialState: function () {
-            return {readonly: true};
+            return {readonly: this.props.readonly};
         },
         render: function () {
             var buttons = [];
@@ -142,10 +199,8 @@
                     </nav>)
         },
     }});
-    ERPBlok.declare_react_class('InlineCrudButton')
     AnyBlokJS.register({classname: 'InlineCrudButton', prototype: {
         icon: undefined,
-        onClick: function (event) {},
         render:  function () {
             return (<li title="Modify the line">
                         <a onClick={this.onClick.bind(this)}>
@@ -155,7 +210,7 @@
         },
     }});
     ERPBlok.declare_react_class('InlineCrudButtonOpen')
-    AnyBlokJS.register({classname: 'InlineCrudButtonOpen', 
+    AnyBlokJS.register({classname: 'InlineCrudButtonOpen',
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-page-edit',
@@ -164,7 +219,7 @@
         },
     }});
     ERPBlok.declare_react_class('InlineCrudButtonSave')
-    AnyBlokJS.register({classname: 'InlineCrudButtonSave', 
+    AnyBlokJS.register({classname: 'InlineCrudButtonSave',
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-save',
@@ -173,7 +228,7 @@
         },
     }});
     ERPBlok.declare_react_class('InlineCrudButtonCancel')
-    AnyBlokJS.register({classname: 'InlineCrudButtonCancel', 
+    AnyBlokJS.register({classname: 'InlineCrudButtonCancel',
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-x-circle',
@@ -182,7 +237,7 @@
         },
     }});
     ERPBlok.declare_react_class('InlineCrudButtonRemove')
-    AnyBlokJS.register({classname: 'InlineCrudButtonRemove', 
+    AnyBlokJS.register({classname: 'InlineCrudButtonRemove',
                         extend: ['InlineCrudButton'],
                         prototype: {
         icon: 'fi-trash',

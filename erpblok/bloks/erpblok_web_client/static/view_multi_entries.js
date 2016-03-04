@@ -30,10 +30,7 @@
                     });
                 this.rpc('get_entries', values, function (records) {
                     self.clear_all();
-                    self.records = records;
-                    for (var i in records) {
-                        self.render_record(records[i]);
-                    }
+                    self.render_records(records);
                 });
             },
             clear_all: function() {
@@ -46,15 +43,26 @@
                     this.entries = [];
                 }
             },
-            appendToView: function(entry) {},
-            get_entry: function (index) {
-                return AnyBlokJS.new('View.Entry', this, index);
+            remove_entry: function (entry) {
+                var index = this.entries.indexOf(entry);
+                this.entries.splice(index, 1);
+                if (entry.$el) entry.$el.remove();
             },
-            render_record: function(record) {
-                var entry = this.get_entry(record);
+            appendToView: function(entry) {},
+            get_entry: function (record, reaonly=true) {
+                return AnyBlokJS.new('View.Entry', this, record, readonly);
+            },
+            render_records: function(records) {
+                for (var i in records) {
+                    var entry = this.render_record(records[i]);
+                    this.appendToView(entry);
+                }
+            },
+            render_record: function(record, readonly=true) {
+                var entry = this.get_entry(record, readonly);
                 entry.render();
-                this.appendToView(entry);
                 this.entries.push(entry);
+                return entry;
             },
             on_new_entry: function () {
                 this.transition('newRecord', {});
@@ -101,17 +109,20 @@
         extend: ['Template', 'View'],
         prototype: {
             template: undefined,
-            init: function(view, record) {
+            init: function(view, record, readonly=true) {
                 this.view = view;
                 this.record = record;
                 this.id = {}
-                var primary_keys = view.options.primary_keys;
-                for (var i in primary_keys) {
-                    this.id[primary_keys[i]] = record[primary_keys[i]];
-                }
-                this.readonly = true;
+                this.compute_id();
+                this.readonly = readonly;
                 this.fields = {};
                 this.fields_by_ids = {};
+            },
+            compute_id: function () {
+                var primary_keys = this.view.options.primary_keys;
+                for (var i in primary_keys) {
+                    this.id[primary_keys[i]] = this.record[primary_keys[i]];
+                }
             },
             initField: function (field_id, instance) {
                 var field_name = this.view.get_field(field_id).field_name;
@@ -131,10 +142,13 @@
                     this.fields[field_name][i].setState({value: value});
                 }
             },
+            pressEnter: function () {
+            },
             apply_react_componente: function (options, $el) {
                 ReactDOM.render(<Field options={options}
                                        init_field={this.initField.bind(this)}
                                        is_readonly={this.isReadonly.bind(this)}
+                                       pressEnter={this.pressEnter.bind(this)}
                                        update_field={this.updateField.bind(this)} />,
                                 $el);
             },

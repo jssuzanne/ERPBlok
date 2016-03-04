@@ -40,6 +40,9 @@ class Action:
             'dialog': self.dialog,
             'views': views,
             'selected': selected,
+            'add_edit': self.add_edit,
+            'add_delete': self.add_delete,
+            'add_new': self.add_new,
         }
 
     @classmethod
@@ -55,6 +58,9 @@ class Action:
             'dialog': field.get('dialog', False),
             'views': views,
             'selected': selected,
+            'add_edit': True,
+            'add_delete': True,
+            'add_new': True,
         }
 
     @classmethod
@@ -96,4 +102,7 @@ class Action:
             'dialog': field.get('dialog', False),
             'views': [view],
             'selected': selected,
+            'add_edit': True,
+            'add_delete': True,
+            'add_new': True,
         }
