@@ -20,7 +20,7 @@ class ERPBlokDemo(Blok):
 
     def install(self):
         """ Initialize database with the blok information """
-        self.import_file('xml', 'Model.Access.User', 'user.xml')
+        self.import_file('xml', 'Model.Web.User', 'user.xml')
 
     def update(self, latest_version):
         """ Update the database """

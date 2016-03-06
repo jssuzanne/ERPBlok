@@ -160,38 +160,4 @@
             </div>
         </div>
     </template>
-    <template id="ERPBlokViewFieldx2One" type="text/x-jsrender">
-        <div>
-            {{if value}}
-                {{if readonly}}
-                    <a>{{:value}}</a>
-                {{else}}
-                    <input id="{{:id}}" name="{{:id}}"/>
-                {{/if}}
-            {{else}}
-                <span></span>
-            {{/if}}
-        </div>
-    </template>
-    <template id="ERPBlokViewFieldBinary" type="text/x-jsrender">
-        <img></img>
-    </template>
-    <template id="ERPBlokViewX2Many" type="text/x-jsrender">
-        <div class="panel">
-        </div>
-    </template>
-    <template id="ERPBlokViewMany2ManyChoices" type="text/x-jsrender">
-        <div class="panel row small-up-{{:smallgrid}} medium-up-{{:mediumgrid}} large-up-{{:largegrid}}">
-        </div>
-    </template>
-    <template id="ERPBlokViewMany2ManyChoice" type="text/x-jsrender">
-        <div class="column">
-            {{if readonly}}
-                <input type="checkbox" DISABLED/>
-            {{else}}
-                <input type="checkbox" />
-            {{/if}}
-            <label>{{:label}}</label>
-        </div>
-    </template>
 </templates>

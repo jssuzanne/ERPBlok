@@ -9,7 +9,6 @@
         <field name="views">
             <record external_id="view_access_group_tree">
                 <field name="selectable">1</field>
-                <field name="is_selectable">0</field>
                 <field name="mode">Model.UI.View.List</field>
                 <field name="template">ERPBlokAccessGroupList</field>
             </record>

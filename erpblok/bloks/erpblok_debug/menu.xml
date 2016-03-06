@@ -29,14 +29,6 @@
                 <field name="label">Interface</field>
                 <field name="children">
                     <record>
-                        <field name="label">User menus</field>
-                        <field name="action" external_id="action_ui_user_menu"/>
-                    </record>
-                    <record>
-                        <field name="label">Quick menus</field>
-                        <field name="action" external_id="action_ui_quick_menu"/>
-                    </record>
-                    <record>
                         <field name="label">Menus</field>
                         <field name="action" external_id="action_ui_menu"/>
                     </record>

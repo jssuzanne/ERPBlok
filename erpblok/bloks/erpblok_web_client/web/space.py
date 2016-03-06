@@ -17,6 +17,7 @@ class Space:
                                           ('left', 'On the left'),
                                           ('right', 'On the right')],
                               default='left', nullable=False)
+    default_menu = Many2One(model='Model.UI.Menu')
 
 
 @Declarations.register(Declarations.Model.Web.Space)

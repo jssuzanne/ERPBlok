@@ -75,7 +75,7 @@
                         entries_primary_keys.push(line.id);
                     }
                 });
-                self.rpc('del_entry', {model: this.viewManager.action.value.model,
+                self.rpc('del_entries', {model: this.viewManager.action.value.model,
                                        primary_keys: entries_primary_keys}, function () {
                     self.do_search();
                 });
