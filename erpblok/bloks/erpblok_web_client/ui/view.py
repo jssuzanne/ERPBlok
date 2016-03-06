@@ -123,36 +123,12 @@ class ViewRenderTemplate:
 
     def get_template_replace_label(self, el, fields_description):
         el_for = el.attrib.get('for')
-        if el_for in fields_description:
-            el.text = fields_description[el_for]['label']
+        for field in fields_description:
+            if field['field_name'] == el_for:
+                if not el.text:
+                    el.text = field['label']
 
-    def get_template_replace_field_attribute(self, k, v, field_description):
-        if k == 'name':
-            return
-        elif k not in ('id', 'model', 'primary_key'):
-            field_description[k] = v
-
-    def get_template_replace_field(self, el, fields_description):
-        el_name = el.attrib.get('name')
-        if el_name in fields_description:
-            div = etree.Element('div')
-            div.set('id', el_name)
-            _class = ["field"]
-            for k, v in el.attrib.items():
-                self.get_template_replace_field_attribute(
-                    k, v, fields_description[el_name])
-                if k not in ('type', 'class'):
-                    div.set(k, v)
-
-                if k == "class":
-                    _class.extend(v.split(' '))
-
-            div.set('class', ' '.join(_class))
-            return div
-
-        return None
-
-    def get_template_replace_expr(self, el, fields_description):
+    def get_template_replace_expr(self, el):
 
         def replace(attrib, head, tail, notailifnextin=None):
             if notailifnextin is None:
@@ -211,27 +187,45 @@ class ViewRenderTemplate:
                     if el is not None:
                         tmpl.replace(node, el)
 
-    def get_template(self, view):
+    def get_fields_description(self, view, fields):
         Model = self.registry.get(view.action.model)
+        fields_description = Model.fields_description()
+        fdesc = []
+        counter = 0
+        for el in fields:
+            counter += 1
+            name = el.attrib['name']
+            field = fields_description[name].copy()
+            fdesc.append(field)
+            field['field_name'] = field['id']
+            field['id'] += '-%d' % counter
+            for k, v in el.attrib.items():
+                if k not in ('field_name', 'id'):
+                    field[k] = v
+
+            el.set('id', field['id'])
+
+        return fdesc
+
+    def get_template(self, view):
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
         tmpl.tag = 'div'
-        fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
-        fields_description = deepcopy(Model.fields_description(
-            fields=fields_name))
+        fields = tmpl.findall('.//field')
+        fields_description = self.get_fields_description(view, fields)
         self.get_template_replace(tmpl, fields_description)
         tmpl = html.tostring(tmpl)
-        self.update_relation_ship_description(fields_description)
+        # self.update_relation_ship_description(fields_description)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
-                fields_name, fields_description]
+                fields_description]
 
     def render_template(self, view):
         """ Specific render for a list view """
-        template, fields_name, fields_description = self.get_template(view)
+        template, fields_description = self.get_template(view)
         return {
-            'fields': fields_name,
+            'fields': [x['field_name'] for x in fields_description],
             'template': template,
-            'fields2display': [fields_description[x] for x in fields_name],
+            'fields2display': fields_description,
         }
 
 

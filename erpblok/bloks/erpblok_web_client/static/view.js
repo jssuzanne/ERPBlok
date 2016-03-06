@@ -158,20 +158,16 @@
             on_edit_view: function() {
                 if (this.readonly) {
                     this.toggleReadonly();
-                    this.refresh_render();
                 }
             },
             on_read_view: function() {
                 if (! this.readonly) {
                     this.toggleReadonly();
-                    this.refresh_render();
                 }
             },
             on_close_view: function () {
                 if (! this.readonly) this.toggleReadonly();
                 this.transition('closeView');
-            },
-            refresh_render: function() {
             },
             get_values_changed: function () {
             },
