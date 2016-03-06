@@ -24,4 +24,3 @@ class ERPBlokCore(Blok):
                          'action_configuration.xml')
         self.import_file('xml', 'Model.Web.Space', 'data', 'spaces.xml')
         self.import_file('xml', 'Model.Web.User', 'data', 'user.xml')
-        self.import_file('xml', 'Model.UI.Menu', 'data', 'menu.xml')

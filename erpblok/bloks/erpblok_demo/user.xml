@@ -7,7 +7,7 @@
              <field name="login">demo</field>
              <field name="password">demo</field>
         </field>
-        <field name="default_space" external_id="setting_space"/>
+        <field name="default_space" external_id="setting_space_user"/>
         <field name="groups">
             <record external_id="group_administration" />
         </field>

@@ -13,7 +13,7 @@ class ERPBlokDebug(Blok):
     def install(self):
         """ Initialize database with the blok information """
         self.import_file('xml', 'Model.UI.Action', 'action.xml')
-        self.import_file('xml', 'Model.UI.Menu', 'menu.xml')
+        self.import_file('xml', 'Model.Web.Space', 'space.xml')
 
     def update(self, latest_version):
         """ Update the database """
