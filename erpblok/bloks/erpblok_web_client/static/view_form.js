@@ -157,6 +157,15 @@
                     self.transition('closeView');
                 });
             },
+            on_read_view: function() {
+                if (! this.readonly) {
+                    this.toggleReadonly();
+                }
+                this.changed_record = {};
+                if (! this.args.id || Object.getOwnPropertyNames(this.args.id).length == 0) {
+                    this.transition('closeView'); 
+                }
+            },
         },
     });
 }) ();
