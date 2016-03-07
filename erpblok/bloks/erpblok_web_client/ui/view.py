@@ -376,9 +376,20 @@ class List(Mixin.ViewMultiEntries):
         :param action: instance of the model UI.Action
         """
         Model = self.registry.get(action.model)
-        fields = deepcopy(Model.fields_description())
-        self.update_relation_ship_description(fields)
+        fields = []
         pks = Model.get_primary_keys()
+        counter = 0
+        for field_name, field in Model.fields_description().items():
+            if field_name in pks:
+                continue
+
+            f = field.copy()
+            f['field_name'] = field_name
+            counter += 1
+            f['id'] += '-%d' % counter
+            fields.append(f)
+
+        # self.update_relation_ship_description(fields)
         buttons = []
         if action.add_new:
             buttons.append(self.get_button_new())
@@ -391,9 +402,9 @@ class List(Mixin.ViewMultiEntries):
             'selectable': True,
             'mode': 'List',
             'primary_keys': pks,
-            'fields': [x for x in fields.keys() if x not in pks],
-            'fields2display': [x for y, x in fields.items() if y not in pks],
-            'headers': [[x for y, x in fields.items() if y not in pks]],
+            'fields': [x['field_name'] for x in fields],
+            'fields2display': fields,
+            'headers': [[x['field_name'] for x in fields]],
             'checkbox': True,
             'buttons': buttons,
             'groups_buttons': [],
