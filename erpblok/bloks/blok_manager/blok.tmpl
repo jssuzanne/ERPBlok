@@ -23,7 +23,9 @@
             </div>
             <div class="columns large-4 medium-6">
                 <field name="logo" type="Binary"/>
+                <!--
                 <call template="AnyBlokSystemBlokButton"/>
+                -->
                 <label for="state"/>
                 <field name="state"/>
                 <label for="version"/>
@@ -52,11 +54,14 @@
         <div class="row">
             <div class="columns large-7 medium-6">
                 <field name="logo" type="Binary"></field>
+                <!--
                 <call template="AnyBlokSystemBlokButton"/>
+                -->
             </div>
             <div class="columns large-5 medium-6">
                 <label for="state"/>
                 <field name="state"/>
+                <!--
                 <expr if="fields.version.get_value() != fields.installed_version.get_value()">
                     <label for="version"/>
                     <field name="version"/>
@@ -65,6 +70,7 @@
                     <label for="installed_version"/>
                     <field name="installed_version"/>
                 </expr>
+                -->
             </div>
         </div>
     </template>

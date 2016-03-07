@@ -6,8 +6,8 @@
             this.hashTagManager = AnyBlokJS.new('HashTagManager', this);
             this.errorManager = AnyBlokJS.new('ErrorManager', this);
             var self = this;
-            this.hashTagManager.onAdd('space', function(newSpace) {self.selectLeftMenu(newSpace);});
-            this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectLeftMenu(newSpace);});
+            this.hashTagManager.onAdd('space', function(newSpace) {self.selectSpace(newSpace);});
+            this.hashTagManager.onChange('space', function(newSpace, oldSpace) {self.selectSpace(newSpace);});
             this.hashTagManager.onAdd('menu', function(newMenu) {self.selectMenu(newMenu);});
             this.hashTagManager.onChange('menu', function(newMenu, oldMenu) {self.selectMenu(newMenu);});
         },
@@ -34,15 +34,18 @@
                 this.current_space.callAction(action);
             }
         },
-        load_menu: function (menu) {
-            this.hashTagManager.update({menu: menu});
+        load_menu: function (value) {
+            this.hashTagManager.update({menu: value});
         },
         closeLeftRemoval: function () {
             this.leftModal.close();
         },
         selectLeftMenu: function (value) {
             this.closeLeftRemoval();
+            this.hashTagManager.clear();
             this.hashTagManager.update({space: value});
+        },
+        selectSpace: function (value) {
             var self = this;
             $.ajax({type: 'POST', url: '/client/space/description?space=' + value})
             .fail(function (xhr, status) {
@@ -75,7 +78,7 @@
                                  close={this.closeLeftRemoval.bind(this)} />,
                 document.getElementById('revealtopbarleft'));
             if (user.space) {
-                this.selectLeftMenu(user.space);
+                this.selectSpace(user.space);
             }
         },
         closeRightRemoval: function () {

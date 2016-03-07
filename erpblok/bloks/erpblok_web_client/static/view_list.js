@@ -63,7 +63,6 @@
             init: function(view, record, readonly=true) {
                 this._super(view, record, readonly);
                 this.selected = false;
-                this.changed_record = {};
             },
             render: function () {
                 var self = this;

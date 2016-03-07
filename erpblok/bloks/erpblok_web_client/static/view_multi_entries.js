@@ -117,6 +117,7 @@
                 this.readonly = readonly;
                 this.fields = {};
                 this.fields_by_ids = {};
+                this.changed_record = {};
             },
             compute_id: function () {
                 var primary_keys = this.view.options.primary_keys;

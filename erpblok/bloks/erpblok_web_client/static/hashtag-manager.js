@@ -71,6 +71,9 @@
                 hash = '#' + hash.join('&');
                 window.location.hash = hash;
             },
+            clear: function() {
+                window.location.hash = '#';
+            },
             get: function(tag) {
                 var hash = window.location.hash;
                 if (hash) {

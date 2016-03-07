@@ -42,11 +42,17 @@
             <menu class="top-menu" />
         </div>
         <div class="row space">
-            <div class="columns">
-                <div id="breadcrumb">
-                </div>
-                <div id="action-manager">
-                </div>
+            <div id="breadcrumb">
+            </div>
+            <div id="action-manager">
+            </div>
+        </div>
+    </template>
+    <template id="Space_without_Menu" type="text/x-jsrender">
+        <div class="space">
+            <div id="breadcrumb">
+            </div>
+            <div id="action-manager">
             </div>
         </div>
     </template>
@@ -147,16 +153,16 @@
     <template id="ERPBlokDialogClose" type="text/x-jsrender">
         <a class="close-reveal-modal float-right" aria-label="Close">&#215;</a>
     </template>
-    <template id="ERPBlokViewThumbnails" extend="View" type="text/x-jsrender">
+    <template id="ViewThumbnails" extend="View" type="text/x-jsrender">
         <xpath action="insert" expression="./div">
             <div id="thumbnails-{{:id}}" class="row thumbnails" data-equalizer>
             </div>
         </xpath>
     </template>
-    <template id="ERPBlokViewThumbnailsSticker" type="text/x-jsrender">
+    <template id="ViewThumbnailsSticker" type="text/x-jsrender">
         <div class="medium-6 large-3 columns"
              data-equalizer-watch>
-            <div class="sticker panel radius selectable view-contnair">
+            <div class="sticker callout primary radius selectable view-contnair">
             </div>
         </div>
     </template>

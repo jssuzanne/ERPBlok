@@ -91,7 +91,7 @@
                     var parent = this.actionManager;
                 }
                 parent.appendTo(this);
-                var viewManager = AnyBlokJS.new('ViewManager', this, view_id, pks);
+                this.viewManager = AnyBlokJS.new('ViewManager', this, view_id, pks);
             },
         },
     });

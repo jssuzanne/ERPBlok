@@ -128,7 +128,7 @@ class ViewRenderTemplate:
                 if not el.text:
                     el.text = field['label']
 
-    def get_template_replace_expr(self, el):
+    def get_template_replace_expr(self, el, fields_description):
 
         def replace(attrib, head, tail, notailifnextin=None):
             if notailifnextin is None:

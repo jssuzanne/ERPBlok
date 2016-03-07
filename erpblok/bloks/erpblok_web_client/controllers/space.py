@@ -39,33 +39,36 @@ class Space:
         user_id = self.request.session['user_id']
         user = self.registry.Web.User.query().get(user_id)
         _space = self.registry.Web.Space.query().get(space)
-        try:
-            if _space is None:
-                return exc.HTTPNotFound(
-                    "The space (id = %s) is not found" % space)
+        if _space is None:
+            return exc.HTTPNotFound(
+                "The space (id = %s) is not found" % space)
 
-            if _space.groups and not user.has_groups(_space.groups.name):
-                return exc.HTTPForbidden(
-                    "You can not acces at the space: %s" % _space.label)
+        if _space.groups and not user.has_groups(_space.groups.name):
+            return exc.HTTPForbidden(
+                "You can not acces at the space: %s" % _space.label)
 
-            category = _space.category
-            if category.groups and not user.has_groups(category.groups.name):
-                return exc.HTTPForbidden(
-                    "You can not acces at the space's category: %s" % category.label)
+        category = _space.category
+        if category.groups and not user.has_groups(category.groups.name):
+            return exc.HTTPForbidden(
+                "You can not acces at the space's category: %s" % category.label)
 
-            res = {
-                'id': _space.id,
-                'label': _space.label,
-                'icon': _space.icon,
-                'menu_position': _space.menu_position,
-                'menus': [],
-            }
-            if _space.menus:
-                self.define_menus_for(user, res['menus'], _space.menus)
+        res = {
+            'id': _space.id,
+            'label': _space.label,
+            'icon': _space.icon,
+            'menu_position': _space.menu_position,
+            'menus': [],
+        }
+        if _space.menus:
+            self.define_menus_for(user, res['menus'], _space.menus)
 
-            return res
-        except Exception as e:
-            return exc.HTTPInternalServerError(str(e))
+        if _space.default_menu:
+            res['default_menu'] = _space.default_menu.id
+
+        if _space.default_action:
+            res['default_action'] = _space.default_action.id
+
+        return res
 
     @PyramidHTTP.view(renderer='json')
     def client_space_menus(self):

@@ -24,32 +24,31 @@
             if (this.options.menus.length != 0) {
                 ReactDOM.render(
                     <TopMenu menus={this.options.menus}
-                          space={this.options.id}
-                          select={this.selectMenu.bind(this)}/>,
+                             space={this.options.id}
+                             select={this.selectMenu.bind(this)}/>,
                     this.$el.find('menu.top-menu')[0]);
                 if (this.$el.find('menu.side-menu').length != 0) {
                     ReactDOM.render(
                         <SideMenu menus={this.options.menus}
-                              space={this.options.id}
-                              select={this.selectMenu.bind(this)}/>,
+                                  space={this.options.id}
+                                  select={this.selectMenu.bind(this)}/>,
                         this.$el.find('menu.side-menu')[0]);
                 }
                 this.Fel = new Foundation.AccordionMenu(this.$el.find('menu'));
-                var menu = this.client.hashTagManager.get('menu'),
-                    action = this.client.hashTagManager.get('action');
-                if (!menu && this.options.default_menu) {
-                    this.client.load_menu(menu);
-                } else {
+                var menu = this.client.hashTagManager.get('menu');
+                if (menu) {
                     this.load_menu(menu);
+                } else if (!menu) {
+                    if (this.options.default_menu) this.client.load_menu(this.options.default_menu);
+                    else if (this.options.default_action) this.callAction(this.options.default_action);
                 }
-                // action can be load by menu, but the action can be different
-                if (action && action != this.client.hashTagManager.get('action')) {
-                    this.callAction(action);
-                }
+            } else {
+                if (this.options.default_action) this.callAction(this.options.default_action);
             }
         },
         load_menu: function (menu) {
-            var self = this;
+            var self = this,
+                action = this.client.hashTagManager.get('action');
             if (this.client.hashTagManager.get('clean-breadcrumbs')) {
                 this.client.hashTagManager.update({'clean-breadcrumbs': undefined});
                 this.actionManager.clear_all();
@@ -60,17 +59,24 @@
                 self.active_menu(res.activemenu);
                 if (res.activemenu) {
                     self.callAction(res.action);
+                    if (action && action != res.action) {
+                        self.callAction(action);
+                    }
                 }
             });
         },
         uncollapse_menus: function(nodemenus) {
-            for (var i in nodemenus) {
-                this.Fel.down(this.$el.find('menu').find('ul.menu-' + nodemenus[i]));
+            if (this.Fel) {
+                for (var i in nodemenus) {
+                    this.Fel.down(this.$el.find('menu').find('ul.menu-' + nodemenus[i]));
+                }
             }
         },
         collapse_all: function () {
-            this.Fel.hideAll();
-            this.$el.find('menu').find('.is-active').removeClass('is-active');
+            if (this.Fel) {
+                this.Fel.hideAll();
+                this.$el.find('menu').find('.is-active').removeClass('is-active');
+            }
         },
         active_menu: function(menu_id) {
             this.$el.find('menu').find('a.menu-' + menu_id).addClass('is-active');
