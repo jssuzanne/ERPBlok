@@ -12,8 +12,8 @@
                 this.fields_by_ids = {};
                 this.changed_record = {};
             },
-            getViewEl: function () {
-                this._super();
+            getViewEl: function ($action) {
+                this._super($action);
                 var $el = $($.templates(this.options.template).render());
                 $el.appendTo(this.$el);
                 this.apply_react_components();

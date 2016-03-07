@@ -46,9 +46,8 @@
                     self.select_view(event.currentTarget.id);
                 });
                 $navEl.appendTo(this.$el.find('ul'));
-                var $viewEl = view.getViewEl();
+                var $viewEl = view.getViewEl(this.$action);
                 $viewEl.addClass('hide');
-                $viewEl.appendTo(this.$action);
                 this.views[view.options.id] = {
                     '$nav': $navEl,
                     '$view': $viewEl,
@@ -101,8 +100,9 @@
                      'icon_selector': this.icon_selector,
                      'selectable': this.options.selectable}));
             },
-            getViewEl: function() {
+            getViewEl: function($action) {
                 this.$el = this.render_template({id: this.options.id, class_name: this.class_name});
+                this.$el.appendTo($action);
                 return this.$el;
             },
             render: function(args) {},

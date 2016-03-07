@@ -7,9 +7,9 @@
             icon_selector: 'fi-list',
             class_name: 'view-list',
             template: 'ViewList',
-            getViewEl: function() {
+            getViewEl: function($action) {
                 var self = this;
-                var $el = this._super();
+                var $el = this._super($action);
                 $el.find('input#all_checkbox').click(function (event) {
                     var checked = $(event.currentTarget).prop('checked');
                     self.$el.find('input#line_checkbox').prop('checked', checked);

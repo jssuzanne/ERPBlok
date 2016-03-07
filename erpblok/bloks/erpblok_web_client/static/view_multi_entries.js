@@ -8,12 +8,13 @@
                 this._super(viewManager, options);
                 this.entries = [];
             },
-            getViewEl: function() {
+            getViewEl: function($action) {
                 var self = this,
                     values = {id: this.options.id,
                               options: this.options,
                               class_name: this.class_name};
                 this.$el = this.render_template(values);
+                this.$el.appendTo($action);
                 return this.$el;
             },
             render: function (args) {
