@@ -11,7 +11,6 @@
                 line.$el.appendTo(this.$el.find('div#thumbnails-' + this.options.id));
             },
             get_entry: function (record, readonly=true) {
-                console.log('get entry')
                 return AnyBlokJS.new('View.Thumbnails.Sticker', this, record, readonly);
             },
         },
@@ -24,7 +23,7 @@
             render: function () {
                 var self = this;
                 this._super();
-                this.$el.find('div.selectable:not(button)').click(function () {
+                this.$el.find('div.selectable:not(button):not(input):not(a)').click(function () {
                     if (self.view.readonly) {
                         self.view.transition('selectRecord', {id: self.id});
                     }

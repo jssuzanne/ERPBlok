@@ -10,6 +10,7 @@
                                 pressEnter={this.props.pressEnter}
                                 init_field={this.props.init_field}
                                 is_readonly={this.props.is_readonly}
+                                get_value_of={this.props.get_value_of}
                                 update_field={this.props.update_field} />
         },
         render_field_Boolean: function () {
@@ -17,6 +18,7 @@
                                  pressEnter={this.props.pressEnter}
                                  init_field={this.props.init_field}
                                  is_readonly={this.props.is_readonly}
+                                 get_value_of={this.props.get_value_of}
                                  update_field={this.props.update_field} />
         },
         render_field_Selection: function () {
@@ -24,6 +26,7 @@
                                    pressEnter={this.props.pressEnter}
                                    init_field={this.props.init_field}
                                    is_readonly={this.props.is_readonly}
+                                   get_value_of={this.props.get_value_of}
                                    update_field={this.props.update_field} />
         },
         render_field_Password: function () {
@@ -31,13 +34,31 @@
                                   pressEnter={this.props.pressEnter}
                                   init_field={this.props.init_field}
                                   is_readonly={this.props.is_readonly}
+                                  get_value_of={this.props.get_value_of}
                                   update_field={this.props.update_field} />
+        },
+        render_field_LargeBinary: function () {
+            return <FieldLargeBinary options={this.props.options}
+                                     pressEnter={this.props.pressEnter}
+                                     init_field={this.props.init_field}
+                                     is_readonly={this.props.is_readonly}
+                                     get_value_of={this.props.get_value_of}
+                                     update_field={this.props.update_field} />
+        },
+        render_field_Picture: function () {
+            return <FieldPicture options={this.props.options}
+                                 pressEnter={this.props.pressEnter}
+                                 init_field={this.props.init_field}
+                                 is_readonly={this.props.is_readonly}
+                                 get_value_of={this.props.get_value_of}
+                                 update_field={this.props.update_field} />
         },
         render: function () {
             var fnct_name = 'render_field_' + (this.props.options.type || 'fake');
             if (this[fnct_name]) {
                 return this[fnct_name]();
             } else {
+                console.log(fnct_name)
                 return this.render_field_fake();
             }
         },
@@ -124,6 +145,80 @@
         input_type: 'password',
         render_ro: function () {
             return <span>******</span>
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldLargeBinary')
+    AnyBlokJS.register({classname: 'FieldLargeBinary', extend: ['FieldString'], prototype: {
+        input_type: 'file',
+        handleChange: function (event) {
+            var file = event.target.files[0],
+                file_name = file.name,
+                file_size = file.size,
+                file_type = file.type;
+            this.props.update_field(this.props.options.id, file);
+            if (this.props.options.file_name_field)
+                this.props.update_field(this.props.options.file_name_field, file_name);
+            if (this.props.options.file_size_field)
+                this.props.update_field(this.props.options.file_size_field, file_size);
+            if (this.props.options.mimetype_field)
+                this.props.update_field(this.props.options.mimetype_field, file_type);
+        },
+        onClick: function (event) {
+            var image_data = atob(this.state.value.split(',')[1]);
+            var arraybuffer = new ArrayBuffer(image_data.length);
+            var view = new Uint8Array(arraybuffer);
+            for (var i=0; i<image_data.length; i++) {
+                view[i] = image_data.charCodeAt(i) & 0xff;
+            }
+            var mimetype = 'application/octet-stream';
+            if (this.props.options.mimetype_field)
+                mimetype = this.props.get_value_of(this.props.options.mimetype_field);
+
+            var blob = new Blob([arraybuffer], {type: mimetype});
+            var url = (window.webkitURL || window.URL).createObjectURL(blob);
+            window.open(url);
+        },
+        get_title: function() {
+            var txt = '';
+            if (this.state.value) {
+                txt = 'Download file';
+                if (this.props.options.file_name_field) {
+                    txt += ' : ' + this.props.get_value_of(this.props.options.file_name_field);
+                    if (this.props.options.file_size_field) {
+                        txt += ' (' + this.props.get_value_of(this.props.options.file_size_field) + ' bytes)';
+                    }
+                }
+            }
+            return txt
+        },
+        render_ro: function () {
+            var txt = this.get_title();
+            return <a onClick={this.onClick.bind(this)}>{txt}</a>
+        },
+        render_rw: function () {
+            var required = this.props.options.nullable ? false : true,
+                placeholder = this.props.options.placeholder || '',
+                accept = this.props.options.accept || "*";
+            return <input type={this.input_type}
+                          required={required}
+                          placeholder={placeholder}
+                          value={this.state.value}
+                          style={this.get_style()}
+                          onKeyPress={this.onKeyPress.bind(this)}
+                          onChange={this.handleChange.bind(this)}
+                          accept={accept}
+                    />
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldPicture')
+    AnyBlokJS.register({classname: 'FieldPicture',
+                        extend: ['FieldLargeBinary'],
+                        prototype: {
+        render_ro: function () {
+            var txt = this.get_title();
+            return <img title={txt} src={this.state.value}/>
         },
     }});
 

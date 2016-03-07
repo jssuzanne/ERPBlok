@@ -145,11 +145,15 @@
             },
             pressEnter: function () {
             },
+            get_value_of: function (field_name) {
+                return this.changed_record[field_name] || this.record[field_name];
+            },
             apply_react_componente: function (options, $el) {
                 ReactDOM.render(<Field options={options}
                                        init_field={this.initField.bind(this)}
                                        is_readonly={this.isReadonly.bind(this)}
                                        pressEnter={this.pressEnter.bind(this)}
+                                       get_value_of={this.get_value_of.bind(this)}
                                        update_field={this.updateField.bind(this)} />,
                                 $el);
             },

@@ -54,26 +54,25 @@
         },
         render: function () {
             return (<div className="row">
-                        <div className="columns large-9 medium-6"></div>
-                        <div className="columns large-3 medium-6">
-                            <ul className="menu">
-                                <li>
+                        <div className="columns large-6 medium-3"></div>
+                        <div className="columns large-6 medium-9">
+                            <div className="input-group">
+                                <span className="input-group-label">
                                     <i className="fi-magnifying-glass" />
-                                </li>
-                                <li>
-                                    <input type="search" 
-                                           placeholder="Filter ..." 
-                                           value={this.props.filterText}
-                                           onChange={this.handleChange.bind(this)} />
-                                </li>
-                                <li>
+                                </span>
+                                <input className="input-group-field" 
+                                       type="search"
+                                       placeholder="Filter ..." 
+                                       value={this.props.filterText}
+                                       onChange={this.handleChange.bind(this)} />
+                                <div className="input-group-button">
                                     <button type="button" 
                                             onClick={this.props.close}
                                             className="button">
                                         Close
                                     </button>
-                                </li>
-                            </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>)
         },
