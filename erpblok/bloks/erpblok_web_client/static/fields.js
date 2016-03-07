@@ -53,6 +53,30 @@
                                  get_value_of={this.props.get_value_of}
                                  update_field={this.props.update_field} />
         },
+        render_field_Many2One: function () {
+            return <FieldMany2One options={this.props.options}
+                                  pressEnter={this.props.pressEnter}
+                                  init_field={this.props.init_field}
+                                  is_readonly={this.props.is_readonly}
+                                  get_value_of={this.props.get_value_of}
+                                  update_field={this.props.update_field} />
+        },
+        render_field_One2One: function () {
+            return <FieldOne2One options={this.props.options}
+                                 pressEnter={this.props.pressEnter}
+                                 init_field={this.props.init_field}
+                                 is_readonly={this.props.is_readonly}
+                                 get_value_of={this.props.get_value_of}
+                                 update_field={this.props.update_field} />
+        },
+        render_field_Many2ManyChoices: function () {
+            return <FieldMany2ManyChoices options={this.props.options}
+                                          pressEnter={this.props.pressEnter}
+                                          init_field={this.props.init_field}
+                                          is_readonly={this.props.is_readonly}
+                                          get_value_of={this.props.get_value_of}
+                                          update_field={this.props.update_field} />
+        },
         render: function () {
             var fnct_name = 'render_field_' + (this.props.options.type || 'fake');
             if (this[fnct_name]) {
@@ -250,6 +274,89 @@
             } else {
                 return this.render_rw()
             }
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldMany2One')
+    AnyBlokJS.register({classname: 'FieldMany2One', 
+                        extend: ['RPC'],
+                        prototype: {
+        getInitialState: function () {
+            this.props.init_field(this.props.options.id, this);
+            return {value: this.props.options.value,
+                    readonly: this.props.is_readonly(this.props.options.id)};
+        },
+        render : function() {
+            return <div>TODO</div>
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldOne2One')
+    AnyBlokJS.register({classname: 'FieldOne2One', 
+                        extend: ['RPC', 'FieldMany2One'],
+                        prototype: {
+    }});
+
+    ERPBlok.declare_react_class('FieldMany2ManyChoices')
+    AnyBlokJS.register({classname: 'FieldMany2ManyChoices', 
+                        extend: ['RPC'],
+                        prototype: {
+        rpc_url: '/web/client/view',
+        getInitialState: function () {
+            this.props.init_field(this.props.options.id, this);
+            return {value: this.props.options.value,
+                    choices: [],
+                    readonly: this.props.is_readonly(this.props.options.id)};
+        },
+        componentDidMount: function() {
+            var self = this;
+            this.rpc('get_relationship_entries', {model: this.props.options.model,
+                                                  display: this.props.options.display}, function (result) {
+                self.setState({choices: result});
+            });
+        },
+        containsEntry : function(obj) {
+            for (var x in this.state.value) {
+                if (this.state.value.hasOwnProperty(x) && JSON.stringify(this.state.value[x]) === JSON.stringify(obj)) {
+                    return x;
+                }
+            }
+            return false;
+        },
+        render: function () {
+            var choices = [],
+                self = this,
+                disabled = (this.state.readonly) ? true : false,
+                large_up = 'large-up-' + (this.props.options.largegrid || 4),
+                medium_up = 'medium-up-' + (this.props.options.mediumgrid || 2),
+                small_up = 'small-up-' + (this.props.options.smallgrid || 1),
+                className = 'row ' + large_up + ' ' + medium_up + ' ' + small_up;
+                
+            this.state.choices.forEach(function (choice) {
+                var checked = false;
+                if (self.containsEntry(choice[0])) checked = true;
+                var onClick = function (event) {
+                    if (event.target.checked) {
+                        if (! self.containsEntry(choice[0]))
+                            self.state.value.push(choice[0]);               
+                    } else {
+                        var index = self.containsEntry(choice[0]);
+                        self.state.value.splice(index, 1)
+                    }
+                    self.props.update_field(self.props.options.id, self.state.value);
+                }
+                choices.push(
+                    <div className="columns">
+                        <input type="checkbox" 
+                               checked={checked} 
+                               disabled={disabled}
+                               onClick={onClick}/>
+                        <label>{choice[1]}</label>
+                    </div>)
+            });
+            return (<div className={className}>
+                        {choices}
+                    </div>)
         },
     }});
 }) ();

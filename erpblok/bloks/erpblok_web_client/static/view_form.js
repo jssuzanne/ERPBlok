@@ -74,7 +74,11 @@
                 for (var i in this.fields[field_name]) {
                     this.fields[field_name][i].setState({value: value});
                 }
-                if (value != this.record[field_name]) {
+                var isArray = false;
+                if (Array.isArray(value) || Array.isArray(this.record[field_name]))
+                    isArray = true;
+
+                if (isArray || (value != this.record[field_name])) {
                     this.changed_record[field_name] = value;
                 } else {
                     if (this.changed_record[field_name]) {
@@ -109,15 +113,6 @@
                         readonly: self.isReadonly(field.id)});
                 });
             },
-                /*
-            render_record: function(record) {
-                $el.find('button').click(function(event) {
-                    var func = event.currentTarget.dataset.function;
-                    var method = event.currentTarget.dataset.method || undefined;
-                    self[func](self.args.id, method);
-                });
-            },
-                */
             get_fields: function() {
                 var self = this,
                     fields = {};
