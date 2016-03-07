@@ -522,17 +522,26 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
         root = etree.Element('div')
         fields = Model.fields_description()
         pks = Model.get_primary_keys()
+        fields_description = []
+        counter = 0
         for name, value in fields.items():
             if name in pks:
                 continue
 
+            counter += 1
+            f = fields[name].copy()
+            f['field_name'] = f['id']
+            f_id = f['id'] + '-%d' % counter
+            f['id'] = f_id
             _label = etree.SubElement(root, 'label')
             _label.set('for', name)
             _label.text = value['label']
             field = etree.SubElement(root, 'field')
             field.set('name', name)
+            field.set('id', f_id)
+            fields_description.append(f)
 
-        self.get_template_replace(root, fields)
+        self.get_template_replace(root, fields_description)
 
         buttons = []
         groups_buttons = []
@@ -577,8 +586,8 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'template': self.registry.erpblok_views.decode(
                 html.tostring(root).decode('utf-8')),
             'primary_keys': pks,
-            'fields': [x for x in fields.keys() if x not in pks],
-            'fields2display': [x for y, x in fields.items() if y not in pks],
+            'fields': [x['field_name'] for x in fields_description],
+            'fields2display': fields_description,
             'buttons': buttons,
             'groups_buttons': groups_buttons,
         }
