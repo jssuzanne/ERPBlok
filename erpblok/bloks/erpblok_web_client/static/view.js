@@ -225,15 +225,14 @@
                     buttons.push(<ViewTopButton call={self.props.call} options={button} />);
                 }
             });
-            // FIXME
-            // this.state.groups.forEach(function(group) {
-            //     if (self.is_visible(group)) {
-            //         buttons.push(<ViewTopGroup call={self.props.call}
-            //                                    readonly={self.state.readonly}
-            //                                    buttons={group.buttons}
-            //                                    options={group} />);
-            //     }
-            // });
+            this.state.groups.forEach(function(group) {
+                if (self.is_visible(group)) {
+                    buttons.push(<ViewTopGroup call={self.props.call}
+                                                readonly={self.state.readonly}
+                                                buttons={group.buttons}
+                                                options={group} />);
+                 }
+            });
             return buttons;
         },
         render: function() {
@@ -259,12 +258,26 @@
     AnyBlokJS.register({classname: 'ViewTopGroup',
                         extend: ['ViewTopButtons'],
                         prototype: {
+        componentDidMount: function() {
+            this.elDropDown = new Foundation.Dropdown($('#' + this.props.options.label));
+        },
+        componentWillUnmount: function() {
+            this.elDropDown.destroy();
+        },
         render: function() {
             var buttons = this.get_buttons();
-            return (<a className="view-button dropdown button">
-                       <span>{this.props.options.label}</span>
-                        {buttons}
-                    </a>)
+            return (<div>
+                        <button className="dropdown button"
+                                data-toggle={this.props.options.label}
+                        >{this.props.options.label}</button>
+                        <div className="dropdown-pane" 
+                             id={this.props.options.label} 
+                             data-dropdown>
+                            <div className="button-group">
+                                {buttons}
+                            </div>
+                        </div>
+                    </div>)
         },
     }});
 }) ();
