@@ -96,7 +96,11 @@
             updateField: function (field_id, value) {
                 this._super(field_id, value);
                 var field_name = this.view.get_field(field_id).field_name;
-                if (value != this.record[field_name]) {
+                var isArray = false;
+                if (Array.isArray(value) || Array.isArray(this.record[field_name]))
+                    isArray = true;
+
+                if (isArray || (value != this.record[field_name])) {
                     this.changed_record[field_name] = value;
                 } else {
                     if (this.changed_record[field_name]) {
