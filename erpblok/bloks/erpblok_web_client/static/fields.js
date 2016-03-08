@@ -356,7 +356,6 @@
         },
         onClick: function (event) {
             if (this.state.value) {
-                console.log('Log')
                 var action = AnyBlokJS.new('Action', this.props.options.actionManager);
                 action.load(this.props.options.action,
                             this.props.options.action.selected,

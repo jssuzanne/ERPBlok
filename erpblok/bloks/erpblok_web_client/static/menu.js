@@ -56,7 +56,6 @@
                 self = this,
                 menuid = 'menu_' + this.props.options.id,
                 clsmenu = "menu vertical nested menu-" + id;
-            console.log(this.props)
             this.props.options.children.forEach(function (menu) {
                 if (menu.children.length == 0) {
                     children.push(<MenuLeaf space={self.props.space} options={menu}/>)
