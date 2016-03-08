@@ -25,21 +25,6 @@ class View:
         return entries.to_dict(*fields)
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
-    def get_relationship_entries(self, model=None, display=None, **kwargs):
-        Model = self.registry.get(model)
-        entries = []
-        for m in Model.query().all():
-            if display:
-                pks = m.to_primary_keys()
-                val = getattr(m, display)
-                # TODO check if callable
-                entries.append((pks, val))
-            else:
-                entries.append(m.field_render())
-
-        return entries
-
-    @PyramidJsonRPC.rpc_method(request_method='POST')
     def get_entry(self, model=None, primary_keys=None, fields=None, **kwargs):
         Model = self.registry.get(model)
         entry = Model.from_primary_keys(**primary_keys)

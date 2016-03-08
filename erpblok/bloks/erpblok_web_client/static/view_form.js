@@ -43,7 +43,9 @@
             apply_fields: function() {
                 var self = this;
                 $.each(this.options.fields2display, function (i, field) {
-                    var options = $.extend({}, field, {value: undefined});
+                    var options = $.extend(
+                        {}, field, {value: undefined,
+                                    actionManager: self.viewManager.action.actionManager});
                     var $els = self.$el.find('field#' + field.id);
                     for (i=0; i<$els.length; i++) {
                         self.apply_field(options, $els[i]);
@@ -163,7 +165,7 @@
                 }
                 this.changed_record = {};
                 if (! this.args.id || Object.getOwnPropertyNames(this.args.id).length == 0) {
-                    this.transition('closeView'); 
+                    this.transition('closeView');
                 }
             },
         },

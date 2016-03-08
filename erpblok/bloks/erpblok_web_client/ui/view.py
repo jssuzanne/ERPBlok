@@ -105,11 +105,11 @@ class View:
         # FIXME check external id
         Action = self.registry.UI.Action
         x2M = ('One2Many', 'Many2Many')
-        for field in descriptions.values():
+        for field in descriptions:
             if field['type'] in x2M:
                 if not field.get('action'):
                     field['action'] = Action.render_from_scratch_x2M(field)
-            if field['model']:
+            elif field['model']:
                 if not field.get('action'):
                     field['action'] = Action.render_from_scratch_x2O(field)
 
@@ -215,7 +215,7 @@ class ViewRenderTemplate:
         fields_description = self.get_fields_description(view, fields)
         self.get_template_replace(tmpl, fields_description)
         tmpl = html.tostring(tmpl)
-        # self.update_relation_ship_description(fields_description)
+        self.update_relation_ship_description(fields_description)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_description]
 
@@ -357,7 +357,7 @@ class List(Mixin.ViewMultiEntries):
         headers = {}
         ordered_fields, level, _ = self._rc_get_headers(
             fields_description, headers, tmpl, 0)
-        self.update_relation_ship_description(fields_description)
+        self.update_relation_ship_description(ordered_fields)
         res.update({
             'fields': fields_name,
             'checkbox': checkbox,
@@ -379,7 +379,10 @@ class List(Mixin.ViewMultiEntries):
         fields = []
         pks = Model.get_primary_keys()
         counter = 0
-        for field_name, field in Model.fields_description().items():
+        headers = []
+        fields_name = self.registry.System.Column.query().filter_by(
+            model=action.model).all().name
+        for field_name, field in Model.fields_description(fields_name).items():
             if field_name in pks:
                 continue
 
@@ -388,8 +391,14 @@ class List(Mixin.ViewMultiEntries):
             counter += 1
             f['id'] += '-%d' % counter
             fields.append(f)
+            headers.append({
+                'id': f['field_name'],
+                'label': f['label'],
+                'colspan': 1,
+                'rowspan': 1,
+            })
 
-        # self.update_relation_ship_description(fields)
+        self.update_relation_ship_description(fields)
         buttons = []
         if action.add_new:
             buttons.append(self.get_button_new())
@@ -404,7 +413,7 @@ class List(Mixin.ViewMultiEntries):
             'primary_keys': pks,
             'fields': [x['field_name'] for x in fields],
             'fields2display': fields,
-            'headers': [[x['field_name'] for x in fields]],
+            'headers': [headers],
             'checkbox': True,
             'buttons': buttons,
             'groups_buttons': [],
@@ -531,7 +540,9 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
         """
         Model = self.registry.get(action.model)
         root = etree.Element('div')
-        fields = Model.fields_description()
+        fields_name = self.registry.System.Column.query().filter_by(
+            model=action.model).all().name
+        fields = Model.fields_description(fields_name)
         pks = Model.get_primary_keys()
         fields_description = []
         counter = 0

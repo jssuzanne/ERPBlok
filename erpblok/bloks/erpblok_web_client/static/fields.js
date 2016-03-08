@@ -13,6 +13,14 @@
                                 get_value_of={this.props.get_value_of}
                                 update_field={this.props.update_field} />
         },
+        render_field_Integer: function () {
+            return <FieldInteger options={this.props.options}
+                                 pressEnter={this.props.pressEnter}
+                                 init_field={this.props.init_field}
+                                 is_readonly={this.props.is_readonly}
+                                 get_value_of={this.props.get_value_of}
+                                 update_field={this.props.update_field} />
+        },
         render_field_Boolean: function () {
             return <FieldBoolean options={this.props.options}
                                  pressEnter={this.props.pressEnter}
@@ -20,6 +28,14 @@
                                  is_readonly={this.props.is_readonly}
                                  get_value_of={this.props.get_value_of}
                                  update_field={this.props.update_field} />
+        },
+        render_field_Float: function () {
+            return <FieldFloat options={this.props.options}
+                               pressEnter={this.props.pressEnter}
+                               init_field={this.props.init_field}
+                               is_readonly={this.props.is_readonly}
+                               get_value_of={this.props.get_value_of}
+                               update_field={this.props.update_field} />
         },
         render_field_Selection: function () {
             return <FieldSelection options={this.props.options}
@@ -151,6 +167,14 @@
 
     ERPBlok.declare_react_class('FieldSelection')
     AnyBlokJS.register({classname: 'FieldSelection', extend: ['FieldString'], prototype: {
+        render_ro: function () {
+            var value = this.state.value,
+                self = this;
+            this.props.options.selections.forEach(function (selection) {
+                if (selection[0] == self.state.value) value = selection[1];
+            });
+            return <span>{value}</span>
+        },
         render_rw: function () {
             var options = [];
             this.props.options.selections.forEach(function (selection) {
@@ -169,6 +193,33 @@
         input_type: 'password',
         render_ro: function () {
             return <span>******</span>
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldInteger')
+    AnyBlokJS.register({classname: 'FieldInteger', extend: ['FieldString'], prototype: {
+        input_type: 'number',
+        get_step: function () {
+            return '1';
+        },
+        render_rw: function () {
+            var required = this.props.options.nullable ? false : true,
+                step = this.get_step();
+            return <input type={this.input_type}
+                          required={required}
+                          value={this.state.value}
+                          style={this.get_style()}
+                          step={step}
+                          onKeyPress={this.onKeyPress.bind(this)}
+                          onChange={this.handleChange.bind(this)}
+                    />
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldFloat')
+    AnyBlokJS.register({classname: 'FieldFloat', extend: ['FieldInteger'], prototype: {
+        get_step: function () {
+            return this.props.options.precision || '0.01';
         },
     }});
 
@@ -278,30 +329,78 @@
     }});
 
     ERPBlok.declare_react_class('FieldMany2One')
-    AnyBlokJS.register({classname: 'FieldMany2One', 
+    AnyBlokJS.register({classname: 'FieldMany2One',
                         extend: ['RPC'],
                         prototype: {
+        rpc_url: '/web/client/field',
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
+                    choices: [],
+                    label: 'Plop',
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
-        render : function() {
-            return <div>TODO</div>
+        setState: function (states) {
+            if ('value' in states) {
+                if (JSON.stringify(this.state.value) != JSON.stringify(states.value)) {
+                    var self = this;
+                    this.rpc('x2One_render', {model: this.props.options.model,
+                                              primary_keys: states.value}, function (label) {
+                        self.setState({'label': label})
+                    });
+                }
+            }
+            this._super(states)
+        },
+        updateLabel: function () {
+        },
+        onClick: function (event) {
+            if (this.state.value) {
+                console.log('Log')
+                var action = AnyBlokJS.new('Action', this.props.options.actionManager);
+                action.load(this.props.options.action,
+                            this.props.options.action.selected,
+                            JSON.stringify(this.state.value));
+            }
+        },
+        render_ro: function() {
+            return <a onClick={this.onClick.bind(this)}>{this.state.label}</a>
+        },
+        render_rw: function() {
+            return <a onClick={this.onClick.bind(this)}>{this.state.label}</a>
+        },
+        render: function () {
+            if (this.state.readonly) {
+                return this.render_ro()
+            } else {
+                return this.render_rw()
+            }
         },
     }});
 
     ERPBlok.declare_react_class('FieldOne2One')
-    AnyBlokJS.register({classname: 'FieldOne2One', 
+    AnyBlokJS.register({classname: 'FieldOne2One',
                         extend: ['RPC', 'FieldMany2One'],
                         prototype: {
+        setState: function (states) {
+            if ('value' in states) {
+                if (JSON.stringify(this.state.value) != JSON.stringify(states.value)) {
+                    var self = this;
+                    this.rpc('x2One_render', {model: this.props.options.model,
+                                              primary_keys: states.value}, function (label) {
+                        self.setState({'label': label})
+                    });
+                }
+            }
+            this._super(states)
+        },
     }});
 
     ERPBlok.declare_react_class('FieldMany2ManyChoices')
-    AnyBlokJS.register({classname: 'FieldMany2ManyChoices', 
+    AnyBlokJS.register({classname: 'FieldMany2ManyChoices',
                         extend: ['RPC'],
                         prototype: {
-        rpc_url: '/web/client/view',
+        rpc_url: '/web/client/field',
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
@@ -310,7 +409,7 @@
         },
         componentDidMount: function() {
             var self = this;
-            this.rpc('get_relationship_entries', {model: this.props.options.model,
+            this.rpc('get_RelationShip_entries', {model: this.props.options.model,
                                                   display: this.props.options.display}, function (result) {
                 self.setState({choices: result});
             });
@@ -331,14 +430,14 @@
                 medium_up = 'medium-up-' + (this.props.options.mediumgrid || 2),
                 small_up = 'small-up-' + (this.props.options.smallgrid || 1),
                 className = 'row ' + large_up + ' ' + medium_up + ' ' + small_up;
-                
+
             this.state.choices.forEach(function (choice) {
                 var checked = false;
                 if (self.containsEntry(choice[0])) checked = true;
                 var onClick = function (event) {
                     if (event.target.checked) {
                         if (! self.containsEntry(choice[0]))
-                            self.state.value.push(choice[0]);               
+                            self.state.value.push(choice[0]);
                     } else {
                         var index = self.containsEntry(choice[0]);
                         self.state.value.splice(index, 1)
@@ -347,16 +446,23 @@
                 }
                 choices.push(
                     <div className="columns">
-                        <input type="checkbox" 
-                               checked={checked} 
+                        <input type="checkbox"
+                               checked={checked}
                                disabled={disabled}
                                onClick={onClick}/>
                         <label>{choice[1]}</label>
                     </div>)
             });
-            return (<div className={className}>
-                        {choices}
-                    </div>)
+            return (<fieldset className="fieldset">
+                        <legend>
+                            <h6>
+                                {this.props.options.label}
+                            </h6>
+                        </legend>
+                        <div className={className}>
+                            {choices}
+                        </div>
+                    </fieldset>)
         },
     }});
 }) ();

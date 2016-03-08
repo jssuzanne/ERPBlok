@@ -165,7 +165,8 @@
                 this.view.appendToView(this);
                 $.each(this.view.options.fields2display, function (i, field) {
                     var options = $.extend(
-                        {}, field, {value: self.record[field.field_name]});
+                        {}, field, {value: self.record[field.field_name],
+                                    actionManager: self.view.viewManager.action.actionManager});
                     var $els = self.$el.find('field#' + field.id);
                     for (i=0; i<$els.length; i++) {
                         self.apply_react_componente(options, $els[i]);
