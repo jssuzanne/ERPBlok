@@ -9,6 +9,30 @@ PyramidJsonRPC = Declarations.PyramidJsonRPC
 class Field:
 
     @PyramidJsonRPC.rpc_method()
+    def get_action_for(self, action=None, model=None, view_type=None, **kwargs):
+        UIAction = self.registry.UI.Action
+        if action:
+            if isinstance(action, str):
+                if model:
+                    action = self.registry.IO.Mapping(model, action)
+                # else raise
+            else:
+                action = UIAction.query().get(int(action))
+
+            res = action.render()
+            view_type = view_type.split('.')[-1]
+            view = None
+            for v in res['views']:
+                if v['mode'] == view_type:
+                    view = v
+
+            res['views'] = [view]
+            res['selected'] = view['id']
+            return res
+        else:
+            return UIAction.render_x2x_from_scratch(model, view_type=view_type, **kwargs)
+
+    @PyramidJsonRPC.rpc_method()
     def x2One_render(self, model=None, primary_keys=None, **kwargs):
         """ return the action render
 
@@ -16,6 +40,10 @@ class Field:
         Model = self.registry.get(model)
         entry = Model.from_primary_keys(**primary_keys)
         return entry.field_render()
+
+    @PyramidJsonRPC.rpc_method()
+    def x2One_search(self, model=None, value=None, **kwargs):
+        return self.registry.get(model).x2One_search(value)
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
     def get_RelationShip_entries(self, model=None, display=None, **kwargs):

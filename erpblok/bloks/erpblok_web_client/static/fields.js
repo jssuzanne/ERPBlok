@@ -78,12 +78,7 @@
                                   update_field={this.props.update_field} />
         },
         render_field_One2One: function () {
-            return <FieldOne2One options={this.props.options}
-                                 pressEnter={this.props.pressEnter}
-                                 init_field={this.props.init_field}
-                                 is_readonly={this.props.is_readonly}
-                                 get_value_of={this.props.get_value_of}
-                                 update_field={this.props.update_field} />
+            return this.render_field_Many2One();
         },
         render_field_Many2ManyChoices: function () {
             return <FieldMany2ManyChoices options={this.props.options}
@@ -330,68 +325,141 @@
 
     ERPBlok.declare_react_class('FieldMany2One')
     AnyBlokJS.register({classname: 'FieldMany2One',
-                        extend: ['RPC'],
+                        extend: ['FieldString', 'RPC'],
                         prototype: {
         rpc_url: '/web/client/field',
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
-                    choices: [],
-                    label: 'Plop',
+                    label: '',
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
         setState: function (states) {
             if ('value' in states) {
-                if (JSON.stringify(this.state.value) != JSON.stringify(states.value)) {
-                    var self = this;
-                    this.rpc('x2One_render', {model: this.props.options.model,
-                                              primary_keys: states.value}, function (label) {
-                        self.setState({'label': label})
-                    });
+                if (states.value) {
+                    if (JSON.stringify(this.state.value) != JSON.stringify(states.value)) {
+                        var self = this;
+                        this.rpc('x2One_render', {model: this.props.options.model,
+                                                  primary_keys: states.value}, function (label) {
+                            self.setState({'label': label})
+                        });
+                    }
                 }
             }
             this._super(states)
         },
-        updateLabel: function () {
-        },
         onClick: function (event) {
             if (this.state.value) {
-                var action = AnyBlokJS.new('Action', this.props.options.actionManager);
-                action.load(this.props.options.action,
-                            this.props.options.action.selected,
-                            JSON.stringify(this.state.value));
+                var self = this;
+                this.rpc('get_action_for', {model: this.props.options.model,
+                                            view_type: 'Model.UI.View.Form',
+                                            label: this.props.options.label}, function (action_description) {
+                    var action = AnyBlokJS.new('Action', self.props.options.actionManager);
+                    action.load(action_description, action_description.selected,
+                                JSON.stringify(self.state.value));
+                });
+            }
+        },
+        handleChange: function (event) {
+            this.setState({label: event.target.value});
+            this.props.update_field(this.props.options.id, null);
+        },
+        search_more: function () {
+            console.log('Search more');
+        },
+        add_new_entry: function () {
+            if (this.state.value) {
+                var self = this;
+                this.rpc('get_action_for', {model: this.props.options.model,
+                                            view_type: 'Model.UI.View.Form',
+                                            label: this.props.options.label}, function (action_description) {
+                    var action = AnyBlokJS.new('Action', self.props.options.actionManager);
+                    action.callback_compute_pks = function (pks) {
+                        self.props.update_field(self.props.options.id, pks);
+                    }
+                    action.load(action_description, action_description.selected, 'new');
+                });
+            }
+        },
+        componentDidUpdate: function() {
+            if (this.state.readonly) return
+            var self = this,
+                limit = this.props.options['search-box-limit'] || 15,
+                add = this.props.options['search-box-add'] || true;  // FIXME use access rule
+            this.input_el = $( "input#" + this.get_id() )
+            this.input_el.autocomplete({
+                source: function(request, response) {
+                    self.rpc('x2One_search', {model: self.props.options.model,
+                                              value: request.term}, function (values) {
+                        var choices = $.map(values, function (value) {
+                            return {label: value[1], 'value': value[1], pks: value[0]};
+                        });
+                        if (limit != -1 && choices.length > limit) {
+                            choices = choices.slice(0, limit);
+                            choices.push({
+                                label: 'Search more ...',
+                                fnct: self.search_more.bind(self),
+                            });
+                        }
+                        if (add) {
+                            choices.push({
+                                label: 'Add new entry',
+                                fnct: self.add_new_entry.bind(self),
+                            });
+                        }
+                        // we doesn't filter here
+                        response(choices);
+                    });
+                },
+                select: function( event, ui ) {
+                    if (ui.item.pks) {
+                        self.props.update_field(self.props.options.id, ui.item.pks);
+                    } else if (ui.item.fnct) {
+                        ui.item.fnct();
+                    }
+                    return false;
+                },
+                autoFocus: true,
+                delay: 250,
+            });
+        },
+        get_id: function () {
+            return 'x2O-id-for-' + this.props.options.id;
+        },
+        onBlur: function (event) {
+            if (! this.state.value && this.state.label) {
+                this.setState({label: ''});
             }
         },
         render_ro: function() {
             return <a onClick={this.onClick.bind(this)}>{this.state.label}</a>
         },
-        render_rw: function() {
-            return <a onClick={this.onClick.bind(this)}>{this.state.label}</a>
-        },
-        render: function () {
-            if (this.state.readonly) {
-                return this.render_ro()
-            } else {
-                return this.render_rw()
-            }
-        },
-    }});
+        render_rw: function () {
+            var required = this.props.options.nullable ? false : true,
+                placeholder = this.props.options.placeholder || '',
+                link = [];
 
-    ERPBlok.declare_react_class('FieldOne2One')
-    AnyBlokJS.register({classname: 'FieldOne2One',
-                        extend: ['RPC', 'FieldMany2One'],
-                        prototype: {
-        setState: function (states) {
-            if ('value' in states) {
-                if (JSON.stringify(this.state.value) != JSON.stringify(states.value)) {
-                    var self = this;
-                    this.rpc('x2One_render', {model: this.props.options.model,
-                                              primary_keys: states.value}, function (label) {
-                        self.setState({'label': label})
-                    });
-                }
+            if (this.state.value) {
+                link = <div className="input-group-button">
+                           <a className="button"
+                              onClick={this.onClick.bind(this)}>
+                               <i className="fi-page-export" />
+                           </a>
+                       </div>
             }
-            this._super(states)
+            return (<div className="ui-widget input-group">
+                        <input type={this.input_type}
+                               id={this.get_id()}
+                               className="input-group-field"
+                               required={required}
+                               value={this.state.label}
+                               style={this.get_style()}
+                               onBlur={this.onBlur.bind(this)}
+                               onKeyPress={this.onKeyPress.bind(this)}
+                               onChange={this.handleChange.bind(this)}
+                        />
+                        {link}
+                    </div>)
         },
     }});
 

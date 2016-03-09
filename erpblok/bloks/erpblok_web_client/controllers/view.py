@@ -92,6 +92,39 @@ class View:
         if not fields:
             return {}
 
+        for field in Model.get_primary_keys():
+            if field not in fields:
+                fields.append(field)
+
+        return model.to_dict(*fields)
+
+    @PyramidJsonRPC.rpc_method(request_method='POST')
+    def dummy_set_entry(self, model=None, values=None, fields=None, **kwargs):
+        Model = self.registry.get(model)
+        model = None
+        if values:
+            vals, x2M = self.format_values(Model, values)
+            if vals:
+                model = Model.insert(**vals)
+
+            # TODO
+            #if x2M:
+            #    if not model:
+            #        model = Model()
+
+            #    for fname, vals in x2M.items():
+            #        with self.registry.session.no_autoflush:
+            #            f = getattr(model, fname)
+            #            for fv in f:
+            #                if fv not in vals:
+            #                    f.remove(fv)
+            #            for val in vals:
+            #                if val not in f:
+            #                    f.append(val)
+
+        if not fields:
+            return {}
+
         return model.to_dict(*fields)
 
     @PyramidJsonRPC.rpc_method(request_method='POST')

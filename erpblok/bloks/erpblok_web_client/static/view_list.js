@@ -150,13 +150,23 @@
                 }
             },
             closeLineWithSave: function() {
-                var self = this;
-                this.rpc('set_entry', {model: self.view.viewManager.action.value.model,
-                                       primary_keys: self.id,
-                                       values: self.changed_record,
-                                       fields: this.view.options.fields}, function (record) {
-                    self.updateLine(record);
-                });
+                var self = this,
+                    values = this.changed_record;
+                if (this.view.viewManager.action.callback_save_changed_record) {
+                    this.rpc('dummy_set_entry', {model: this.view.viewManager.action.value.model,
+                                                 values: values,
+                                                 fields: this.view.options.fields}, function (record) {
+                        self.updateLine(record);
+                        self.viewManager.action.callback_save_changed_record(record);
+                    });
+                } else {
+                    this.rpc('set_entry', {model: self.view.viewManager.action.value.model,
+                                           primary_keys: self.id,
+                                           values: values,
+                                           fields: this.view.options.fields}, function (record) {
+                        self.updateLine(record);
+                    });
+                }
             },
             removeLine: function() {
                 var self = this;

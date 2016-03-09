@@ -10,3 +10,11 @@ menu ul a.is-active {
     background-color: #2199e8;
     color: white;
 }
+.ui-autocomplete {
+    background-color: white;
+    border: 1px solid gray;
+}
+.ui-menu .ui-menu-item.ui-state-focus ,
+.ui-menu .ui-menu-item:hover {
+    background-color: blue;
+}

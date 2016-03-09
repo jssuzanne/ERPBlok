@@ -27,7 +27,9 @@
                     if (pks == undefined) {
                         pks = action.actionManager.get_hash('pks');
                     }
-                    if (pks) {
+                    if (pks == 'new') {
+                        kwargs.new = true;
+                    } else if (pks) {
                         kwargs.id = JSON.parse(pks);
                     }
                     this.select_view(view_id, kwargs);
@@ -270,8 +272,8 @@
                         <button className="dropdown button"
                                 data-toggle={this.props.options.label}
                         >{this.props.options.label}</button>
-                        <div className="dropdown-pane" 
-                             id={this.props.options.label} 
+                        <div className="dropdown-pane"
+                             id={this.props.options.label}
                              data-dropdown>
                             <div className="button-group">
                                 {buttons}

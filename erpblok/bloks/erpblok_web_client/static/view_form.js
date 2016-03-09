@@ -130,18 +130,30 @@
                 var self = this;
                 var values = this.changed_record;
                 this.toggleReadonly();
-                this.rpc('set_entry', {model: this.viewManager.action.value.model,
-                                       primary_keys: this.args.id,
-                                       values: values,
-                                       fields: this.options.fields}, function (record) {
-                    self.applyRecord(record);
-                    if (!self.args.id){
-                        self.args.id = {};
-                        $.each(self.options.primary_keys, function(i, pk) {
-                            self.args.id[pk] = record[pk];
-                        });
-                    }
-                });
+                if (this.viewManager.action.callback_save_changed_record) {
+                    this.rpc('dummy_set_entry', {model: this.viewManager.action.value.model,
+                                                 values: values,
+                                                 fields: this.options.fields}, function (record) {
+                        self.applyRecord(record);
+                        self.viewManager.action.callback_save_changed_record(record);
+                    });
+                } else {
+                    this.rpc('set_entry', {model: this.viewManager.action.value.model,
+                                           primary_keys: this.args.id,
+                                           values: values,
+                                           fields: this.options.fields}, function (record) {
+                        self.applyRecord(record);
+                        if (!self.args.id){
+                            self.args.id = {};
+                            $.each(self.options.primary_keys, function(i, pk) {
+                                self.args.id[pk] = record[pk];
+                            });
+                            if (self.viewManager.action.callback_compute_pks) {
+                                self.viewManager.action.callback_compute_pks(self.args.id);
+                            }
+                        }
+                    });
+                }
             },
             on_new_entry: function () {
                 var self = this;
