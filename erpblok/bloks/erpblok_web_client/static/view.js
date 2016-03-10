@@ -207,7 +207,7 @@
                     groups: this.props.groups || []};
         },
         is_visible: function (entity) {
-            if (entity.visibility == "") return true;
+            if (entity.visibility == "" || !entity.visibility) return true;
             if (entity.visibility == 'on-readonly') {
                 if (this.state.readonly) return true;
             }
