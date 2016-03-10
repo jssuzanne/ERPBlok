@@ -256,24 +256,35 @@
                     </a>)
         },
     }});
+
+    var group_counter = 0;
+    function get_group_counter () {
+        return group_counter ++;
+    }
     ERPBlok.declare_react_class('ViewTopGroup')
     AnyBlokJS.register({classname: 'ViewTopGroup',
                         extend: ['ViewTopButtons'],
                         prototype: {
         componentDidMount: function() {
-            this.elDropDown = new Foundation.Dropdown($('#' + this.props.options.label));
+            var group_id = this.get_id();
+            this.elDropDown = new Foundation.Dropdown($('#' + group_id));
         },
         componentWillUnmount: function() {
             this.elDropDown.destroy();
         },
+        get_id: function () {
+            if (!this.group_id) this.group_id = 'view-group-button-' + get_group_counter();
+            return this.group_id;
+        },
         render: function() {
-            var buttons = this.get_buttons();
+            var buttons = this.get_buttons(),
+                group_id = this.get_id();
             return (<div>
                         <button className="dropdown button"
-                                data-toggle={this.props.options.label}
+                                data-toggle={group_id}
                         >{this.props.options.label}</button>
                         <div className="dropdown-pane"
-                             id={this.props.options.label}
+                             id={group_id}
                              data-dropdown>
                             <div className="button-group">
                                 {buttons}

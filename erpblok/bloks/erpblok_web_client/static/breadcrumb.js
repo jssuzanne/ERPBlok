@@ -41,7 +41,7 @@
                         links.push(link);
                         if (link.index == index) {
                             hash = link.hash;
-                            link.action.$el.removeClass('hide')
+                            link.action.$el.removeClass('hide');
                         }
                     } else {
                         link.action.$el.remove();
