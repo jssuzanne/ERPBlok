@@ -17,8 +17,16 @@ def password_adapter(obj, request):
     return ''
 
 
+def bytes_adapter(obj, request):
+    if obj:
+        return obj.decode('utf8')
+
+    return ''
+
+
 def declare_json_data_adapter(config):
     json_renderer = JSON()
     json_renderer.add_adapter(Password, password_adapter)
+    json_renderer.add_adapter(bytes, bytes_adapter)
     config.add_renderer('json', json_renderer)
     config.add_renderer(DEFAULT_RENDERER, json_renderer)

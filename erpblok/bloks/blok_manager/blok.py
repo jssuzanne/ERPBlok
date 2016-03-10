@@ -6,6 +6,7 @@ from docutils.core import publish_programmatically
 from docutils import io
 from rst2html5 import HTML5Writer
 from os.path import join, isfile
+from lxml import html
 
 
 register = Declarations.register
@@ -42,7 +43,7 @@ class Blok:
             writer=HTML5Writer(), writer_name='null',
             settings=None, settings_spec=None, settings_overrides={},
             config_section=None, enable_exit_status=None)
-        return output.decode('utf-8')
+        return html.tostring(html.fromstring(output).find('body'))
 
     def get_short_description(self):
         res = super(Blok, self).get_short_description()
