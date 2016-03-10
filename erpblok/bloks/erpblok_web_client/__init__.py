@@ -18,6 +18,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/foundation-6.1.2/css/foundation.min.css',
         '#BLOK/static/foundation-icons/foundation-icons.css',
         '#BLOK/static/jquery-ui-1.11.4/jquery-ui.min.css',
+        '#BLOK/static/trumbowyg-2.0.0-beta-7/ui/trumbowyg.min.css',
         '#BLOK/static/erpblok.css',
         '#BLOK/static/fields.css',
     ]
@@ -29,6 +30,7 @@ class ERPBlokWebClient(Blok):
         '#BLOK/static/jquery-ui-1.11.4/jquery-ui.min.js',
         '#BLOK/static/foundation-6.1.2/js/foundation.min.js',
         '#BLOK/static/jsviews.min.js',
+        '#BLOK/static/trumbowyg-2.0.0-beta-7/trumbowyg.min.js',
         '#BLOK/static/anyblok-js.js',
         '#BLOK/static/erpblok.js',
         '#BLOK/static/rpc.js',

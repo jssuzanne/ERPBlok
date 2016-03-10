@@ -187,6 +187,9 @@ class ViewRenderTemplate:
                 if k not in ('field_name', 'id'):
                     field[k] = v
 
+            if el.attrib.get('type'):
+                del el.attrib['type']
+
             el.set('id', field['id'])
 
         return fdesc

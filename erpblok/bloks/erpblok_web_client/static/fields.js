@@ -53,6 +53,22 @@
                                   get_value_of={this.props.get_value_of}
                                   update_field={this.props.update_field} />
         },
+        render_field_Text: function () {
+            return <FieldText options={this.props.options}
+                              pressEnter={this.props.pressEnter}
+                              init_field={this.props.init_field}
+                              is_readonly={this.props.is_readonly}
+                              get_value_of={this.props.get_value_of}
+                              update_field={this.props.update_field} />
+        },
+        render_field_Html: function () {
+            return <FieldHtml options={this.props.options}
+                              pressEnter={this.props.pressEnter}
+                              init_field={this.props.init_field}
+                              is_readonly={this.props.is_readonly}
+                              get_value_of={this.props.get_value_of}
+                              update_field={this.props.update_field} />
+        },
         render_field_LargeBinary: function () {
             return <FieldLargeBinary options={this.props.options}
                                      pressEnter={this.props.pressEnter}
@@ -98,6 +114,9 @@
             }
         },
     }});
+
+    var field_counter = 0;
+    function get_field_counter () {return field_counter ++;}
 
     ERPBlok.declare_react_class('FieldString')
     AnyBlokJS.register({classname: 'FieldString', prototype: {
@@ -302,24 +321,12 @@
         handleChange: function (event) {
             this.props.update_field(this.props.options.id, event.target.checked);
         },
-        render_ro: function () {
-            return <input type="checkbox"
-                          disabled
-                          checked={this.state.value} />
-        },
-        render_rw: function () {
-            return (
-                    <input type="checkbox"
+        render: function () {
+            return (<input type="checkbox"
+                           disabled={this.state.readonly}
                            id={this.props.options.id}
                            onChange={this.handleChange.bind(this)}
                            checked={this.state.value} />)
-        },
-        render: function () {
-            if (this.state.readonly) {
-                return this.render_ro()
-            } else {
-                return this.render_rw()
-            }
         },
     }});
 
@@ -424,7 +431,8 @@
             });
         },
         get_id: function () {
-            return 'x2O-id-for-' + this.props.options.id;
+            if (!this.field_id) this.field_id = 'x2O-id-for-' + this.props.options.id + '-' + get_field_counter();
+            return this.field_id;
         },
         onBlur: function (event) {
             if (! this.state.value && this.state.label) {
@@ -530,6 +538,80 @@
                             {choices}
                         </div>
                     </fieldset>)
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldText')
+    AnyBlokJS.register({classname: 'FieldText',
+                        extend: ['FieldString'],
+                        prototype: {
+        handleChange: function (event) {
+            var $el = $('#' + this.get_id()),
+                value = $el.val();
+            this.props.update_field(this.props.options.id, value);
+        },
+        get_style: function () {
+            var style = this._super();
+            style.resize = 'none';
+            return style;
+        },
+        get_id: function () {
+            if (!this.field_id) this.field_id = 'Text-id-for-' + this.props.options.id + '-' + get_field_counter();
+            return this.field_id;
+        },
+        componentDidUpdate: function() {
+            var $el = $('#' + this.get_id());
+            if ($el.length) {
+                $el.val(this.state.value);
+            }
+        },
+        render_rw: function () {
+            var placeholder = this.props.options.placeholder || '',
+                rows = this.props.options.rows || 10;
+            return (<textarea id={this.get_id()}
+                              placeholder={placeholder}
+                              style={this.get_style()}
+                              rows={rows}
+                              disabled={false}
+                              onChange={this.handleChange.bind(this)} />)
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldHtml')
+    AnyBlokJS.register({classname: 'FieldHtml',
+                        extend: ['FieldString'],
+                        prototype: {
+        get_id: function () {
+            if (!this.field_id) this.field_id = 'Text-id-for-' + this.props.options.id + '-' + get_field_counter();
+            return this.field_id;
+        },
+        componentDidUpdate: function() {
+            if (!this.eltrumbowyg) {
+                this.eltrumbowyg = $('#' + this.get_id())
+                this.eltrumbowyg.trumbowyg({
+                    fullscreenable: false,
+                })
+                .on('tbwblur', this.handleBlur.bind(this));
+            }
+            this.eltrumbowyg.trumbowyg('html', this.state.value);
+        },
+        componentWillUnmount: function() {
+            if (!this.eltrumbowyg.length) this.eltrumbowyg.trumbowyg('destroy');
+        },
+        handleBlur: function (event) {
+            if (this.eltrumbowyg.length) {
+                this.props.update_field(this.props.options.id,
+                                        this.eltrumbowyg.trumbowyg('html'));
+            }
+        },
+        render_ro: function () {
+            return (<span dangerouslySetInnerHTML={{__html: this.state.value}} />)
+        },
+        render_rw: function () {
+            var placeholder = this.props.options.placeholder || '';
+            return (<div id={this.get_id()}
+                         placeholder={placeholder}
+                         style={this.get_style()} />)
         },
     }});
 }) ();
