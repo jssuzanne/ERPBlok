@@ -192,7 +192,7 @@
     }});
 
     ERPBlok.declare_react_class('FieldString')
-    AnyBlokJS.register({classname: 'FieldString', 
+    AnyBlokJS.register({classname: 'FieldString',
                         extend: ['BaseField'],
                         prototype: {
         input_type: "text",
@@ -213,8 +213,8 @@
     }});
 
     ERPBlok.declare_react_class('FieldSelection')
-    AnyBlokJS.register({classname: 'FieldSelection', 
-                        extend: ['BaseField'], 
+    AnyBlokJS.register({classname: 'FieldSelection',
+                        extend: ['BaseField'],
                         prototype: {
         render_ro: function () {
             var value = this.state.value,
@@ -238,8 +238,8 @@
     }});
 
     ERPBlok.declare_react_class('FieldPassword')
-    AnyBlokJS.register({classname: 'FieldPassword', 
-                        extend: ['FieldString'], 
+    AnyBlokJS.register({classname: 'FieldPassword',
+                        extend: ['FieldString'],
                         prototype: {
         input_type: 'password',
         render_ro: function () {
@@ -248,8 +248,8 @@
     }});
 
     ERPBlok.declare_react_class('FieldInteger')
-    AnyBlokJS.register({classname: 'FieldInteger', 
-                        extend: ['FieldString'], 
+    AnyBlokJS.register({classname: 'FieldInteger',
+                        extend: ['FieldString'],
                         prototype: {
         input_type: 'number',
         get_step: function () {
@@ -269,8 +269,8 @@
     }});
 
     ERPBlok.declare_react_class('FieldFloat')
-    AnyBlokJS.register({classname: 'FieldFloat', 
-                        extend: ['FieldInteger'], 
+    AnyBlokJS.register({classname: 'FieldFloat',
+                        extend: ['FieldInteger'],
                         prototype: {
         get_step: function () {
             return this.props.options.precision || '0.01';
@@ -278,8 +278,8 @@
     }});
 
     ERPBlok.declare_react_class('FieldLargeBinary')
-    AnyBlokJS.register({classname: 'FieldLargeBinary', 
-                        extend: ['FieldString'], 
+    AnyBlokJS.register({classname: 'FieldLargeBinary',
+                        extend: ['FieldString'],
                         prototype: {
         input_type: 'file',
         handleChange: function (event) {
@@ -353,7 +353,7 @@
     }});
 
     ERPBlok.declare_react_class('FieldBoolean')
-    AnyBlokJS.register({classname: 'FieldBoolean', 
+    AnyBlokJS.register({classname: 'FieldBoolean',
                         extend: ['BaseField'],
                         prototype: {
         handleChange: function (event) {
@@ -516,7 +516,6 @@
         getInitialState: function () {
             var state = this._super();
             state.choices = [];
-            console.log(state)
             return state;
         },
         componentDidMount: function() {

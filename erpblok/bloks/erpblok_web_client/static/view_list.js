@@ -107,11 +107,6 @@
                         delete this.changed_record[field_name];
                     }
                 }
-                var self = this,
-                    fields_value = $.extend({}, this.record, this.changed_record);
-                $.each(this.view.options.fields2display, function (i, field) {
-                    self.fields_by_ids[field.id].setState({all_fields_value: fields_value});
-                });
             },
             applyChange: function () {
                 var self = this;
@@ -122,6 +117,7 @@
                         readonly: self.isReadonly(field.id)});
                 });
                 this.inline_buttons.setState({readonly: this.readonly});
+                this.updateVisibilityUI();
             },
             pressEnter: function () {
                 var self = this;

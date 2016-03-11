@@ -1,4 +1,5 @@
 (function () {
+    function check_eval (condition, fields) {return eval(condition);}
     AnyBlokJS.register({
         classname: 'View.MultiEntries',
         extend: ['Template', 'View'],
@@ -143,6 +144,12 @@
                 for (var i in this.fields[field_name]) {
                     this.fields[field_name][i].setState({value: value});
                 }
+                var self = this,
+                    fields_value = $.extend({}, this.record, this.changed_record);
+                $.each(this.view.options.fields2display, function (i, field) {
+                    self.fields_by_ids[field.id].setState({all_fields_value: fields_value});
+                });
+                this.updateVisibilityUI();
             },
             pressEnter: function () {
             },
@@ -173,11 +180,20 @@
                         self.apply_react_componente(options, $els[i]);
                     }
                 });
+                this.updateVisibilityUI();
                 this.$el.find('button').click(function(event) {
                     event.stopPropagation();
                     var func = event.currentTarget.dataset.function;
                     var method = event.currentTarget.dataset.method || undefined;
                     self.view[func](self.id, method);
+                });
+            },
+            updateVisibilityUI: function () {
+                var fields_value = $.extend({}, this.record, this.changed_record);
+                $.each(this.$el.find('.visibility-conditional-ui'), function (i, el) {
+                    var condition = el.getAttribute("visible-only-if"); 
+                    if (!check_eval(condition, fields_value)) $(el).addClass('hide');
+                    else $(el).removeClass('hide');
                 });
             },
             get_fields: function () {

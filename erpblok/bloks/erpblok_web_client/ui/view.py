@@ -131,15 +131,17 @@ class ViewAccessGroups:
 @register(Mixin)
 class ViewRenderTemplate(Mixin.ViewAccessGroups):
 
-    def get_template_replace_label(self, els, fields_description):
-        for el in els:
+    def get_template_replace_label(self, tmpl, fields_description):
+        labels = tmpl.findall('.//label')
+        for el in labels:
             el_for = el.attrib.get('for')
             for field in fields_description:
                 if field['field_name'] == el_for:
                     if not el.text:
                         el.text = field['label']
 
-    def get_fields_description(self, view, fields):
+    def get_fields_description(self, view, tmpl):
+        fields = tmpl.findall('.//field')
         Model = self.registry.get(view.action.model)
         fields_description = Model.fields_description()
         fdesc = []
@@ -155,8 +157,10 @@ class ViewRenderTemplate(Mixin.ViewAccessGroups):
                 if k not in ('field_name', 'id'):
                     field[k] = v
 
-            if el.attrib.get('type'):
-                del el.attrib['type']
+            for attr in ('type', 'writable-only-if', 'not-nullable-only-if',
+                         'not-nullable-only-if'):
+                if el.attrib.get(attr):
+                    del el.attrib[attr]
 
             el.set('id', field['id'])
             if 'readonly' in field and isinstance(field['readonly'], str):
@@ -164,8 +168,34 @@ class ViewRenderTemplate(Mixin.ViewAccessGroups):
                     field['readonly'] = True
                 else:
                     field['readonly'] = False
+            for x in ('writable-only-if', 'not-nullable-only-if'):
+                if x in field and field[x]:
+                    field[x] = [field[x]]
+                else:
+                    field[x] = []
 
         return fdesc
+
+    def update_interface_attributes(self, tmpl, fields_description):
+        for el in tmpl.findall('.//*[@visible-only-if]'):
+            class_attr = el.attrib.get(
+                'class', '') + ' visibility-conditional-ui'
+            el.set('class', class_attr)
+
+        for attr in ('writable-only-if', 'not-nullable-only-if'):
+            for el in tmpl.findall('.//*[@%s]' % attr):
+                attr_val = el.attrib[attr]
+                if attr_val:
+                    for field in el.findall('.//field'):
+                        field_id = field.attrib.get('id')
+                        for fd in fields_description:
+                            if fd['id'] == field_id:
+                                fd[attr].append(attr_val)
+
+        for field in fields_description:
+            for attr in ('writable-only-if', 'not-nullable-only-if'):
+                if attr in field:
+                    field[attr] = ' || '.join(field[attr])
 
     def get_template(self, view, user):
         tmpl = self.registry.erpblok_views.get_template(
@@ -173,10 +203,9 @@ class ViewRenderTemplate(Mixin.ViewAccessGroups):
         self.visible_only_for_access_group(tmpl, user)
         self.writable_only_for_access_group(tmpl, user)
         tmpl.tag = 'div'
-        fields = tmpl.findall('.//field')
-        fields_description = self.get_fields_description(view, fields)
-        labels = tmpl.findall('.//label')
-        self.get_template_replace_label(labels, fields_description)
+        fields_description = self.get_fields_description(view, tmpl)
+        self.get_template_replace_label(tmpl, fields_description)
+        self.update_interface_attributes(tmpl, fields_description)
         tmpl = html.tostring(tmpl)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_description]

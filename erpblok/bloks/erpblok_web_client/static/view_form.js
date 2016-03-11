@@ -1,4 +1,5 @@
 (function() {
+    function check_eval(condition, fields){return eval(condition);}
     AnyBlokJS.register({
         classname: 'View.Form',
         extend: ['View'],
@@ -92,6 +93,15 @@
                 $.each(this.options.fields2display, function (i, field) {
                     self.fields_by_ids[field.id].setState({all_fields_value: fields_value});
                 });
+                this.updateVisibilityUI();
+            },
+            updateVisibilityUI: function () {
+                var fields_value = $.extend({}, this.record, this.changed_record);
+                $.each(this.$el.find('.visibility-conditional-ui'), function (i, el) {
+                    var condition = el.getAttribute("visible-only-if"); 
+                    if (!check_eval(condition, fields_value)) $(el).addClass('hide');
+                    else $(el).removeClass('hide');
+                });
             },
             pressEnter: function () {
             },
@@ -120,6 +130,7 @@
                         readonly: self.isReadonly(field.id),
                         all_fields_value: self.record});
                 });
+                this.updateVisibilityUI();
             },
             get_fields: function() {
                 var self = this,
