@@ -23,7 +23,7 @@
                     event.stopPropagation();
                     var func = event.currentTarget.dataset.function;
                     var method = event.currentTarget.dataset.method || undefined;
-                    self[func](self.id, method);
+                    self[func](self.args.id, method);
                 });
                 return this.$el;
             },
@@ -105,7 +105,7 @@
             updateVisibilityUI: function () {
                 var fields_value = $.extend({}, this.record, this.changed_record);
                 $.each(this.$el.find('.visibility-conditional-ui'), function (i, el) {
-                    var condition = el.getAttribute("visible-only-if"); 
+                    var condition = el.getAttribute("visible-only-if");
                     if (!check_eval(condition, fields_value)) $(el).addClass('hide');
                     else $(el).removeClass('hide');
                 });
