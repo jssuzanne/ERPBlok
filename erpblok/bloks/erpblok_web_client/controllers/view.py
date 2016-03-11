@@ -153,7 +153,6 @@ class View:
         Model = self.registry.get(model)
         res = getattr(Model.from_primary_keys(**primary_keys), method)(
             *params, **kwparams)
-        self.registry.commit()
         return res
 
     @PyramidJsonRPC.rpc_method(request_method='POST')
@@ -168,7 +167,6 @@ class View:
         Model = self.registry.get(model)
         res = getattr(Model, method)(
             primary_keys, *params, **kwparams)
-        self.registry.commit()
         return res
 
 
