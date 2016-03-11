@@ -117,6 +117,7 @@
 
     var field_counter = 0;
     function get_field_counter () {return field_counter ++;}
+    function check_eval (condition, fields) {return eval(condition);}
 
     ERPBlok.declare_react_class('FieldString')
     AnyBlokJS.register({classname: 'FieldString', prototype: {
@@ -124,6 +125,7 @@
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
+                    all_fields_value: this.props.options.all_fields_value || {},
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
         handleChange: function (event) {
@@ -170,8 +172,16 @@
                           onChange={this.handleChange.bind(this)}
                     />
         },
+        is_readonly: function() {
+            if (this.state.readonly) return true;
+            if (this.props.options['writable-only-if']) {
+                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
+                    return true;
+            }
+            return false;
+        },
         render: function () {
-            if (this.state.readonly) {
+            if (this.is_readonly()) {
                 return this.render_ro()
             } else {
                 return this.render_rw()
@@ -316,14 +326,23 @@
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
+                    all_fields_value: this.props.options.all_fields_value || {},
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
         handleChange: function (event) {
             this.props.update_field(this.props.options.id, event.target.checked);
         },
+        is_readonly: function() {
+            if (this.state.readonly) return true;
+            if (this.props.options['writable-only-if']) {
+                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
+                    return true;
+            }
+            return false;
+        },
         render: function () {
             return (<input type="checkbox"
-                           disabled={this.state.readonly}
+                           disabled={this.is_readonly()}
                            id={this.props.options.id}
                            onChange={this.handleChange.bind(this)}
                            checked={this.state.value} />)
@@ -339,6 +358,7 @@
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
                     label: '',
+                    all_fields_value: this.props.options.all_fields_value || {},
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
         setState: function (states) {
@@ -389,7 +409,7 @@
             }
         },
         componentDidUpdate: function() {
-            if (this.state.readonly) return
+            if (this.is_readonly()) return
             var self = this,
                 limit = this.props.options['search-box-limit'] || 15,
                 add = this.props.options['search-box-add'] || true;  // FIXME use access rule
@@ -480,6 +500,7 @@
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
                     choices: [],
+                    all_fields_value: this.props.options.all_fields_value || {},
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
         componentDidMount: function() {
@@ -497,10 +518,18 @@
             }
             return false;
         },
+        is_readonly: function() {
+            if (this.state.readonly) return true;
+            if (this.props.options['writable-only-if']) {
+                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
+                    return true;
+            }
+            return false;
+        },
         render: function () {
             var choices = [],
                 self = this,
-                disabled = (this.state.readonly) ? true : false,
+                disabled = (this.is_readonly()) ? true : false,
                 large_up = 'large-up-' + (this.props.options.largegrid || 4),
                 medium_up = 'medium-up-' + (this.props.options.mediumgrid || 2),
                 small_up = 'small-up-' + (this.props.options.smallgrid || 1),

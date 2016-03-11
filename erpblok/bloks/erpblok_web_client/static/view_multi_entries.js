@@ -166,6 +166,7 @@
                 $.each(this.view.options.fields2display, function (i, field) {
                     var options = $.extend(
                         {}, field, {value: self.record[field.field_name],
+                                    all_fields_value: self.record,
                                     actionManager: self.view.viewManager.action.actionManager});
                     var $els = self.$el.find('field#' + field.id);
                     for (i=0; i<$els.length; i++) {

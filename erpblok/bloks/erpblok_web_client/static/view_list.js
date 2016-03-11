@@ -107,12 +107,18 @@
                         delete this.changed_record[field_name];
                     }
                 }
+                var self = this,
+                    fields_value = $.extend({}, this.record, this.changed_record);
+                $.each(this.view.options.fields2display, function (i, field) {
+                    self.fields_by_ids[field.id].setState({all_fields_value: fields_value});
+                });
             },
             applyChange: function () {
                 var self = this;
                 $.each(this.view.options.fields2display, function (i, field) {
                     self.fields_by_ids[field.id].setState({
                         value: self.record[field.field_name],
+                        all_fields_value: self.record,
                         readonly: self.isReadonly(field.id)});
                 });
                 this.inline_buttons.setState({readonly: this.readonly});

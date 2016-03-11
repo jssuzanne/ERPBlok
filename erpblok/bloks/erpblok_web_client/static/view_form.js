@@ -87,6 +87,11 @@
                         delete this.changed_record[field_name];
                     }
                 }
+                var self = this,
+                    fields_value = $.extend({}, this.record, this.changed_record);
+                $.each(this.options.fields2display, function (i, field) {
+                    self.fields_by_ids[field.id].setState({all_fields_value: fields_value});
+                });
             },
             pressEnter: function () {
             },
@@ -112,7 +117,8 @@
                 $.each(this.options.fields2display, function (i, field) {
                     self.fields_by_ids[field.id].setState({
                         value: self.record[field.field_name],
-                        readonly: self.isReadonly(field.id)});
+                        readonly: self.isReadonly(field.id),
+                        all_fields_value: self.record});
                 });
             },
             get_fields: function() {

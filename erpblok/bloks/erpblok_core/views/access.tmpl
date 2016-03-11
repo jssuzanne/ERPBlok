@@ -33,17 +33,22 @@
             </div>
             <div class="columns small-12 medium-6 large-6">
                 <label for="login" />
-                <field name="login" />
+                <field name="login" 
+                visible-only-if="fields.first_name"
+                />
             </div>
             <div class="columns small-12 medium-6 large-6">
                 <label for="default_space" />
-                <field name="default_space" />
+                <field name="default_space" 
+                writable-only-if="fields.first_name"
+                />
             </div>
         </div>
         <field name="groups"
                type="Many2ManyChoices"
                display="label"
                largegrid="4"
+               not-nullable-only-if="fields.first_name"
                mediumgrid="2"/>
     </template>
 </templates>
