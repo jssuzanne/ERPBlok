@@ -554,7 +554,7 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             field.set('id', f_id)
             fields_description.append(f)
 
-        self.get_template_replace(root, fields_description)
+        self.get_template_replace_label(root, fields_description)
 
         buttons = []
         groups_buttons = []
