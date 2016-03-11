@@ -46,7 +46,8 @@ class User:
     def has_groups(self, groups):
         Groups = self.registry.Access.Group
         User = self.registry.Web.User
-        query = User.query().filter(User.groups.any(Groups.name.in_(groups)))
+        query = User.query().filter(User.id == self.id,
+                                    User.groups.any(Groups.name.in_(groups)))
         if query.count():
             return True
 

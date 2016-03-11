@@ -13,9 +13,11 @@ class Action:
         """ return the action render
 
         :param action: id of the action """
+        user_id = self.request.session['user_id']
+        user = self.registry.Web.User.query().get(user_id)
         UIAction = self.registry.UI.Action
         action = UIAction.query().filter(UIAction.id == int(action)).first()
-        return action.render()
+        return action.render(user)
 
 
 PyramidJsonRPC.add_route(PyramidJsonRPC.Action, '/web/client/action')

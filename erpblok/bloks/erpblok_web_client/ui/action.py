@@ -17,7 +17,7 @@ class Action:
     add_new = Boolean(default=True)
     add_edit = Boolean(default=True)
 
-    def render(self):
+    def render(self, user):
         """ Return the information of one action """
         selected = self.selected
 
@@ -31,7 +31,7 @@ class Action:
                 selectables.sort()
                 selected = self.selected = selectables[0][1]
 
-            views = self.views.render()
+            views = self.views.render(user)
 
         return {
             'model': self.model,

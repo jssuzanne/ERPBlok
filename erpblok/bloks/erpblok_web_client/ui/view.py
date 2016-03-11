@@ -40,9 +40,9 @@ class View(Mixin.ViewType):
     add_new = Boolean(default=True)
     add_edit = Boolean(default=True)
 
-    def render(self):
+    def render(self, user):
         """ Return the View render"""
-        return self.registry.get(self.mode)().render(self)
+        return self.registry.get(self.mode)().render(self, user)
 
     @classmethod
     def render_from_scratch(cls, action):
@@ -60,7 +60,7 @@ class View(Mixin.ViewType):
 class View:
     mode_name = None
 
-    def render(self, view):
+    def render(self, view, user):
         Model = self.registry.get(view.action.model)
         pks = Model.get_primary_keys()
         return {
@@ -105,71 +105,13 @@ class View:
 @register(Mixin)
 class ViewRenderTemplate:
 
-    def get_template_replace_label(self, el, fields_description):
-        el_for = el.attrib.get('for')
-        for field in fields_description:
-            if field['field_name'] == el_for:
-                if not el.text:
-                    el.text = field['label']
-
-    def get_template_replace_expr(self, el, fields_description):
-
-        def replace(attrib, head, tail, notailifnextin=None):
-            if notailifnextin is None:
-                notailifnextin = []
-
-            el.tag = 'div'
-            del el.attrib[attrib]
-            index = el.getparent().getchildren().index(el)
-            if index == 0:
-                el.getparent().text += head
-            else:
-                if el.getparent().getchildren()[index - 1].tail:
-                    el.getparent().getchildren()[index - 1].tail += head
-                else:
-                    el.getparent().getchildren()[index - 1].tail = head
-
-            if index != (len(el.getparent().getchildren()) - 1):
-                nextel = el.getparent().getchildren()[index + 1]
-                if nextel.tag == 'expr':
-                    for expr in notailifnextin:
-                        if expr in nextel.attrib.keys():
-                            return
-
-            if el.tail:
-                el.tail = tail + el.tail
-            else:
-                el.tail = tail
-
-        endop = '{{/if}}'
-
-        for k, v in el.attrib.items():
-            if k == "if":
-                head = '{{if %(expr)s }}' % dict(expr=v)
-                replace(k, head, endop, notailifnextin=('else', 'elif'))
-
-            elif k == "else":
-                head = '{{else}}'
-                replace(k, head, endop)
-            elif k == "elif":
-                head = '{{else %(expr)s }}' % dict(expr=v)
-                replace(k, head, endop, notailifnextin=('else', 'elif'))
-
-    def get_template_replace(self, tmpl, fields_description):
-        for node in tmpl.getchildren():
-            if node.tag is etree.Comment:
-                continue
-            else:
-                if node.getchildren():
-                    self.get_template_replace(node, fields_description)
-
-                tag = node.tag.lower()
-                if hasattr(self, 'get_template_replace_' + tag):
-                    el = getattr(self, 'get_template_replace_' + tag)(
-                        node, fields_description)
-
-                    if el is not None:
-                        tmpl.replace(node, el)
+    def get_template_replace_label(self, els, fields_description):
+        for el in els:
+            el_for = el.attrib.get('for')
+            for field in fields_description:
+                if field['field_name'] == el_for:
+                    if not el.text:
+                        el.text = field['label']
 
     def get_fields_description(self, view, fields):
         Model = self.registry.get(view.action.model)
@@ -194,20 +136,30 @@ class ViewRenderTemplate:
 
         return fdesc
 
-    def get_template(self, view):
+    def remove_unwanted_access_group(self, tmpl, user):
+        els = tmpl.findall(".//*[@access-groups]")
+        for el in els:
+            access_groups = [
+                x.strip() for x in el.attrib['access-groups'].split(',') if x]
+            if not user.has_groups(access_groups):
+                el.getparent().remove(el)
+
+    def get_template(self, view, user):
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
+        self.remove_unwanted_access_group(tmpl, user)
         tmpl.tag = 'div'
         fields = tmpl.findall('.//field')
         fields_description = self.get_fields_description(view, fields)
-        self.get_template_replace(tmpl, fields_description)
+        labels = tmpl.findall('.//label')
+        self.get_template_replace_label(labels, fields_description)
         tmpl = html.tostring(tmpl)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_description]
 
-    def render_template(self, view):
+    def render_template(self, view, user):
         """ Specific render for a list view """
-        template, fields_description = self.get_template(view)
+        template, fields_description = self.get_template(view, user)
         return {
             'fields': [x['field_name'] for x in fields_description],
             'template': template,
@@ -329,9 +281,9 @@ class List(Mixin.ViewMultiEntries):
         else:
             return False
 
-    def render(self, view):
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(List, self).render(view)
+        res = super(List, self).render(view, user)
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
@@ -506,10 +458,10 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
 
         return res
 
-    def render(self, view):
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(Form, self).render(view)
-        res.update(self.render_template(view))
+        res = super(Form, self).render(view, user)
+        res.update(self.render_template(view, user))
         res.update({
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
@@ -606,10 +558,10 @@ class Thumbnails(Mixin.ViewMultiEntries, Mixin.ViewRenderTemplate):
     id = 1000002
     mode_name = 'Thumbnails'
 
-    def render(self, view):
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(Thumbnails, self).render(view)
-        res.update(self.render_template(view))
+        res = super(Thumbnails, self).render(view, user)
+        res.update(self.render_template(view, user))
         res.update({
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
