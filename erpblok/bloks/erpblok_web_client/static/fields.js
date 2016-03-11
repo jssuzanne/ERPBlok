@@ -119,20 +119,27 @@
     function get_field_counter () {return field_counter ++;}
     function check_eval (condition, fields) {return eval(condition);}
 
-    ERPBlok.declare_react_class('FieldString')
-    AnyBlokJS.register({classname: 'FieldString', prototype: {
-        input_type: "text",
+    AnyBlokJS.register({classname: 'BaseField', prototype: {
         getInitialState: function () {
             this.props.init_field(this.props.options.id, this);
             return {value: this.props.options.value,
                     all_fields_value: this.props.options.all_fields_value || {},
                     readonly: this.props.is_readonly(this.props.options.id)};
         },
-        handleChange: function (event) {
-            this.props.update_field(this.props.options.id, event.target.value);
+        is_readonly: function() {
+            if (this.state.readonly) return true;
+            if (this.props.options['writable-only-if']) {
+                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
+                    return true;
+            }
+            return false;
         },
-        render_ro: function () {
-            return <span>{this.state.value}</span>
+        render: function () {
+            if (this.is_readonly()) {
+                return this.render_ro()
+            } else {
+                return this.render_rw()
+            }
         },
         get_style: function () {
             var style = {};
@@ -155,10 +162,23 @@
             }
             return className
         },
+        handleChange: function (event) {
+            this.props.update_field(this.props.options.id, event.target.value);
+        },
         onKeyPress: function (event) {
             if (this.props.pressEnter && event.key == 'Enter') {
                 this.props.pressEnter();
             }
+        },
+    }});
+
+    ERPBlok.declare_react_class('FieldString')
+    AnyBlokJS.register({classname: 'FieldString', 
+                        extend: ['BaseField'],
+                        prototype: {
+        input_type: "text",
+        render_ro: function () {
+            return <span>{this.state.value}</span>
         },
         render_rw: function () {
             var required = this.props.options.nullable ? false : true,
@@ -172,25 +192,12 @@
                           onChange={this.handleChange.bind(this)}
                     />
         },
-        is_readonly: function() {
-            if (this.state.readonly) return true;
-            if (this.props.options['writable-only-if']) {
-                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
-                    return true;
-            }
-            return false;
-        },
-        render: function () {
-            if (this.is_readonly()) {
-                return this.render_ro()
-            } else {
-                return this.render_rw()
-            }
-        },
     }});
 
     ERPBlok.declare_react_class('FieldSelection')
-    AnyBlokJS.register({classname: 'FieldSelection', extend: ['FieldString'], prototype: {
+    AnyBlokJS.register({classname: 'FieldSelection', 
+                        extend: ['BaseField'], 
+                        prototype: {
         render_ro: function () {
             var value = this.state.value,
                 self = this;
@@ -213,7 +220,9 @@
     }});
 
     ERPBlok.declare_react_class('FieldPassword')
-    AnyBlokJS.register({classname: 'FieldPassword', extend: ['FieldString'], prototype: {
+    AnyBlokJS.register({classname: 'FieldPassword', 
+                        extend: ['FieldString'], 
+                        prototype: {
         input_type: 'password',
         render_ro: function () {
             return <span>******</span>
@@ -221,7 +230,9 @@
     }});
 
     ERPBlok.declare_react_class('FieldInteger')
-    AnyBlokJS.register({classname: 'FieldInteger', extend: ['FieldString'], prototype: {
+    AnyBlokJS.register({classname: 'FieldInteger', 
+                        extend: ['FieldString'], 
+                        prototype: {
         input_type: 'number',
         get_step: function () {
             return '1';
@@ -241,14 +252,18 @@
     }});
 
     ERPBlok.declare_react_class('FieldFloat')
-    AnyBlokJS.register({classname: 'FieldFloat', extend: ['FieldInteger'], prototype: {
+    AnyBlokJS.register({classname: 'FieldFloat', 
+                        extend: ['FieldInteger'], 
+                        prototype: {
         get_step: function () {
             return this.props.options.precision || '0.01';
         },
     }});
 
     ERPBlok.declare_react_class('FieldLargeBinary')
-    AnyBlokJS.register({classname: 'FieldLargeBinary', extend: ['FieldString'], prototype: {
+    AnyBlokJS.register({classname: 'FieldLargeBinary', 
+                        extend: ['FieldString'], 
+                        prototype: {
         input_type: 'file',
         handleChange: function (event) {
             var file = event.target.files[0],
@@ -322,23 +337,11 @@
     }});
 
     ERPBlok.declare_react_class('FieldBoolean')
-    AnyBlokJS.register({classname: 'FieldBoolean', prototype: {
-        getInitialState: function () {
-            this.props.init_field(this.props.options.id, this);
-            return {value: this.props.options.value,
-                    all_fields_value: this.props.options.all_fields_value || {},
-                    readonly: this.props.is_readonly(this.props.options.id)};
-        },
+    AnyBlokJS.register({classname: 'FieldBoolean', 
+                        extend: ['BaseField'],
+                        prototype: {
         handleChange: function (event) {
             this.props.update_field(this.props.options.id, event.target.checked);
-        },
-        is_readonly: function() {
-            if (this.state.readonly) return true;
-            if (this.props.options['writable-only-if']) {
-                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
-                    return true;
-            }
-            return false;
         },
         render: function () {
             return (<input type="checkbox"
@@ -351,15 +354,13 @@
 
     ERPBlok.declare_react_class('FieldMany2One')
     AnyBlokJS.register({classname: 'FieldMany2One',
-                        extend: ['FieldString', 'RPC'],
+                        extend: ['BaseField', 'RPC'],
                         prototype: {
         rpc_url: '/web/client/field',
         getInitialState: function () {
-            this.props.init_field(this.props.options.id, this);
-            return {value: this.props.options.value,
-                    label: '',
-                    all_fields_value: this.props.options.all_fields_value || {},
-                    readonly: this.props.is_readonly(this.props.options.id)};
+            var state = this._super();
+            state.label = '';
+            return state;
         },
         setState: function (states) {
             if ('value' in states) {
@@ -476,7 +477,7 @@
                        </div>
             }
             return (<div className="ui-widget input-group">
-                        <input type={this.input_type}
+                        <input type="text"
                                id={this.get_id()}
                                className="input-group-field"
                                required={required}
@@ -493,15 +494,14 @@
 
     ERPBlok.declare_react_class('FieldMany2ManyChoices')
     AnyBlokJS.register({classname: 'FieldMany2ManyChoices',
-                        extend: ['RPC'],
+                        extend: ['BaseField', 'RPC'],
                         prototype: {
         rpc_url: '/web/client/field',
         getInitialState: function () {
-            this.props.init_field(this.props.options.id, this);
-            return {value: this.props.options.value,
-                    choices: [],
-                    all_fields_value: this.props.options.all_fields_value || {},
-                    readonly: this.props.is_readonly(this.props.options.id)};
+            var state = this._super();
+            state.choices = [];
+            console.log(state)
+            return state;
         },
         componentDidMount: function() {
             var self = this;
@@ -515,14 +515,6 @@
                 if (this.state.value.hasOwnProperty(x) && JSON.stringify(this.state.value[x]) === JSON.stringify(obj)) {
                     return x;
                 }
-            }
-            return false;
-        },
-        is_readonly: function() {
-            if (this.state.readonly) return true;
-            if (this.props.options['writable-only-if']) {
-                if (!check_eval(this.props.options['writable-only-if'], this.state.all_fields_value))
-                    return true;
             }
             return false;
         },
@@ -572,7 +564,7 @@
 
     ERPBlok.declare_react_class('FieldText')
     AnyBlokJS.register({classname: 'FieldText',
-                        extend: ['FieldString'],
+                        extend: ['BaseField'],
                         prototype: {
         handleChange: function (event) {
             var $el = $('#' + this.get_id()),
@@ -608,10 +600,10 @@
 
     ERPBlok.declare_react_class('FieldHtml')
     AnyBlokJS.register({classname: 'FieldHtml',
-                        extend: ['FieldString'],
+                        extend: ['BaseField'],
                         prototype: {
         get_id: function () {
-            if (!this.field_id) this.field_id = 'Text-id-for-' + this.props.options.id + '-' + get_field_counter();
+            if (!this.field_id) this.field_id = 'Html-id-for-' + this.props.options.id + '-' + get_field_counter();
             return this.field_id;
         },
         componentDidUpdate: function() {
