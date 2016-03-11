@@ -134,7 +134,17 @@
             }
             return false;
         },
+        is_visible: function() {
+            if (this.props.options['visible-only-if']) {
+                if (check_eval(this.props.options['visible-only-if'], this.state.all_fields_value))
+                    return true;
+
+                return false;
+            }
+            return true;
+        },
         render: function () {
+            if (!this.is_visible()) return <div/>
             if (this.is_readonly()) {
                 return this.render_ro()
             } else {
@@ -344,6 +354,7 @@
             this.props.update_field(this.props.options.id, event.target.checked);
         },
         render: function () {
+            if (!this.is_visible()) return <div/>
             return (<input type="checkbox"
                            disabled={this.is_readonly()}
                            id={this.props.options.id}
@@ -519,6 +530,7 @@
             return false;
         },
         render: function () {
+            if (!this.is_visible()) return <div/>
             var choices = [],
                 self = this,
                 disabled = (this.is_readonly()) ? true : false,
