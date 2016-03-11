@@ -133,21 +133,41 @@ class ViewRenderTemplate:
                 del el.attrib['type']
 
             el.set('id', field['id'])
+            if 'readonly' in field and isinstance(field['readonly'], str):
+                if field['readonly'].lower() in ('true', '1'):
+                    field['readonly'] = True
+                else:
+                    field['readonly'] = False
 
         return fdesc
 
-    def remove_unwanted_access_group(self, tmpl, user):
-        els = tmpl.findall(".//*[@access-groups]")
+    def get_unwanted_elements_for(self, tmpl, attribute, user):
+        els = tmpl.findall(".//*[@%s]" % attribute)
+        res = []
         for el in els:
-            access_groups = [
-                x.strip() for x in el.attrib['access-groups'].split(',') if x]
-            if not user.has_groups(access_groups):
-                el.getparent().remove(el)
+            groups = [x.strip() for x in el.attrib[attribute].split(',') if x]
+            if not user.has_groups(groups):
+                res.append(el)
+
+        return res
+
+    def visible_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'visible-only-for-groups', user)
+        for el in els:
+            el.getparent().remove(el)
+
+    def writable_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'writable-only-for-groups', user)
+        for el in els:
+            el.set('readonly', "1")
 
     def get_template(self, view, user):
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
-        self.remove_unwanted_access_group(tmpl, user)
+        self.visible_only_for_access_group(tmpl, user)
+        self.writable_only_for_access_group(tmpl, user)
         tmpl.tag = 'div'
         fields = tmpl.findall('.//field')
         fields_description = self.get_fields_description(view, fields)
