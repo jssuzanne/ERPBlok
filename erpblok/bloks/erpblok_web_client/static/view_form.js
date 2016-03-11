@@ -18,6 +18,13 @@
                 var $el = $($.templates(this.options.template).render());
                 $el.appendTo(this.$el);
                 this.apply_react_components();
+                var self = this;
+                this.$el.find('button').click(function(event) {
+                    event.stopPropagation();
+                    var func = event.currentTarget.dataset.function;
+                    var method = event.currentTarget.dataset.method || undefined;
+                    self[func](self.id, method);
+                });
                 return this.$el;
             },
             render: function (args) {
