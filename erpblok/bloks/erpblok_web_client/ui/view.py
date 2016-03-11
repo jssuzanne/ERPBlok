@@ -103,7 +103,33 @@ class View:
 
 
 @register(Mixin)
-class ViewRenderTemplate:
+class ViewAccessGroups:
+
+    def get_unwanted_elements_for(self, tmpl, attribute, user):
+        els = tmpl.findall(".//*[@%s]" % attribute)
+        res = []
+        for el in els:
+            groups = [x.strip() for x in el.attrib[attribute].split(',') if x]
+            if not user.has_groups(groups):
+                res.append(el)
+
+        return res
+
+    def visible_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'visible-only-for-groups', user)
+        for el in els:
+            el.getparent().remove(el)
+
+    def writable_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'writable-only-for-groups', user)
+        for el in els:
+            el.set('readonly', "1")
+
+
+@register(Mixin)
+class ViewRenderTemplate(Mixin.ViewAccessGroups):
 
     def get_template_replace_label(self, els, fields_description):
         for el in els:
@@ -140,28 +166,6 @@ class ViewRenderTemplate:
                     field['readonly'] = False
 
         return fdesc
-
-    def get_unwanted_elements_for(self, tmpl, attribute, user):
-        els = tmpl.findall(".//*[@%s]" % attribute)
-        res = []
-        for el in els:
-            groups = [x.strip() for x in el.attrib[attribute].split(',') if x]
-            if not user.has_groups(groups):
-                res.append(el)
-
-        return res
-
-    def visible_only_for_access_group(self, tmpl, user):
-        els = self.get_unwanted_elements_for(
-            tmpl, 'visible-only-for-groups', user)
-        for el in els:
-            el.getparent().remove(el)
-
-    def writable_only_for_access_group(self, tmpl, user):
-        els = self.get_unwanted_elements_for(
-            tmpl, 'writable-only-for-groups', user)
-        for el in els:
-            el.set('readonly', "1")
 
     def get_template(self, view, user):
         tmpl = self.registry.erpblok_views.get_template(
@@ -218,7 +222,7 @@ class ViewMultiEntries(Mixin.View):
 
 
 @register(Model.UI.View)
-class List(Mixin.ViewMultiEntries):
+class List(Mixin.ViewMultiEntries, Mixin.ViewAccessGroups):
     "List View"
 
     id = 1000001
@@ -306,6 +310,8 @@ class List(Mixin.ViewMultiEntries):
         res = super(List, self).render(view, user)
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
+        self.visible_only_for_access_group(tmpl, user)
+        self.writable_only_for_access_group(tmpl, user)
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
         checkbox = self.get_tmpl_attribute_format_bool(tmpl, 'checkbox', True)
         inline = self.get_tmpl_attribute_format_bool(tmpl, 'inline', False)
