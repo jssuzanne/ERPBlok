@@ -143,6 +143,15 @@
             }
             return true;
         },
+        is_not_nullable: function() {
+            if (!this.props.options.nullable) return true;
+            if (this.props.options['not-nullable-only-if']) {
+                if (check_eval(this.props.options['not-nullable-only-if'], this.state.all_fields_value))
+                    return true;
+
+            }
+            return false;
+        },
         render: function () {
             if (!this.is_visible()) return <div/>
             if (this.is_readonly()) {
@@ -153,7 +162,7 @@
         },
         get_style: function () {
             var style = {};
-            if (! this.props.options.nullable) {
+            if (this.is_not_nullable()) {
                 style['background-color'] = 'lightblue';
                 if (!this.state.value) {
                     style['border'] = '3px solid red';
@@ -163,7 +172,7 @@
         },
         get_className: function () {
             var className='';
-            if (!this.props.options.nullable) {
+            if (this.is_not_nullable()) {
                 if (!this.state.value) {
                     className = 'fieldNotNull fieldEmpty'
                 } else {
@@ -191,10 +200,9 @@
             return <span>{this.state.value}</span>
         },
         render_rw: function () {
-            var required = this.props.options.nullable ? false : true,
-                placeholder = this.props.options.placeholder || '';
+            var placeholder = this.props.options.placeholder || '';
             return <input type={this.input_type}
-                          required={required}
+                          required={this.is_not_nullable()}
                           placeholder={placeholder}
                           value={this.state.value}
                           style={this.get_style()}
@@ -248,10 +256,9 @@
             return '1';
         },
         render_rw: function () {
-            var required = this.props.options.nullable ? false : true,
-                step = this.get_step();
+            var step = this.get_step();
             return <input type={this.input_type}
-                          required={required}
+                          required={this.is_not_nullable()}
                           value={this.state.value}
                           style={this.get_style()}
                           step={step}
@@ -321,11 +328,10 @@
             return <a onClick={this.onClick.bind(this)}>{txt}</a>
         },
         render_rw: function () {
-            var required = this.props.options.nullable ? false : true,
-                placeholder = this.props.options.placeholder || '',
+            var placeholder = this.props.options.placeholder || '',
                 accept = this.props.options.accept || "*";
             return <input type={this.input_type}
-                          required={required}
+                          required={this.is_not_nullable()}
                           placeholder={placeholder}
                           value={this.state.value}
                           style={this.get_style()}
@@ -475,8 +481,7 @@
             return <a onClick={this.onClick.bind(this)}>{this.state.label}</a>
         },
         render_rw: function () {
-            var required = this.props.options.nullable ? false : true,
-                placeholder = this.props.options.placeholder || '',
+            var placeholder = this.props.options.placeholder || '',
                 link = [];
 
             if (this.state.value) {
@@ -491,7 +496,7 @@
                         <input type="text"
                                id={this.get_id()}
                                className="input-group-field"
-                               required={required}
+                               required={this.is_not_nullable()}
                                value={this.state.label}
                                style={this.get_style()}
                                onBlur={this.onBlur.bind(this)}
@@ -561,7 +566,8 @@
                         <label>{choice[1]}</label>
                     </div>)
             });
-            return (<fieldset className="fieldset">
+            return (<fieldset className="fieldset"
+                              style={this.get_style()}>
                         <legend>
                             <h6>
                                 {this.props.options.label}
