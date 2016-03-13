@@ -46,12 +46,13 @@ class Action:
         }
 
     @classmethod
-    def render_x2x_from_scratch(cls, model, **kwargs):
+    def render_x2x_from_scratch(cls, model, user, **kwargs):
         # TODO change transition
         query = cls.query().filter_by(model=model)
         if query.count():
-            res = query.first().render()
-            view_type = kwargs.get('view_type', 'Model.UI.View.Form').split('.')[-1]
+            res = query.first().render(user)
+            view_type = kwargs.get('view_type',
+                                   'Model.UI.View.Form').split('.')[-1]
             view = None
             for v in res['views']:
                 if v['mode'] == view_type:
@@ -68,7 +69,10 @@ class Action:
         query = query.filter(cls.model == model)
         query = query.filter(View.mode == viewtype)
         if query.count():
-            view = query.first().render(action)
+            view = query.first()
+            view.action = action
+            view = view.render(user)
+            cls.registry.rollback()
         else:
             view = cls.registry.get(viewtype)().render_from_scratch(action)
 

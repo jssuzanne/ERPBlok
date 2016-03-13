@@ -10,6 +10,8 @@ class Field:
 
     @PyramidJsonRPC.rpc_method()
     def get_action_for(self, action=None, model=None, view_type=None, **kwargs):
+        user_id = self.request.session['user_id']
+        user = self.registry.Web.User.query().get(user_id)
         UIAction = self.registry.UI.Action
         if action:
             if isinstance(action, str):
@@ -19,7 +21,7 @@ class Field:
             else:
                 action = UIAction.query().get(int(action))
 
-            res = action.render()
+            res = action.render(user)
             view_type = view_type.split('.')[-1]
             view = None
             for v in res['views']:
@@ -30,7 +32,8 @@ class Field:
             res['selected'] = view['id']
             return res
         else:
-            return UIAction.render_x2x_from_scratch(model, view_type=view_type, **kwargs)
+            return UIAction.render_x2x_from_scratch(
+                model, user, view_type=view_type, **kwargs)
 
     @PyramidJsonRPC.rpc_method()
     def x2One_render(self, model=None, primary_keys=None, **kwargs):
