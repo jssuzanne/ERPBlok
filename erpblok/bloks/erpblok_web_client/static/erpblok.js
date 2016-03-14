@@ -6,11 +6,21 @@ window.ERPBlok = null;
     ERPBLOK.prototype = Object.create({
         init: function () {
             this.react_classes = [];
+            this.fields = {};
         },
-        declare_react_class: function (classname) {
+        declare_react_class: function (classname, fieldType=undefined) {
             if (this.react_classes.indexOf(classname) == -1) {
                 this.react_classes.push(classname);
             }
+            if (fieldType) this.fields[fieldType] = classname;
+        },
+        add_field_definition: function (fieldType, classname) {
+            this.fields[fieldType] = classname;
+        },
+        get_field_definition: function (fieldType) {
+            var classname = 'FieldString';
+            if (this.fields[fieldType]) classname = this.fields[fieldType];
+            return AnyBlokJS.compile(classname);
         },
         compile_react_classes: function () {
             for (var index in this.react_classes) {

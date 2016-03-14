@@ -2,116 +2,17 @@
 
     ERPBlok.declare_react_class('Field')
     AnyBlokJS.register({classname: 'Field', prototype: {
-        render_field_fake: function () {
-            return this.render_field_String();
-        },
-        render_field_String: function () {
-            return <FieldString options={this.props.options}
-                                pressEnter={this.props.pressEnter}
-                                init_field={this.props.init_field}
-                                is_readonly={this.props.is_readonly}
-                                get_value_of={this.props.get_value_of}
-                                update_field={this.props.update_field} />
-        },
-        render_field_Integer: function () {
-            return <FieldInteger options={this.props.options}
-                                 pressEnter={this.props.pressEnter}
-                                 init_field={this.props.init_field}
-                                 is_readonly={this.props.is_readonly}
-                                 get_value_of={this.props.get_value_of}
-                                 update_field={this.props.update_field} />
-        },
-        render_field_Boolean: function () {
-            return <FieldBoolean options={this.props.options}
-                                 pressEnter={this.props.pressEnter}
-                                 init_field={this.props.init_field}
-                                 is_readonly={this.props.is_readonly}
-                                 get_value_of={this.props.get_value_of}
-                                 update_field={this.props.update_field} />
-        },
-        render_field_Float: function () {
-            return <FieldFloat options={this.props.options}
-                               pressEnter={this.props.pressEnter}
-                               init_field={this.props.init_field}
-                               is_readonly={this.props.is_readonly}
-                               get_value_of={this.props.get_value_of}
-                               update_field={this.props.update_field} />
-        },
-        render_field_Selection: function () {
-            return <FieldSelection options={this.props.options}
-                                   pressEnter={this.props.pressEnter}
-                                   init_field={this.props.init_field}
-                                   is_readonly={this.props.is_readonly}
-                                   get_value_of={this.props.get_value_of}
-                                   update_field={this.props.update_field} />
-        },
-        render_field_Password: function () {
-            return <FieldPassword options={this.props.options}
-                                  pressEnter={this.props.pressEnter}
-                                  init_field={this.props.init_field}
-                                  is_readonly={this.props.is_readonly}
-                                  get_value_of={this.props.get_value_of}
-                                  update_field={this.props.update_field} />
-        },
-        render_field_Text: function () {
-            return <FieldText options={this.props.options}
-                              pressEnter={this.props.pressEnter}
-                              init_field={this.props.init_field}
-                              is_readonly={this.props.is_readonly}
-                              get_value_of={this.props.get_value_of}
-                              update_field={this.props.update_field} />
-        },
-        render_field_Html: function () {
-            return <FieldHtml options={this.props.options}
-                              pressEnter={this.props.pressEnter}
-                              init_field={this.props.init_field}
-                              is_readonly={this.props.is_readonly}
-                              get_value_of={this.props.get_value_of}
-                              update_field={this.props.update_field} />
-        },
-        render_field_LargeBinary: function () {
-            return <FieldLargeBinary options={this.props.options}
-                                     pressEnter={this.props.pressEnter}
-                                     init_field={this.props.init_field}
-                                     is_readonly={this.props.is_readonly}
-                                     get_value_of={this.props.get_value_of}
-                                     update_field={this.props.update_field} />
-        },
-        render_field_Picture: function () {
-            return <FieldPicture options={this.props.options}
-                                 pressEnter={this.props.pressEnter}
-                                 init_field={this.props.init_field}
-                                 is_readonly={this.props.is_readonly}
-                                 get_value_of={this.props.get_value_of}
-                                 update_field={this.props.update_field} />
-        },
-        render_field_Many2One: function () {
-            return <FieldMany2One options={this.props.options}
-                                  pressEnter={this.props.pressEnter}
-                                  init_field={this.props.init_field}
-                                  is_readonly={this.props.is_readonly}
-                                  get_value_of={this.props.get_value_of}
-                                  update_field={this.props.update_field} />
-        },
-        render_field_One2One: function () {
-            return this.render_field_Many2One();
-        },
-        render_field_Many2ManyChoices: function () {
-            return <FieldMany2ManyChoices options={this.props.options}
-                                          pressEnter={this.props.pressEnter}
-                                          init_field={this.props.init_field}
-                                          is_readonly={this.props.is_readonly}
-                                          get_value_of={this.props.get_value_of}
-                                          update_field={this.props.update_field} />
-        },
         render: function () {
-            var fnct_name = 'render_field_' + (this.props.options.type || 'fake');
-            if (this[fnct_name]) {
-                return this[fnct_name]();
-            } else {
-                console.log(fnct_name)
-                return this.render_field_fake();
-            }
+            var FieldType = ERPBlok.get_field_definition(this.props.options.type || 'String'),
+                props = {
+                    options: this.props.options,
+                    pressEnter: this.props.pressEnter,
+                    init_field: this.props.init_field,
+                    is_readonly: this.props.is_readonly,
+                    get_value_of: this.props.get_value_of,
+                    update_field: this.props.update_field,
+                };
+            return React.createElement(FieldType, props);
         },
     }});
 
@@ -191,7 +92,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldString')
+    ERPBlok.declare_react_class('FieldString', 'String')
     AnyBlokJS.register({classname: 'FieldString',
                         extend: ['BaseField'],
                         prototype: {
@@ -212,7 +113,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldSelection')
+    ERPBlok.declare_react_class('FieldSelection', 'Selection')
     AnyBlokJS.register({classname: 'FieldSelection',
                         extend: ['BaseField'],
                         prototype: {
@@ -237,7 +138,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldPassword')
+    ERPBlok.declare_react_class('FieldPassword', 'Password')
     AnyBlokJS.register({classname: 'FieldPassword',
                         extend: ['FieldString'],
                         prototype: {
@@ -247,7 +148,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldInteger')
+    ERPBlok.declare_react_class('FieldInteger', 'Integer')
     AnyBlokJS.register({classname: 'FieldInteger',
                         extend: ['FieldString'],
                         prototype: {
@@ -268,7 +169,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldFloat')
+    ERPBlok.declare_react_class('FieldFloat', 'Float')
     AnyBlokJS.register({classname: 'FieldFloat',
                         extend: ['FieldInteger'],
                         prototype: {
@@ -277,7 +178,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldLargeBinary')
+    ERPBlok.declare_react_class('FieldLargeBinary', 'LargeBinary')
     AnyBlokJS.register({classname: 'FieldLargeBinary',
                         extend: ['FieldString'],
                         prototype: {
@@ -342,7 +243,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldPicture')
+    ERPBlok.declare_react_class('FieldPicture', 'Picture')
     AnyBlokJS.register({classname: 'FieldPicture',
                         extend: ['FieldLargeBinary'],
                         prototype: {
@@ -352,7 +253,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldBoolean')
+    ERPBlok.declare_react_class('FieldBoolean', 'Boolean')
     AnyBlokJS.register({classname: 'FieldBoolean',
                         extend: ['BaseField'],
                         prototype: {
@@ -369,7 +270,8 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldMany2One')
+    ERPBlok.declare_react_class('FieldMany2One', 'Many2One');
+    ERPBlok.add_field_definition('One2One', 'FieldMany2One');
     AnyBlokJS.register({classname: 'FieldMany2One',
                         extend: ['BaseField', 'RPC'],
                         prototype: {
@@ -508,7 +410,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldMany2ManyChoices')
+    ERPBlok.declare_react_class('FieldMany2ManyChoices', 'Many2ManyChoices');
     AnyBlokJS.register({classname: 'FieldMany2ManyChoices',
                         extend: ['BaseField', 'RPC'],
                         prototype: {
@@ -579,7 +481,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldText')
+    ERPBlok.declare_react_class('FieldText', 'Text')
     AnyBlokJS.register({classname: 'FieldText',
                         extend: ['BaseField'],
                         prototype: {
@@ -615,7 +517,7 @@
         },
     }});
 
-    ERPBlok.declare_react_class('FieldHtml')
+    ERPBlok.declare_react_class('FieldHtml', 'Html')
     AnyBlokJS.register({classname: 'FieldHtml',
                         extend: ['BaseField'],
                         prototype: {
