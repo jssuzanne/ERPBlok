@@ -6,3 +6,25 @@ select.fieldEmpty,
 input.fieldEmpty {
     border: 3px solid red;
 }
+
+.field-html pre {
+    background-color: lightyellow;
+    border: 1px solid;
+    margin: 10px;
+}
+
+.field-html table {
+    width: 100%;
+}
+
+.field-html table thead {
+    border: 1px solid;
+}
+
+.field-html table thead th{
+    border: 1px solid;
+}
+
+.field-html table tbody tr{
+    border: 1px solid;
+}

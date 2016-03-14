@@ -643,7 +643,8 @@
             }
         },
         render_ro: function () {
-            return (<span dangerouslySetInnerHTML={{__html: this.state.value}} />)
+            return (<span className="field-html" 
+                          dangerouslySetInnerHTML={{__html: this.state.value}} />)
         },
         render_rw: function () {
             var placeholder = this.props.options.placeholder || '';
