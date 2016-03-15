@@ -1,34 +1,33 @@
 from anyblok import Declarations
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
-from .common import list_databases, login_user, logout
+from .common import (list_databases, login_user, logout, get_static,
+                     get_templates_from)
 from pyramid.httpexceptions import HTTPUnauthorized, HTTPFound
 from pyramid.response import Response
 
 
 Declarations.Pyramid.add_route('login', '/login')
 Declarations.Pyramid.add_route('login-logo', '/login/logo')
+Declarations.Pyramid.add_route('login-databases', '/login/databases')
 Declarations.Pyramid.add_route('login-connect', '/login/connect',
                                request_method='POST')
 Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
                                request_method='POST')
 
 
-@Declarations.Pyramid.add_view('login',
-                               renderer='erpblok:templates/login.mak')
+@Declarations.Pyramid.add_view('login', renderer='erpblok:client.mak')
 def get_login(request, database=None):
     """ Display the login page
 
-    :param database: default database filled by the url
     """
     title = Configuration.get('app_name', 'ERPBlok')
-    allow_database_manager = Configuration.get('allow_database_manager',
-                                               True)
     return {
         'title': title,
-        'databases': list_databases(),
-        'database': database,
-        'allow_database_manager': allow_database_manager,
+        'css': get_static('global_css') + get_static('login_css'),
+        'js': get_static('global_js') + get_static('login_js'),
+        'js_babel': get_static('global_js_babel') + get_static('login_js_babel'),
+        'templates': get_templates_from('login_templates'),
     }
 
 
@@ -42,6 +41,32 @@ def get_login_logo(request):
     return HTTPFound(location="/static/login-logo.png")
 
 
+@Declarations.Pyramid.add_view('login-databases', request_method="GET",
+                               renderer="json")
+def get_databases(request):
+    res = [
+        {
+            'label': 'Databases',
+            'icon': 'fi-database large',
+            'menus': [{'id': x, 'label': x} for x in list_databases()],
+        },
+    ]
+    if Configuration.get('allow_database_manager'):
+        res.append({
+            'label': 'Tools',
+            'icon': 'fi-widget',
+            'menus': [{'id': 'manage_db',
+                       'label': 'Manage databases',
+                       'icon': 'fi-wrench',
+                       'description': "Create new or drop exising ERPBlok "
+                                      "database. You may also insall or "
+                                      "uninstall some low level management "
+                                      "bloks"}],
+        })
+
+    return res
+
+
 @Declarations.Pyramid.add_view('login-connect')
 def post_login_connect(request, database=None, login=None, password=None):
     """ Log the user, if the login and password are right
@@ -52,10 +77,9 @@ def post_login_connect(request, database=None, login=None, password=None):
     :rtype: redirection if login/password is right else HTTPUnauthorized
     """
     registry = RegistryManager.get(database)
-    authentificated = registry.Web.Login.check_authentification(
-        login, password)
-    if authentificated:
-        if login_user(request, database, login, password):
+    user_id = registry.Web.Login.check_authentification(login, password)
+    if user_id:
+        if login_user(request, database, login, password, user_id):
             return Response(request.route_url('web-client'))
 
     return HTTPUnauthorized()

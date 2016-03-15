@@ -8,9 +8,9 @@
             init: function() {
                 var self = this;
                 this.load_callback();
-                 window.addEventListener("hashchange", function(e) {
-                     self.changed(self.toObject(e.newURL), self.toObject(e.oldURL));
-                 });
+                window.addEventListener("hashchange", function(e) {
+                    self.changed(self.toObject(e.newURL), self.toObject(e.oldURL));
+                });
             },
             toObject: function (paramString) {
                 var params = {};
@@ -70,6 +70,9 @@
                 hash = this.fromObject(hash);
                 hash = '#' + hash.join('&');
                 window.location.hash = hash;
+            },
+            clear: function() {
+                window.location.hash = '#';
             },
             get: function(tag) {
                 var hash = window.location.hash;

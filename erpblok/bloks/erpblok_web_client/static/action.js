@@ -30,10 +30,10 @@
         classname: 'ActionManager',
         extend: ['ActionInterface'],
         prototype: {
-            init: function(client) {
+            init: function(client, $el) {
                 this.client = client;
-                this.breadcrumb = AnyBlokJS.new('BreadCrumb', this);
-                this.$el = $('#action-manager');
+                this.breadcrumb = AnyBlokJS.new('BreadCrumbManager', this, $el);
+                this.$el = $el.find('#action-manager');
             },
             load: function(action_id) {
                 var action = AnyBlokJS.new('Action');
@@ -44,7 +44,7 @@
             },
             appendTo: function (action) {
                 action.$el.appendTo(this.$el);
-                this.breadcrumb.add(action.value.id, action.value.label, action.$el);
+                this.breadcrumb.add(action);
             },
             select_view: function(view, kwargs) {
                 if (kwargs != undefined && kwargs.id != undefined) {
@@ -64,10 +64,12 @@
     });
     AnyBlokJS.register({
         classname: 'Action',
+        extend: ['Template', 'RPC'],
         prototype: {
-            'rpc_url': '/web/client/action',
-            init: function(parent) {
-                this.actionManager = parent || document.ERPBlokClient.actionManager;
+            rpc_url: '/web/client/action',
+            template: 'Action',
+            init: function(actionManager) {
+                this.actionManager = actionManager;
                 this.Dialog = 'Dialog';
             },
             load: function(action, view_id, pks) {
@@ -82,14 +84,14 @@
                     return;
                 }
                 this.value = action;
-                this.$el = $($.templates('#ERPBlokAction').render({id: action.id}))
+                this.$el = this.render_template({id: action.id});
                 if (action.dialog) {
                     var parent = AnyBlokJS.new(this.Dialog);
                 } else {
                     var parent = this.actionManager;
                 }
                 parent.appendTo(this);
-                var viewManager = AnyBlokJS.new('ViewManager', this, view_id, pks);
+                this.viewManager = AnyBlokJS.new('ViewManager', this, view_id, pks);
             },
         },
     });

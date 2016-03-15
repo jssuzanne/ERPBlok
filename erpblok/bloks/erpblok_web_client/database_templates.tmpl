@@ -1,0 +1,62 @@
+<templates>
+    <!--
+        It is the templating for client
+
+        The client templating come from
+        http://www.jsviews.com/#d.templates
+    -->
+    <template id="ClientCreateDB" type="text/x-jsrender">
+        <div class="row">
+            <div class="columns small-12 medium-8 medium-offset-2 large-6 large-offset-3">
+                <div id="error" data-alert class="hide alert callout">
+                    The database already exist
+                </div>
+                <div id="error2" data-alert class="hide alert callout">
+                    The password and the confirmation of the password are different
+                </div>
+                <div id="error3" data-alert class="hide alert callout">
+                    Wrong database manager password
+                </div>
+                <label for="db_manager_password">Adminitrator password</label>
+                <field id="db_manager_password" />
+                <label for="database">Name of the database</label>
+                <field id="database"/>
+                <label for="login">Login of the administrator</label>
+                <field id="login" />
+                <label for="password">Password of the administrator</label>
+                <field id="password" />
+                <label for="password2">Confirm the password of the administrator</label>
+                <field id="password2" />
+                <fieldset class="fieldset">
+                    <legend>Select the administration bloks to install</legend>
+                    {{for addons}}
+                        <div class="row">
+                            <div class="columns small-2 medium-2 large-2">
+                                <field id="{{:id}}"/>
+                            </div>
+                            <div class="columns small-10 medium-10 large-10">
+                                <label for="{{:id}}"><h4>{{:label}}</h4></label>
+                                {{:description}}
+                            </div>
+                        </div>
+                    {{/for}}
+                </fieldset>
+                <a id="submit" class="button expanded" href="#">Create</a>
+            </div>
+        </div>
+    </template>
+    <template id="ClientDropDB" type="text/x-jsrender">
+        <div class="row">
+            <div class="columns small-12 medium-8 medium-offset-2 large-4 large-offset-4">
+                <div id="error" data-alert class="hide alert callout">
+                    Wrong database manager password
+                </div>
+                <label for="db_manager_password">Adminitrator password</label>
+                <field id="db_manager_password" />
+                <label for="database">Select the database to drop</label>
+                <field id="database" />
+                <a id="submit" class="button expanded" href="#">Drop</a>
+            </div>
+        </div>
+    </template>
+</templates>

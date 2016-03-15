@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <records>
-    <record external_id="user_demo">
+    <record external_id="user_demo" if_exist="pass">
         <field name="first_name">User</field>
         <field name="last_name">Demo</field>
         <field name="login">
              <field name="login">demo</field>
              <field name="password">demo</field>
+        </field>
+        <field name="default_space" external_id="setting_space_user"/>
+        <field name="groups">
+            <record external_id="group_administration" />
         </field>
     </record>
 </records>

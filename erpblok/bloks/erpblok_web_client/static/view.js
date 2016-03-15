@@ -1,12 +1,18 @@
 (function () {
     AnyBlokJS.register({
         classname: 'ViewManager',
+        extend: ['Template'],
         prototype: {
+            template: 'ViewManager',
             init: function(action, view_id, pks) {
                 this.action = action;
                 this.$action = action.$el;
-                this.$el = $($.templates('#ERPBlokViewManager').render({}));
+                this.$el = this.render_template();
                 this.$buttons = this.$el.find('div.view-buttons');
+                this.topButtons = ReactDOM.render(
+                    <ViewTopButtons view_id={view_id}
+                                    call={this.callFunction.bind(this)}/>,
+                    this.$buttons[0]);
                 this.$el.appendTo(action.$el);
                 this.views = {};
                 this.active_view = undefined;
@@ -21,13 +27,18 @@
                     if (pks == undefined) {
                         pks = action.actionManager.get_hash('pks');
                     }
-                    if (pks) {
+                    if (pks == 'new') {
+                        kwargs.new = true;
+                    } else if (pks) {
                         kwargs.id = JSON.parse(pks);
                     }
                     this.select_view(view_id, kwargs);
                 } else {
                     this.select_view(action.value.selected);
                 }
+            },
+            callFunction: function(function_name, dataset) {
+                this.views[this.active_view].view['on_' + function_name](dataset);
             },
             add: function(view) {
                 var self = this;
@@ -37,9 +48,8 @@
                     self.select_view(event.currentTarget.id);
                 });
                 $navEl.appendTo(this.$el.find('ul'));
-                var $viewEl = view.getViewEl();
+                var $viewEl = view.getViewEl(this.$action);
                 $viewEl.addClass('hide');
-                $viewEl.appendTo(this.$action);
                 this.views[view.options.id] = {
                     '$nav': $navEl,
                     '$view': $viewEl,
@@ -58,33 +68,28 @@
                     this.views[this.active_view].$nav.removeClass('active');
                     this.views[this.active_view].$view.addClass('hide');
                 }
-                if (view_id) {
+                if (view_id && this.views[view_id]) {
                     this.views[view_id].$nav.addClass('active');
                     this.views[view_id].$view.removeClass('hide');
                     this.views[view_id].view.last_view = this.active_view || this.action.value.selected;
                     this.views[view_id].view.render(kwargs);
+                    this.views[view_id].view.display_buttons();
                     this.action.actionManager.select_view(view_id, kwargs);
                     this.active_view = view_id;
                 }
-            },
-            add_buttons: function(button) {
-                var $el = $($.templates('#ERPBlokViewManagerButton').render(button));
-                $el.appendTo(this.$buttons);
-            },
-            add_group: function(group) {
-                var $el = $($.templates('#ERPBlokViewManagerGroup').render(group));
-                $el.appendTo(this.$buttons);
             },
         },
     });
     AnyBlokJS.register({
         classname: 'View',
-        extend: ['RPC'],
+        extend: ['RPC', 'Template'],
+        template: 'View',
         prototype: {
             rpc_url: '/web/client/view',
             icon_selector: 'fi-alert',
             title_selector: 'undefined',
             class_name: 'view-undefined',
+            template: 'View',
             init: function(viewManager, options) {
                 this.viewManager = viewManager;
                 this.options = options;
@@ -97,15 +102,12 @@
                      'icon_selector': this.icon_selector,
                      'selectable': this.options.selectable}));
             },
-            getViewEl: function() {
-                var $el = $($.templates('#ERPBlokView').render(
-                    {id: this.options.id, class_name: this.class_name}));
-                this.$el = $el;
-                return $el;
+            getViewEl: function($action) {
+                this.$el = this.render_template({id: this.options.id, class_name: this.class_name});
+                this.$el.appendTo($action);
+                return this.$el;
             },
-            render: function(args) {
-                this.display_buttons();
-            },
+            render: function(args) {},
             transition: function(name, kwargs) {
                 this['transition_' + name](kwargs);
             },
@@ -149,58 +151,25 @@
                 this.applyReadOnly();
             },
             applyReadOnly: function () {
-                this.hide_show_buttons();
-            },
-            hide_show_buttons: function() {
-                this.viewManager.$buttons.find('.on-readwrite').addClass('hide');
-                this.viewManager.$buttons.find('.on-readonly').addClass('hide');
-                if (this.readonly) {
-                    this.viewManager.$buttons.find('.on-readonly').removeClass('hide');
-                } else {
-                    this.viewManager.$buttons.find('.on-readwrite').removeClass('hide');
-                }
+                this.viewManager.topButtons.setState({readonly: this.readonly});
             },
             display_buttons: function() {
-                var self = this;
-                this.viewManager.$buttons.children().remove();
-                if (this.options.buttons != undefined) {
-                    $.each(this.options.buttons, function (i, button) {
-                        self.viewManager.add_buttons(button);
-                    });
-                }
-                if (this.options.groups_buttons != undefined) {
-                    $.each(this.options.groups_buttons, function (i, group) {
-                        self.viewManager.add_group(group);
-                    });
-    
-                    // this is uggly, wait if the next version allow to init only
-                    // the dropdown
-                    $(document).foundation();
-                }
-                self.applyReadOnly();
-                this.viewManager.$buttons.find('.view-button').click(function (e) {
-                    var func = e.currentTarget.dataset.function,
-                        dataset = e.currentTarget.dataset;
-                    self['on_' + func](dataset);
-                });
+                this.viewManager.topButtons.setState({buttons: this.options.buttons || [],
+                                                      groups: this.options.groups_buttons || []});
             },
             on_edit_view: function() {
                 if (this.readonly) {
                     this.toggleReadonly();
-                    this.refresh_render();
                 }
             },
             on_read_view: function() {
                 if (! this.readonly) {
                     this.toggleReadonly();
-                    this.refresh_render();
                 }
             },
             on_close_view: function () {
                 if (! this.readonly) this.toggleReadonly();
                 this.transition('closeView');
-            },
-            refresh_render: function() {
             },
             get_values_changed: function () {
             },
@@ -227,4 +196,101 @@
             },
         },
     });
+    ERPBlok.declare_react_class('ViewTopButtons')
+    AnyBlokJS.register({classname: 'ViewTopButtons', prototype: {
+        getInitialState: function () {
+            var readonly = true;
+            if (this.props.readonly != undefined) readonly = this.props.readonly;
+            return {readonly: readonly,
+                    selected: false,
+                    buttons: this.props.buttons || [],
+                    groups: this.props.groups || []};
+        },
+        is_visible: function (entity) {
+            if (entity.visibility == "" || !entity.visibility) return true;
+            if (entity.visibility == 'on-readonly') {
+                if (this.state.readonly) return true;
+            }
+            if (entity.visibility == 'on-readonly on-selected') {
+                if (this.state.readonly && this.state.selected) return true;
+            }
+            if (entity.visibility == 'on-readwrite') {
+                if (!this.state.readonly) return true;
+            }
+            return false;
+        },
+        get_buttons: function () {
+            var buttons = [],
+                self = this;
+            this.state.buttons.forEach(function(button) {
+                if (self.is_visible(button)) {
+                    buttons.push(<ViewTopButton call={self.props.call} options={button} />);
+                }
+            });
+            this.state.groups.forEach(function(group) {
+                if (self.is_visible(group)) {
+                    buttons.push(<ViewTopGroup call={self.props.call}
+                                                readonly={self.state.readonly}
+                                                buttons={group.buttons}
+                                                options={group} />);
+                 }
+            });
+            return buttons;
+        },
+        render: function() {
+            var buttons = this.get_buttons();
+            return (<div className="button-group">
+                        {buttons}
+                    </div>)
+        },
+    }});
+    ERPBlok.declare_react_class('ViewTopButton')
+    AnyBlokJS.register({classname: 'ViewTopButton', prototype: {
+        onClick: function (event) {
+            this.props.call(this.props.options.fnct, this.props.options.method);
+        },
+        render: function() {
+            return (<a className="view-button button"
+                       onClick={this.onClick.bind(this)}>
+                       {this.props.options.label}
+                    </a>)
+        },
+    }});
+
+    var group_counter = 0;
+    function get_group_counter () {
+        return group_counter ++;
+    }
+    ERPBlok.declare_react_class('ViewTopGroup')
+    AnyBlokJS.register({classname: 'ViewTopGroup',
+                        extend: ['ViewTopButtons'],
+                        prototype: {
+        componentDidMount: function() {
+            var group_id = this.get_id();
+            this.elDropDown = new Foundation.Dropdown($('#' + group_id));
+        },
+        componentWillUnmount: function() {
+            this.elDropDown.destroy();
+        },
+        get_id: function () {
+            if (!this.group_id) this.group_id = 'view-group-button-' + get_group_counter();
+            return this.group_id;
+        },
+        render: function() {
+            var buttons = this.get_buttons(),
+                group_id = this.get_id();
+            return (<div>
+                        <button className="dropdown button"
+                                data-toggle={group_id}
+                        >{this.props.options.label}</button>
+                        <div className="dropdown-pane"
+                             id={group_id}
+                             data-dropdown>
+                            <div className="button-group">
+                                {buttons}
+                            </div>
+                        </div>
+                    </div>)
+        },
+    }});
 }) ();

@@ -6,6 +6,7 @@
             <field name="login">admin</field>
             <field name="password">admin</field>
         </field>
+        <field name="default_space" external_id="setting_space_user"/>
         <field name="groups">
             <record external_id="group_administration" />
         </field>

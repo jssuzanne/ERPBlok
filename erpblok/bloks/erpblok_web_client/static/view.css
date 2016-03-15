@@ -12,7 +12,8 @@ nav.view-selector ul {
     margin: 0;
 }
 nav.view-selector ul li.hide.active,
-nav.view-selector ul li {
+nav.view-selector ul li ,
+nav.view-list-inline-buttons ul li {
     display: inline-block;
     list-style-type: none;
 

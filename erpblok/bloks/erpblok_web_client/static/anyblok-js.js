@@ -21,6 +21,7 @@ var AnyBlokJS = {};
     
     var extendable = false,
         classId = 0,
+        compile = false,
         fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
 
     function createClass(prototypes) {
@@ -29,11 +30,20 @@ var AnyBlokJS = {};
         }
         function Class() {
             this._super = null;
+            if (!compile) {
+                if (this.constructor) {
+                    if (this.constructor != Class) {
+                        this.constructor.apply(this, arguments);
+                    }
+                }
+            }
             return this;
         }
         var _super = Class.prototype;
         var This = Class;
+        compile = true;
         var prototype = new This();
+        compile = false;
         for (var i in prototypes) {
             var prop = prototypes[i];
             for (var name in prop){
@@ -92,7 +102,7 @@ var AnyBlokJS = {};
                 }
             });
         }
-        _class.prototypes.push(declaration.prototype);
+        _class.prototypes.push(declaration.prototype || {});
     }
     AnyBlokJS.compile = function (classname) {
         if (!(classname in AnyBlokJS.class_names)){
@@ -138,7 +148,11 @@ var AnyBlokJS = {};
     AnyBlokJS.register({
         classname: 'CorePrototype',
         prototype: {
-            init: function() {},
+            init: function() {
+                if (this._super) {
+                    this._super.apply(arguments);
+                }
+            },
             isInstance: function(classname) {
                 if (classname in AnyBlokJS.class_names) {
                     if (AnyBlokJS.class_names[classname].compiled) {

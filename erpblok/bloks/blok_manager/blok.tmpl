@@ -1,20 +1,30 @@
 <templates>
     <template id="AnyBlokSystemBlokButton">
-        <expr if="fields.state.get_value() == 'uninstalled'">
-            <button data-function="rpc_call"
-                    data-method="install_blok"
-                    class="button expanded success">Install this blok</button>
-        </expr>
-        <expr else>
+        <button data-function="rpc_call"
+                data-method="install_blok"
+                visible-only-if="fields.state == 'uninstalled'"
+                class="button expanded success">Install this blok</button>
+        <div visible-only-if="fields.state != 'uninstalled'">
             <button data-function="rpc_call"
                     data-method="uninstall_blok"
                     class="button expanded alert">Uninstall this blok</button>
-            <expr if="fields.version.get_value() != fields.installed_version.get_value()">
-                <button data-function="rpc_call"
-                        data-method="upgrade_blok"
-                        class="button expanded">Upgrade this blok</button>
-            </expr>
-        </expr>
+            <button data-function="rpc_call"
+                    data-method="upgrade_blok"
+                    visible-only-if="fields.version != fields.installed_version"
+                    class="button expanded">Upgrade this blok</button>
+        </div>
+    </template>
+    <template id="AnyBlokSystemBlokState">
+        <label for="state"/>
+        <field name="state"/>
+        <div visible-only-if="fields.version != fields.installed_version">
+            <label for="version"/>
+            <field name="version"/>
+        </div>
+        <div visible-only-if="fields.state != 'uninstalled'">
+            <label for="installed_version"/>
+            <field name="installed_version"/>
+        </div>
     </template>
     <template id="AnyBlokSystemBlokForm">
         <div class="row">
@@ -22,18 +32,13 @@
                 <h1><field name="name"/></h1>
             </div>
             <div class="columns large-4 medium-6">
-                <field name="logo" type="Binary"/>
+                <field name="logo" type="Picture" file_name_field="name"/>
                 <call template="AnyBlokSystemBlokButton"/>
-                <label for="state"/>
-                <field name="state"/>
-                <label for="version"/>
-                <field name="version"/>
-                <label for="installed_version"/>
-                <field name="installed_version" type="Html"/>
+                <call template="AnyBlokSystemBlokState"/>
             </div>
             <div class="columns large-8 medium-6">
                 <label for="short_description"/>
-                <field name="short_description"/>
+                <field name="short_description" type="Html"/>
             </div>
         </div>
         <div class="row">
@@ -51,20 +56,11 @@
         </div>
         <div class="row">
             <div class="columns large-7 medium-6">
-                <field name="logo" type="Binary"></field>
+                <field name="logo" type="Picture" file_name_field="name"></field>
                 <call template="AnyBlokSystemBlokButton"/>
             </div>
             <div class="columns large-5 medium-6">
-                <label for="state"/>
-                <field name="state"/>
-                <expr if="fields.version.get_value() != fields.installed_version.get_value()">
-                    <label for="version"/>
-                    <field name="version"/>
-                </expr>
-                <expr if="fields.state.get_value() != 'uninstalled'">
-                    <label for="installed_version"/>
-                    <field name="installed_version"/>
-                </expr>
+                <call template="AnyBlokSystemBlokState"/>
             </div>
         </div>
     </template>

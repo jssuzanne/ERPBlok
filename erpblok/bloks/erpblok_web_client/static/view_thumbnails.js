@@ -6,12 +6,12 @@
             title_selector: 'Thumbnails view',
             icon_selector: 'fi-thumbnails',
             class_name: 'view-thumbnails',
-            template: 'ERPBlokViewThumbnails',
+            template: 'ViewThumbnails',
             appendToView: function(line) {
                 line.$el.appendTo(this.$el.find('div#thumbnails-' + this.options.id));
             },
-            get_entry: function (record) {
-                return AnyBlokJS.new('View.Thumbnails.Sticker', this, record);
+            get_entry: function (record, readonly=true) {
+                return AnyBlokJS.new('View.Thumbnails.Sticker', this, record, readonly);
             },
         },
     });
@@ -19,21 +19,21 @@
         classname: 'View.Thumbnails.Sticker',
         extend: ['View.Entry'],
         prototype: {
-            template: 'ERPBlokViewThumbnailsSticker',
+            template: 'ViewThumbnailsSticker',
             render: function () {
                 var self = this;
                 this._super();
-                this.$el.find('div.selectable:not(button)').click(function () {
+                this.$el.find('div.selectable:not(button):not(input):not(a)').click(function () {
                     if (self.view.readonly) {
                         self.view.transition('selectRecord', {id: self.id});
                     }
                 });
             },
-            render_template: function () {
-                this.$el = $($.templates('#' + this.template).render());
-                var $el = $($.templates(this.view.options.template).render(
-                   this.get_values_for_template()));
-                $el.appendTo(this.$el.find('.view-contnair'))
+            render_template: function (values={}) {
+                var $el = this._super()
+                var $subel = $($.templates(this.view.options.template).render(values));
+                $subel.appendTo($el.find('.view-contnair'))
+                return $el;
             },
         },
     });

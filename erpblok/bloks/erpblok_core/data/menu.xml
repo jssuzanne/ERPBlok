@@ -4,23 +4,6 @@
         <field name="label">Settings</field>
         <field name="children">
             <record>
-                <field name="label">Access</field>
-                <field name="children">
-                    <record>
-                        <field name="label">Groups</field>
-                        <field name="action" external_id="action_group"/>
-                    </record>
-                    <record>
-                        <field name="label">Logins</field>
-                        <field name="action" external_id="action_login"/>
-                    </record>
-                    <record>
-                        <field name="label">Users</field>
-                        <field name="action" external_id="action_user"/>
-                    </record>
-                </field>
-            </record>
-            <record>
                 <field name="label">Configurations</field>
                 <field name="children">
                     <record>

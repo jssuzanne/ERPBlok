@@ -5,59 +5,74 @@
         The client templating come from
         http://www.jsviews.com/#d.templates
     -->
-    <template id="ERPBlokAction" type="text/x-jsrender">
-        <div id="action-{{:id}}" class="row action"/>
-    </template>
-    <template id="ERPBlokBreadCrumb" type="text/x-jsrender">
-        <li id="{{:id}}" class="disabled">{{:label}}</li>
-    </template>
-    <template id="ERPBlokDialog" type="text/x-jsrender">
-        <div id="modal{{:id}}" class="reveal" data-reveal>
-            <div class="row panel">
-                <div class="columns small-11 medium-11 large-11">
-                    <h2 class="dialog-title"></h2>
+    <template id="Space_left_Menu" type="text/x-jsrender">
+        <div class="row hide-for-large">
+            <menu class="top-menu" />
+        </div>
+        <div class="row space">
+            <div class="columns large-3 show-for-large">
+                <menu class="side-menu">
+            </div>
+            <div class="columns large-9">
+                <div id="breadcrumb">
                 </div>
-                <div class="columns small-1 medium-1 large-1 close-button">
+                <div id="action-manager">
                 </div>
             </div>
-            <div class="dialog-content"></div>
         </div>
     </template>
-    <template id="ERPBlokDialogClose" type="text/x-jsrender">
-        <a class="close-reveal-modal float-right" aria-label="Close">&#215;</a>
+    <template id="Space_right_Menu" type="text/x-jsrender">
+        <div class="row hide-for-large">
+            <menu class="top-menu" />
+        </div>
+        <div class="row space">
+            <div class="columns large-9">
+                <div id="breadcrumb">
+                </div>
+                <div id="action-manager">
+                </div>
+            </div>
+            <div class="columns large-3 show-for-large">
+                <menu class="side-menu">
+            </div>
+        </div>
     </template>
-    <template id="ERPBlokViewManager" type="text/x-jsrender">
+    <template id="Space_top_Menu" type="text/x-jsrender">
+        <div class="row">
+            <menu class="top-menu" />
+        </div>
+        <div class="row space">
+            <div id="breadcrumb">
+            </div>
+            <div id="action-manager">
+            </div>
+        </div>
+    </template>
+    <template id="Space_without_Menu" type="text/x-jsrender">
+        <div class="space">
+            <div id="breadcrumb">
+            </div>
+            <div id="action-manager">
+            </div>
+        </div>
+    </template>
+    <template id="Action" type="text/x-jsrender">
+        <div id="action-{{:id}}" class="row action"/>
+    </template>
+    <template id="ViewManager" type="text/x-jsrender">
         <div class="row view-manager">
-            <div class="columns large-7 button-group view-buttons">
+            <div class="columns large-5 view-buttons">
             </div>
-            <div class="columns large-3 medium-7">
+            <div class="columns large-5 medium-8">
             </div>
-            <div class="columns large-2 medium-5">
+            <div class="columns large-2 medium-4">
                 <nav class="view-selector">
                     <ul/>
                 </nav>
             </div>
         </div>
     </template>
-    <template id="ERPBlokViewManagerButton" type="text/x-jsrender">
-        <a class="view-button button {{:visibility}}"
-           data-function="{{:fnct}}"
-           data-method="{{:method}}">{{:label}}</a>
-    </template>
-    <template id="ERPBlokViewManagerGroup" type="text/x-jsrender">
-            <button data-toggle="{{:id}}"
-                    class="button dropdown {{:visibility}}">{{:label}}</button>
-            <div class="dropdown-pane" id="{{:id}}" data-dropdown>
-                <div class="menu vertical">
-                    {{for buttons}}
-                        <a class="view-button button verticale {{:visibility}}"
-                           data-function="{{:fnct}}"
-                           data-params="{{:params}}">{{:label}}</a>
-                    {{/for}}
-                </div>
-            </div>
-    </template>
-    <template id="ERPBlokView" type="text/x-jsrender">
+    <template id="View" type="text/x-jsrender">
         <div id="{{:id}}" class="row view {{:class_name}}"/>
     </template>
     <template id="ERPBlokViewSelector" type="text/x-jsrender">
@@ -69,17 +84,24 @@
             </a>
         </li>
     </template>
-    <template id="ERPBlokViewList" extend="ERPBlokView" type="text/x-jsrender">
+    <template id="ViewList" extend="View" type="text/x-jsrender">
         <xpath action="insert" expression="./div">
             <table role="grid">
                 <thead>
-                    {{for options.headers ~checkbox=options.checkbox ~length= options.headers.length}}
+                    {{for options.headers ~checkbox=options.checkbox
+                                          ~length=options.headers.length
+                                          ~inline=options.inline}}
                         <tr>
                             {{if #index == 0}}
                                 {{if ~checkbox}}
                                     <th width="10px"
                                         rowspan="{{:~length}}">
                                         <input type="checkbox" id="all_checkbox"></input>
+                                    </th>
+                                {{/if}}
+                                {{if ~inline}}
+                                    <th width="10px"
+                                        rowspan="{{:~length}}">
                                     </th>
                                 {{/if}}
                             {{/if}}
@@ -97,83 +119,51 @@
             </table>
         </xpath>
     </template>
-    <template id="ERPBlokViewListLine" type="text/x-jsrender">
+    <template id="ViewListLine" type="text/x-jsrender">
         <tr class="view-list-line">
             {{if options.checkbox}}
                 <td>
                     <input type="checkbox" id="line_checkbox"></input>
                 </td>
             {{/if}}
-            {{for fields ~fields=fields}}
-                <td id="{{:~fields[#index]}}" class="selectable">
-                    <div id="{{:~fields[#index]}}" class="field"></div>
+            {{if options.inline}}
+                <td>
+                    <inline-crud-buttons></inline-crud-buttons>
+                </td>
+            {{/if}}
+            {{for fields}}
+                <td id="{{:id}}" class="selectable">
+                    <field id="{{:id}}" />
                 </td>
             {{/for}}
         </tr>
     </template>
-    <template id="ERPBlokViewThumbnails" extend="ERPBlokView" type="text/x-jsrender">
+    <template id="ERPBlokDialog" type="text/x-jsrender">
+        <div id="modal{{:id}}" class="reveal" data-reveal>
+            <div class="row panel">
+                <div class="columns small-11 medium-11 large-11">
+                    <h2 class="dialog-title"></h2>
+                </div>
+                <div class="columns small-1 medium-1 large-1 close-button">
+                </div>
+            </div>
+            <div class="dialog-content"></div>
+        </div>
+    </template>
+    <template id="ERPBlokDialogClose" type="text/x-jsrender">
+        <a class="close-reveal-modal float-right" aria-label="Close">&#215;</a>
+    </template>
+    <template id="ViewThumbnails" extend="View" type="text/x-jsrender">
         <xpath action="insert" expression="./div">
             <div id="thumbnails-{{:id}}" class="row thumbnails" data-equalizer>
             </div>
         </xpath>
     </template>
-    <template id="ERPBlokViewThumbnailsSticker" type="text/x-jsrender">
+    <template id="ViewThumbnailsSticker" type="text/x-jsrender">
         <div class="medium-6 large-3 columns"
              data-equalizer-watch>
-            <div class="sticker panel radius selectable view-contnair">
+            <div class="sticker callout primary radius selectable view-contnair">
             </div>
-        </div>
-    </template>
-    <template id="ERPBlokViewField" type="text/x-jsrender">
-        {{if readonly}}
-            <span>{{:value}}</span>
-        {{else}}
-            <input id="{{:id}}" name="{{:id}}" type="{{:type}}"/>
-        {{/if}}
-    </template>
-    <template id="ERPBlokViewFieldPassword" type="text/x-jsrender">
-        {{if readonly}}
-            {{if value}}
-                <span> *** Unreadable protected value *** </span>
-            {{else}}
-                <span ></span>
-            {{/if}}
-        {{else}}
-            <input id="{{:id}}" name="{{:id}}" type="password"/>
-        {{/if}}
-    </template>
-    <template id="ERPBlokViewFieldx2One" type="text/x-jsrender">
-        <div>
-            {{if value}}
-                {{if readonly}}
-                    <a>{{:value}}</a>
-                {{else}}
-                    <input id="{{:id}}" name="{{:id}}"/>
-                {{/if}}
-            {{else}}
-                <span></span>
-            {{/if}}
-        </div>
-    </template>
-    <template id="ERPBlokViewFieldBinary" type="text/x-jsrender">
-        <img></img>
-    </template>
-    <template id="ERPBlokViewX2Many" type="text/x-jsrender">
-        <div class="panel">
-        </div>
-    </template>
-    <template id="ERPBlokViewMany2ManyChoices" type="text/x-jsrender">
-        <div class="panel row small-up-{{:smallgrid}} medium-up-{{:mediumgrid}} large-up-{{:largegrid}}">
-        </div>
-    </template>
-    <template id="ERPBlokViewMany2ManyChoice" type="text/x-jsrender">
-        <div class="column">
-            {{if readonly}}
-                <input type="checkbox" DISABLED/>
-            {{else}}
-                <input type="checkbox" />
-            {{/if}}
-            <label>{{:label}}</label>
         </div>
     </template>
 </templates>

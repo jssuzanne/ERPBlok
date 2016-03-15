@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+    <record external_id="setting_space_user">
+        <field name="label">User</field>
+        <field name="icon">fi-results-demographics</field>
+        <field name="description">Configure the users and access rules</field>
+        <field name="category" external_id="setting_space_category" />
+        <field name="menus">
+            <record external_id="setting_menu_groups">
+                <field name="label">Groups</field>
+                <field name="action" external_id="action_group"/>
+            </record>
+            <record external_id="setting_menu_logins">
+                <field name="label">Logins</field>
+                <field name="action" external_id="action_login"/>
+            </record>
+            <record external_id="setting_menu_users">
+                <field name="label">Users</field>
+                <field name="action" external_id="action_user"/>
+            </record>
+        </field>
+    </record>
+    <record external_id="setting_space_user" if_exist="overwrite">
+        <field name="default_menu" external_id="setting_menu_users"/>
+    </record>
+    <record external_id="setting_space_param">
+        <field name="label">Parameters</field>
+        <field name="description">Configure the global paramters of the applications</field>
+        <field name="category" external_id="setting_space_category" />
+        <field name="menus">
+            <record external_id="setting_menu_sequence">
+                <field name="label">Sequences</field>
+                <field name="action" external_id="action_sequence"/>
+            </record>
+            <record external_id="setting_menu_parameter">
+                <field name="label">Parameters</field>
+                <field name="action" external_id="action_parameter"/>
+            </record>
+        </field>
+    </record>
+    <record external_id="setting_space_param" if_exist="overwrite">
+        <field name="default_menu" external_id="setting_menu_sequence"/>
+    </record>
+</records>

@@ -39,11 +39,10 @@ class View(Mixin.ViewType):
     add_delete = Boolean(default=True)
     add_new = Boolean(default=True)
     add_edit = Boolean(default=True)
-    is_selectable = Boolean(default=True)  # Only for multi
 
-    def render(self):
+    def render(self, user):
         """ Return the View render"""
-        return self.registry.get(self.mode)().render(self)
+        return self.registry.get(self.mode)().render(self, user)
 
     @classmethod
     def render_from_scratch(cls, action):
@@ -61,7 +60,7 @@ class View(Mixin.ViewType):
 class View:
     mode_name = None
 
-    def render(self, view):
+    def render(self, view, user):
         Model = self.registry.get(view.action.model)
         pks = Model.get_primary_keys()
         return {
@@ -102,137 +101,122 @@ class View:
                 for x in view.action.transitions
                 if x.mode == self.__registry_name__}
 
-    def update_relation_ship_description(self, descriptions):
-        # FIXME check external id
-        Action = self.registry.UI.Action
-        x2M = ('One2Many', 'Many2Many')
-        for field in descriptions.values():
-            if field['type'] in x2M:
-                if not field.get('action'):
-                    field['action'] = Action.render_from_scratch_x2M(field)
-            if field['model']:
-                if not field.get('action'):
-                    field['action'] = Action.render_from_scratch_x2O(field)
 
-                if not field.get('selection_action'):
-                    field['selection_action'] = \
-                        Action.render_from_scratch_selection(field)
+@register(Mixin)
+class ViewAccessGroups:
+
+    def get_unwanted_elements_for(self, tmpl, attribute, user):
+        els = tmpl.findall(".//*[@%s]" % attribute)
+        res = []
+        for el in els:
+            groups = [x.strip() for x in el.attrib[attribute].split(',') if x]
+            if not user.has_groups(groups):
+                res.append(el)
+
+        return res
+
+    def visible_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'visible-only-for-groups', user)
+        for el in els:
+            el.getparent().remove(el)
+
+    def writable_only_for_access_group(self, tmpl, user):
+        els = self.get_unwanted_elements_for(
+            tmpl, 'writable-only-for-groups', user)
+        for el in els:
+            el.set('readonly', "1")
 
 
 @register(Mixin)
-class ViewRenderTemplate:
+class ViewRenderTemplate(Mixin.ViewAccessGroups):
 
-    def get_template_replace_label(self, el, fields_description):
-        el_for = el.attrib.get('for')
-        if el_for in fields_description:
-            el.text = fields_description[el_for]['label']
+    def get_template_replace_label(self, tmpl, fields_description):
+        labels = tmpl.findall('.//label')
+        for el in labels:
+            el_for = el.attrib.get('for')
+            for field in fields_description:
+                if field['field_name'] == el_for:
+                    if not el.text:
+                        el.text = field['label']
 
-    def get_template_replace_field_attribute(self, k, v, field_description):
-        if k == 'name':
-            return
-        elif k not in ('id', 'model', 'primary_key'):
-            field_description[k] = v
-
-    def get_template_replace_field(self, el, fields_description):
-        el_name = el.attrib.get('name')
-        if el_name in fields_description:
-            div = etree.Element('div')
-            div.set('id', el_name)
-            _class = ["field"]
-            for k, v in el.attrib.items():
-                self.get_template_replace_field_attribute(
-                    k, v, fields_description[el_name])
-                if k not in ('type', 'class'):
-                    div.set(k, v)
-
-                if k == "class":
-                    _class.extend(v.split(' '))
-
-            div.set('class', ' '.join(_class))
-            return div
-
-        return None
-
-    def get_template_replace_expr(self, el, fields_description):
-
-        def replace(attrib, head, tail, notailifnextin=None):
-            if notailifnextin is None:
-                notailifnextin = []
-
-            el.tag = 'div'
-            del el.attrib[attrib]
-            index = el.getparent().getchildren().index(el)
-            if index == 0:
-                el.getparent().text += head
-            else:
-                if el.getparent().getchildren()[index - 1].tail:
-                    el.getparent().getchildren()[index - 1].tail += head
-                else:
-                    el.getparent().getchildren()[index - 1].tail = head
-
-            if index != (len(el.getparent().getchildren()) - 1):
-                nextel = el.getparent().getchildren()[index + 1]
-                if nextel.tag == 'expr':
-                    for expr in notailifnextin:
-                        if expr in nextel.attrib.keys():
-                            return
-
-            if el.tail:
-                el.tail = tail + el.tail
-            else:
-                el.tail = tail
-
-        endop = '{{/if}}'
-
-        for k, v in el.attrib.items():
-            if k == "if":
-                head = '{{if %(expr)s }}' % dict(expr=v)
-                replace(k, head, endop, notailifnextin=('else', 'elif'))
-
-            elif k == "else":
-                head = '{{else}}'
-                replace(k, head, endop)
-            elif k == "elif":
-                head = '{{else %(expr)s }}' % dict(expr=v)
-                replace(k, head, endop, notailifnextin=('else', 'elif'))
-
-    def get_template_replace(self, tmpl, fields_description):
-        for node in tmpl.getchildren():
-            if node.tag is etree.Comment:
-                continue
-            else:
-                if node.getchildren():
-                    self.get_template_replace(node, fields_description)
-
-                tag = node.tag.lower()
-                if hasattr(self, 'get_template_replace_' + tag):
-                    el = getattr(self, 'get_template_replace_' + tag)(
-                        node, fields_description)
-
-                    if el is not None:
-                        tmpl.replace(node, el)
-
-    def get_template(self, view):
+    def get_fields_description(self, view, tmpl):
+        fields = tmpl.findall('.//field')
         Model = self.registry.get(view.action.model)
+        fields_description = Model.fields_description()
+        fdesc = []
+        counter = 0
+        for el in fields:
+            counter += 1
+            name = el.attrib['name']
+            field = fields_description[name].copy()
+            fdesc.append(field)
+            field['field_name'] = field['id']
+            field['id'] += '-%d' % counter
+            for k, v in el.attrib.items():
+                if k not in ('field_name', 'id'):
+                    field[k] = v
+
+            for attr in ('type', 'writable-only-if', 'not-nullable-only-if',
+                         'not-nullable-only-if'):
+                if el.attrib.get(attr):
+                    del el.attrib[attr]
+
+            el.set('id', field['id'])
+            if 'readonly' in field and isinstance(field['readonly'], str):
+                if field['readonly'].lower() in ('true', '1'):
+                    field['readonly'] = True
+                else:
+                    field['readonly'] = False
+            for x in ('writable-only-if', 'not-nullable-only-if'):
+                if x in field and field[x]:
+                    field[x] = [field[x]]
+                else:
+                    field[x] = []
+
+        return fdesc
+
+    def update_interface_attributes(self, tmpl, fields_description):
+        for el in tmpl.findall('.//*[@visible-only-if]'):
+            class_attr = el.attrib.get(
+                'class', '') + ' visibility-conditional-ui'
+            el.set('class', class_attr)
+
+        for attr in ('writable-only-if', 'not-nullable-only-if'):
+            for el in tmpl.findall('.//*[@%s]' % attr):
+                attr_val = el.attrib[attr]
+                if attr_val:
+                    for field in el.findall('.//field'):
+                        field_id = field.attrib.get('id')
+                        for fd in fields_description:
+                            if fd['id'] == field_id:
+                                fd[attr].append(attr_val)
+
+        for field in fields_description:
+            for attr in ('writable-only-if', 'not-nullable-only-if'):
+                if attr in field:
+                    field[attr] = ' || '.join(field[attr])
+
+    def get_template(self, view, user):
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
+        self.visible_only_for_access_group(tmpl, user)
+        self.writable_only_for_access_group(tmpl, user)
         tmpl.tag = 'div'
-        fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
-        fields_description = deepcopy(Model.fields_description(
-            fields=fields_name))
-        self.get_template_replace(tmpl, fields_description)
+        fields_description = self.get_fields_description(view, tmpl)
+        self.get_template_replace_label(tmpl, fields_description)
+        self.update_interface_attributes(tmpl, fields_description)
         tmpl = html.tostring(tmpl)
-        self.update_relation_ship_description(fields_description)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
-                fields_name, fields_description]
+                fields_description]
 
-    def render_template(self, view):
+    def render_template(self, view, user):
         """ Specific render for a list view """
-        template, fields_name, fields_description = self.get_template(view)
+        template, fields_description = self.get_template(view, user)
         return {
-            'fields': fields_name,
+            'fields': [x['field_name'] for x in fields_description],
             'template': template,
-            'fields2display': [fields_description[x] for x in fields_name],
+            'fields2display': fields_description,
         }
 
 
@@ -267,13 +251,35 @@ class ViewMultiEntries(Mixin.View):
 
 
 @register(Model.UI.View)
-class List(Mixin.ViewMultiEntries):
+class List(Mixin.ViewMultiEntries, Mixin.ViewAccessGroups):
     "List View"
 
     id = 1000001
     mode_name = 'List'
 
-    def _rc_get_headers(self, fields, headers, node, level):
+    def _rc_get_headers_parent_options(self, el, parent_options):
+        options = parent_options.copy()
+        for k in ('readonly', 'nullable'):
+            if k in el.attrib:
+                options[k] = self.attrib[k]
+
+        return options
+
+    def _rc_get_headers_get_field(self, fields, name, el, options, counter):
+        field = fields[name].copy()
+        field.update(options)
+        field.update({x: y for x, y in el.attrib.items()
+                      if x not in ('label', 'name', 'colspan',
+                                   'rowspan')})
+        field['field_name'] = field['id']
+        field['id'] += '-%d' % counter
+        return field
+
+    def _rc_get_headers(self, fields, headers, node, level, options=None,
+                        counter=0):
+        if options is None:
+            options = {}
+
         maxlevel = level
         nbel = 0
         els = []
@@ -285,7 +291,9 @@ class List(Mixin.ViewMultiEntries):
                 continue
             elif el.tag.lower() == 'group':
                 subfields, submaxlevel, subnbel = self._rc_get_headers(
-                    fields, headers, el, level + 1)
+                    fields, headers, el, level + 1,
+                    options=self._rc_get_headers_parent_options(el, options),
+                    counter=counter)
                 if submaxlevel > maxlevel:
                     maxlevel = submaxlevel
 
@@ -307,37 +315,47 @@ class List(Mixin.ViewMultiEntries):
                     'label': label,
                     'colspan': 1,
                 }
-                fields[name].update({x: y for x, y in el.attrib.items()
-                                     if x not in ('label', 'name', 'colspan',
-                                                  'rowspan')})
                 headers[level].append(_el)
                 els.append(_el)
-                ordered_fields.append(name)
+                counter += 1
+                field = self._rc_get_headers_get_field(
+                    fields, name, el, options, counter)
+                ordered_fields.append(field)
 
         for el in els:
             el['rowspan'] = maxlevel - level + 1
 
         return ordered_fields, maxlevel, nbel
 
-    def render(self, view):
+    def get_tmpl_attribute_format_bool(self, tmpl, key, default=False):
+        value = tmpl.attrib.get(key, str(default))
+        if value.lower() in ('true', '1'):
+            return True
+        else:
+            return False
+
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(List, self).render(view)
+        res = super(List, self).render(view, user)
         tmpl = self.registry.erpblok_views.get_template(
             view.template, tostring=False)
+        self.visible_only_for_access_group(tmpl, user)
+        self.writable_only_for_access_group(tmpl, user)
         fields_name = [x.attrib.get('name') for x in tmpl.findall('.//field')]
+        checkbox = self.get_tmpl_attribute_format_bool(tmpl, 'checkbox', True)
+        inline = self.get_tmpl_attribute_format_bool(tmpl, 'inline', False)
         Model = self.registry.get(view.action.model)
         fields_description = deepcopy(Model.fields_description(
             fields=fields_name))
         headers = {}
         ordered_fields, level, _ = self._rc_get_headers(
             fields_description, headers, tmpl, 0)
-        self.update_relation_ship_description(fields_description)
         res.update({
             'fields': fields_name,
-            'checkbox': view.is_selectable,
-            'fields2display': [fields_description[x] for x in ordered_fields],
+            'checkbox': checkbox,
+            'inline': inline,
+            'fields2display': ordered_fields,
             'headers': list(headers.values()),
-            'buttons': self.get_buttons(view),
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
             'transitions': self.get_transitions(view),
@@ -350,9 +368,28 @@ class List(Mixin.ViewMultiEntries):
         :param action: instance of the model UI.Action
         """
         Model = self.registry.get(action.model)
-        fields = deepcopy(Model.fields_description())
-        self.update_relation_ship_description(fields)
+        fields = []
         pks = Model.get_primary_keys()
+        counter = 0
+        headers = []
+        fields_name = self.registry.System.Column.query().filter_by(
+            model=action.model).all().name
+        for field_name, field in Model.fields_description(fields_name).items():
+            if field_name in pks:
+                continue
+
+            f = field.copy()
+            f['field_name'] = field_name
+            counter += 1
+            f['id'] += '-%d' % counter
+            fields.append(f)
+            headers.append({
+                'id': f['field_name'],
+                'label': f['label'],
+                'colspan': 1,
+                'rowspan': 1,
+            })
+
         buttons = []
         if action.add_new:
             buttons.append(self.get_button_new())
@@ -365,11 +402,12 @@ class List(Mixin.ViewMultiEntries):
             'selectable': True,
             'mode': 'List',
             'primary_keys': pks,
-            'fields': [x for x in fields.keys() if x not in pks],
-            'fields2display': [x for y, x in fields.items() if y not in pks],
-            'headers': [[x for y, x in fields.items() if y not in pks]],
+            'fields': [x['field_name'] for x in fields],
+            'fields2display': fields,
+            'headers': [headers],
             'checkbox': True,
             'buttons': buttons,
+            'groups_buttons': [],
             'transitions': {
                 'selectRecord': ('open_view', self.registry.UI.View.Form.id),
                 'newRecord': ('open_view', self.registry.UI.View.Form.id),
@@ -475,10 +513,10 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
 
         return res
 
-    def render(self, view):
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(Form, self).render(view)
-        res.update(self.render_template(view))
+        res = super(Form, self).render(view, user)
+        res.update(self.render_template(view, user))
         res.update({
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),
@@ -493,19 +531,30 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
         """
         Model = self.registry.get(action.model)
         root = etree.Element('div')
-        fields = Model.fields_description()
+        fields_name = self.registry.System.Column.query().filter_by(
+            model=action.model).all().name
+        fields = Model.fields_description(fields_name)
         pks = Model.get_primary_keys()
+        fields_description = []
+        counter = 0
         for name, value in fields.items():
             if name in pks:
                 continue
 
+            counter += 1
+            f = fields[name].copy()
+            f['field_name'] = f['id']
+            f_id = f['id'] + '-%d' % counter
+            f['id'] = f_id
             _label = etree.SubElement(root, 'label')
             _label.set('for', name)
             _label.text = value['label']
             field = etree.SubElement(root, 'field')
             field.set('name', name)
+            field.set('id', f_id)
+            fields_description.append(f)
 
-        self.get_template_replace(root, fields)
+        self.get_template_replace_label(root, fields_description)
 
         buttons = []
         groups_buttons = []
@@ -550,8 +599,8 @@ class Form(Mixin.View, Mixin.ViewRenderTemplate):
             'template': self.registry.erpblok_views.decode(
                 html.tostring(root).decode('utf-8')),
             'primary_keys': pks,
-            'fields': [x for x in fields.keys() if x not in pks],
-            'fields2display': [x for y, x in fields.items() if y not in pks],
+            'fields': [x['field_name'] for x in fields_description],
+            'fields2display': fields_description,
             'buttons': buttons,
             'groups_buttons': groups_buttons,
         }
@@ -564,10 +613,10 @@ class Thumbnails(Mixin.ViewMultiEntries, Mixin.ViewRenderTemplate):
     id = 1000002
     mode_name = 'Thumbnails'
 
-    def render(self, view):
+    def render(self, view, user):
         """ Specific render for a list view """
-        res = super(Thumbnails, self).render(view)
-        res.update(self.render_template(view))
+        res = super(Thumbnails, self).render(view, user)
+        res.update(self.render_template(view, user))
         res.update({
             'buttons': self.get_buttons(view),
             'groups_buttons': self.get_groups_buttons(view),

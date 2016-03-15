@@ -6,8 +6,6 @@ class UI:
     pass
 
 
-from . import template  # noqa
-reload_module_if_blok_is_reloading(template)
 from . import action  # noqa
 reload_module_if_blok_is_reloading(action)
 from . import menu  # noqa

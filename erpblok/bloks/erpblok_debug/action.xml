@@ -16,14 +16,6 @@
         <field name="label">Relation Ships</field>
         <field name="model">Model.System.RelationShip</field>
     </record>
-    <record external_id="action_ui_user_menu">
-        <field name="label">User Menus</field>
-        <field name="model">Model.UI.UserMenu</field>
-    </record>
-    <record external_id="action_ui_quick_menu">
-        <field name="label">Quick Menus</field>
-        <field name="model">Model.UI.QuickMenu</field>
-    </record>
     <record external_id="action_ui_menu">
         <field name="label">Menus</field>
         <field name="model">Model.UI.Menu</field>
