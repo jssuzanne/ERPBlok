@@ -53,6 +53,7 @@ class Blok:
         res = super(Blok, self).get_long_description()
         return self.convert_rst2html(res)
 
+    # FIXME install, upgrade and uninstall must relod if they are view
     def install_blok(self):
         self.registry.upgrade(install=[self.name])
         return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
@@ -63,6 +64,9 @@ class Blok:
 
     def uninstall_blok(self):
         self.registry.upgrade(uninstall=[self.name])
+        if self.name == 'erpblok-blok-manager':
+            return {'action': 'reload', 'keephash': False}
+
         return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     @classmethod

@@ -23,13 +23,13 @@
                 </record>
             </field>
             <field name="transitions">
-                <record>
+                <record external_id="transition_blok_manager_select_record">
                     <field name="name">selectRecord</field>
                     <field name="mode">Model.UI.View.Thumbnails</field>
                     <field name="code">open_view</field>
                     <field name="view" external_id="view_blok_form"/>
                 </record>
-                <record>
+                <record external_id="transition_blok_manager_new_record">
                     <field name="name">newRecord</field>
                     <field name="mode">Model.UI.View.Thumbnails</field>
                     <field name="code">open_view</field>
@@ -37,13 +37,13 @@
                 </record>
             </field>
             <field name="buttons">
-                <record>
-                    <field name="group">
+                <record external_id="buttons_blok_manager_reload_all_bloks">
+                    <field name="group" external_id="group_button_blok_manager_other">
                         <field name="label">Others</field>
                         <field name="code">others</field>
                         <field name="on_readonly">1</field>
                     </field>
-                    <field name="label">Relad all bloks</field>
+                    <field name="label">Reload all bloks</field>
                     <field name="mode">all</field>
                     <field name="function">rpc_call_classmethod</field>
                     <field name="method">reload_blokmanager</field>
