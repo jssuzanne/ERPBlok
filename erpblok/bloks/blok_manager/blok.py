@@ -55,15 +55,15 @@ class Blok:
 
     def install_blok(self):
         self.registry.upgrade(install=[self.name])
-        return {'action': 'reload', 'keephash': True}
+        return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     def upgrade_blok(self):
         self.registry.upgrade(update=[self.name])
-        return {'action': 'reload', 'keephash': True}
+        return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     def uninstall_blok(self):
         self.registry.upgrade(uninstall=[self.name])
-        return {'action': 'reload', 'keephash': True}
+        return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     @classmethod
     def reload_blokmanager(cls, *args, **kwargs):
@@ -71,4 +71,4 @@ class Blok:
         BlokManager.reload()  # reload all the blok code
         # FIXME BlokManager.reload should close all the registry and
         # forbidden load registry during the reload
-        return {'action': 'reload', 'keephash': True}
+        return {'action': 'reload'}

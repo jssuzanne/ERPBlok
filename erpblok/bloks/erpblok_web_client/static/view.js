@@ -194,6 +194,9 @@
             reload: function(params) {
                 this.viewManager.action.actionManager.reload(params.keephash || false);
             },
+            refresh: function(params) {
+                this.render({id: params.primary_keys});
+            },
         },
     });
     ERPBlok.declare_react_class('ViewTopButtons')
