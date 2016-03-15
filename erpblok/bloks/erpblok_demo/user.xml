@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <records>
-    <record external_id="user_demo">
+    <record external_id="user_demo" if_exist="pass">
         <field name="first_name">User</field>
         <field name="last_name">Demo</field>
         <field name="login">

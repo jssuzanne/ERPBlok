@@ -18,15 +18,6 @@ class ERPBlokDemo(Blok):
         'value': Configuration.get('db_manager_demo'),
     }
 
-    def install(self):
-        """ Initialize database with the blok information """
-        self.import_file('xml', 'Model.Web.User', 'user.xml')
-
     def update(self, latest_version):
         """ Update the database """
-        if latest_version is None:
-            self.install()
-
-    @classmethod
-    def reload_declaration_module(cls, reload):
-        pass
+        self.import_file('xml', 'Model.Web.User', 'user.xml')
