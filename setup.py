@@ -9,6 +9,8 @@ requires = [
     'lxml',
     'rst2html5',
     'python-magic',
+    'gunicorn',
+    'passlib',
 ]
 
 ERPBlok = [

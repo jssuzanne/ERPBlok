@@ -9,6 +9,15 @@ managment...
 
 `Continious integration <http://buildbot.anyblok.org/waterfall>`_
 
+* Inline list view
+
+    |inline_list_view|
+
+* Form view
+
+    |form_view|
+
+
 License
 -------
 
@@ -29,3 +38,8 @@ Todo
 * Dialog view
 * Adding more field widgets (Datetime, Color, Email, ...)
 * Adding more view types (Diagramme, Kanban, Custom, ...)
+
+.. |inline_list_view| image:: doc/_static/list-view.png
+    :alt: Inline list view picture
+.. |form_view| image:: doc/_static/form-view.png
+    :alt: Form view picture

@@ -1,17 +1,20 @@
-.. ERPBlok documentation master file, created by
-   sphinx-quickstart on Sat Jan 24 15:56:16 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+ERPBlok documentation
+=====================
 
-Welcome to ERPBlok's documentation!
-===================================
+ERPBlok provide a way to manage business applications on top of `Anyblok 
+<http://doc.anyblok.org>`_ adding a Graphic User Interface, user system
+managment...
 
-Contents:
+AnyBlok is released under the terms of the `AGPL v3`.
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-
+    FRONT.rst
+    CODE.rst
+    BLOKS.rst
+    CHANGES.rst
+    ROADMAP.rst
 
 Indices and tables
 ==================
