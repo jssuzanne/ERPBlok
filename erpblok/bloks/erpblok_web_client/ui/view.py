@@ -3,6 +3,7 @@ from anyblok.column import Integer, Boolean, String, Selection
 from anyblok.relationship import Many2One
 from lxml import etree, html
 from copy import deepcopy
+import uuid
 
 
 register = Declarations.register
@@ -131,6 +132,52 @@ class ViewAccessGroups:
 @register(Mixin)
 class ViewRenderTemplate(Mixin.ViewAccessGroups):
 
+    def get_template_replace_tabs(self, tmpl):
+        for tabs in tmpl.findall('.//tabs'):
+            tabs.tag = 'div'
+            tabs_id = str(uuid.uuid1())
+
+            ul = etree.SubElement(tabs, "ul")
+            ul.set('class', 'tabs')
+            ul.set('id', tabs_id)
+            ul.set('data-tabs', 'data-tabs')
+
+            div = etree.SubElement(tabs, 'div')
+            div.set('class', "tabs-content")
+            div.set('data-tabs-content', tabs_id)
+
+            for tab in tabs.findall('.//tab'):
+                label = tab.attrib.get('label', '')
+                tab_id = str(uuid.uuid1())
+                selected = (
+                    tab.attrib.get('selected', '0').lower() in ('1', 'true'))
+                li = etree.SubElement(ul, 'li')
+                li_class = 'tabs-title'
+                if selected:
+                    li_class += ' is-active'
+
+                li.set('class', li_class)
+
+                a = etree.SubElement(li, 'a')
+                a.text = label
+                a.set('href', '#' + tab_id)
+                if selected:
+                    a.set('aria-selected', 'true')
+
+                subdiv = etree.SubElement(div, 'div')
+                subdiv_class = 'tabs-panel'
+                if selected:
+                    subdiv_class += ' is-active'
+
+                subdiv.set('class', subdiv_class)
+                subdiv.set('id', tab_id)
+                subdiv.extend(tab.getchildren())
+                tab.getparent().remove(tab)
+
+            script = etree.SubElement(tabs, 'script')
+            script.set('type', 'text/javascript')
+            script.text = "var el = new Foundation.Tabs($('#%s'));" % tabs_id
+
     def get_template_replace_label(self, tmpl, fields_description):
         labels = tmpl.findall('.//label')
         for el in labels:
@@ -206,6 +253,7 @@ class ViewRenderTemplate(Mixin.ViewAccessGroups):
         fields_description = self.get_fields_description(view, tmpl)
         self.get_template_replace_label(tmpl, fields_description)
         self.update_interface_attributes(tmpl, fields_description)
+        self.get_template_replace_tabs(tmpl)
         tmpl = html.tostring(tmpl)
         return [self.registry.erpblok_views.decode(tmpl.decode('utf-8')),
                 fields_description]
