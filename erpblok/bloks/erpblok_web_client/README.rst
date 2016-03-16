@@ -2,7 +2,7 @@ This blok is required by all ERPBlok application. This blok define the main
 fonctionnality of the interface and the user notion.
 
 Functional space
-----------------
+~~~~~~~~~~~~~~~~
 
 The functional space is reprented by:
 * Menu or not
@@ -33,7 +33,7 @@ The functional space is reprented by:
     </record>
 
 Menu
-----
+~~~~
 
 Space have often menus, this menu call action, in the same page or in a dialog
 box. 
@@ -74,7 +74,7 @@ The menu can be hierarchical.
 
 
 Action
-------
+~~~~~~
 
 Is attach at the space or a dialog box. The action can have one or more view(s).
 
@@ -96,12 +96,11 @@ Is attach at the space or a dialog box. The action can have one or more view(s).
     </record>
 
 View
-----
+~~~~
 
 Actuality the existing are:
 
-List
-~~~~
+List:
 
  * Can be modifiable directly in the line or open another type of view
  * Can be multi header
@@ -126,8 +125,7 @@ Possible attribute:
 | inline               | Boolean, if the data is modified in the same view    |
 +----------------------+------------------------------------------------------+
 
-Form
-~~~~
+Form:
 
  * Can n be modifiable directly
  * On field can be display more than one time.
@@ -146,8 +144,7 @@ Form
         </div>
     </template>
 
-thumbnail
-~~~~~~~~~
+thumbnail:
 
  * Can open another type of view
  * On field can be display more than one time.
@@ -172,8 +169,7 @@ thumbnail
         </div>
     </template>
 
-helper
-~~~~~~
+helper:
 
 You can use some feature for the definition of the view:
 
@@ -182,7 +178,7 @@ You can use some feature for the definition of the view:
 
 
 Field
------
+~~~~~
 
 Each field represent one column in the database. If a column is put two time, 
 modify one, automaticly modify the 2nd one. 

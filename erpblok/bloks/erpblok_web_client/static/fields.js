@@ -548,7 +548,7 @@
             return (<span className="field-html" 
                           dangerouslySetInnerHTML={{__html: this.state.value}} />)
         },
-        render: function () {
+        render_rw: function () {
             var placeholder = this.props.options.placeholder || '';
             return (<div id={this.get_id()}
                          placeholder={placeholder}

@@ -15,13 +15,12 @@ Bloks
 Blok erpblok-core
 -----------------
 
-.. FIXME sphinx plugin for anyblok
-.. .. automodule:: anyblok.bloks.anyblok_core
-.. .. autoclass:: AnyBlokCore
-..     :members:
-..     :undoc-members:
-..     :show-inheritance:
-..     :noindex:
+.. automodule:: erpblok.bloks.erpblok_core
+.. autoclass:: ERPBlokCore
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
 ..
 .. .. include:: ../anyblok/bloks/anyblok_core/README.rst
 .. .. include:: ../anyblok/bloks/anyblok_core/CODE.rst
@@ -29,11 +28,41 @@ Blok erpblok-core
 Blok erpblok-web-client
 -----------------------
 
+.. automodule:: erpblok.bloks.erpblok_web_client
+.. autoclass:: ERPBlokWebClient
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
+
+.. include:: ../erpblok/bloks/erpblok_web_client/README.rst
+
 Blok erpblok-demo
 -----------------
+
+.. automodule:: erpblok.bloks.erpblok_demo
+.. autoclass:: ERPBlokDemo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
 
 Blok erpblok-debug
 ------------------
 
+.. automodule:: erpblok.bloks.erpblok_debug
+.. autoclass:: ERPBlokDebug
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
+
 Blok erpblok-blok-manager
 -------------------------
+
+.. automodule:: erpblok.bloks.blok_manager
+.. autoclass:: ERPBlokBlokManager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
