@@ -6,6 +6,7 @@ ERPBlok provide a way to manage business applications on top of `Anyblok
 managment...
 
 `Documentation <http://docs.anybox.fr/erpblok/default/index.html>`_
+
 `Continious integration <http://buildbot.anyblok.org/waterfall>`_
 
 License
