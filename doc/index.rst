@@ -15,6 +15,7 @@ AnyBlok is released under the terms of the `AGPL v3`.
     BLOKS.rst
     CHANGES.rst
     ROADMAP.rst
+    LICENSE.rst
 
 Indices and tables
 ==================
