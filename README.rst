@@ -2,20 +2,23 @@ ERPBlok
 =======
 
 ERPBlok provide a way to manage business applications on top of `Anyblok 
-<http://doc.anyblok.org>`_ adding a Graphic User Interface, user system
-managment...
+<http://doc.anyblok.org>`_ adding a Graphic User Interface based on
+`React <https://facebook.github.io/react/>`_ and `Foundation 
+<http://foundation.zurb.com/>`_
 
-`Documentation <http://docs.anybox.fr/erpblok/default/index.html>`_
+* `Documentation <http://docs.anybox.fr/erpblok/default/index.html>`_
+* `Continious integration <http://buildbot.anyblok.org/waterfall>`_
 
-`Continious integration <http://buildbot.anyblok.org/waterfall>`_
+Preview
+-------
 
-* Inline list view
+Inline list view:
 
-    |inline_list_view|
+|inline_list_view|
 
-* Form view
+Form view:
 
-    |form_view|
+|form_view|
 
 
 License
@@ -38,6 +41,7 @@ Todo
 * Dialog view
 * Adding more field widgets (Datetime, Color, Email, ...)
 * Adding more view types (Diagramme, Kanban, Custom, ...)
+* ...
 
 .. |inline_list_view| image:: doc/_static/list-view.png
     :alt: Inline list view picture
