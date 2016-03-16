@@ -7,7 +7,12 @@
         open: function(msg) {
             this.$el.children().remove();
             var $node = $('<div/>');
-            $(msg).appendTo($node);
+            console.log(msg)
+            if (typeof(msg) == 'object') {
+                $('<span>' + msg.message + '</span>').appendTo($node);
+            } else {
+                $(msg).appendTo($node);
+            }
             $node.appendTo(this.$el);
             this.modal.open();
         },

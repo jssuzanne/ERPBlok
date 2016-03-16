@@ -17,17 +17,10 @@
                     };
                 $.post(url, JSON.stringify(request), function (response) {
                     if (response.result) {
-                        if (done) {
-                            done(response.result);
-                        }
+                        if (done) done(response.result);
                     } else if (response.error) {
-                        if (fail) {
-                            fail(response.error);
-                        } else {
-                            if (self.client) {
-                                self.client.errorManager.open(response.error);
-                            }
-                        }
+                        if (fail) fail(response.error);
+                        else document.ERPBlokClient.errorManager.open(response.error);
                     }
                 }, "json");
             },
