@@ -26,7 +26,8 @@ def get_login(request, database=None):
         'title': title,
         'css': get_static('global_css') + get_static('login_css'),
         'js': get_static('global_js') + get_static('login_js'),
-        'js_babel': get_static('global_js_babel') + get_static('login_js_babel'),
+        'js_babel': (get_static('global_js_babel') +
+                     get_static('login_js_babel')),
         'templates': get_templates_from('login_templates'),
     }
 

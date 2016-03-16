@@ -50,7 +50,8 @@ class Space:
         category = _space.category
         if category.groups and not user.has_groups(category.groups.name):
             return exc.HTTPForbidden(
-                "You can not acces at the space's category: %s" % category.label)
+                "You can not acces at the space's category: %s" % (
+                    category.label))
 
         res = {
             'id': _space.id,

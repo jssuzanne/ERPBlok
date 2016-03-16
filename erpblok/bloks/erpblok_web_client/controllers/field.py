@@ -9,7 +9,8 @@ PyramidJsonRPC = Declarations.PyramidJsonRPC
 class Field:
 
     @PyramidJsonRPC.rpc_method()
-    def get_action_for(self, action=None, model=None, view_type=None, **kwargs):
+    def get_action_for(self, action=None, model=None, view_type=None,
+                       **kwargs):
         user_id = self.request.session['user_id']
         user = self.registry.Web.User.query().get(user_id)
         UIAction = self.registry.UI.Action

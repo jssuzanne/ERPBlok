@@ -45,7 +45,8 @@ class Web:
     @classmethod
     def get_js_babel(cls):
         """ return the babel paths """
-        return cls.get_static('global_js_babel') + cls.get_static('client_js_babel')
+        return (cls.get_static('global_js_babel') +
+                cls.get_static('client_js_babel'))
 
     @classmethod
     def get_templates(cls):

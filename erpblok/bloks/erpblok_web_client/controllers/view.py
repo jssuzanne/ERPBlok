@@ -108,19 +108,19 @@ class View:
                 model = Model.insert(**vals)
 
             # TODO
-            #if x2M:
-            #    if not model:
-            #        model = Model()
+            # if x2M:
+            #     if not model:
+            #         model = Model()
 
-            #    for fname, vals in x2M.items():
-            #        with self.registry.session.no_autoflush:
-            #            f = getattr(model, fname)
-            #            for fv in f:
-            #                if fv not in vals:
-            #                    f.remove(fv)
-            #            for val in vals:
-            #                if val not in f:
-            #                    f.append(val)
+            #     for fname, vals in x2M.items():
+            #         with self.registry.session.no_autoflush:
+            #             f = getattr(model, fname)
+            #             for fv in f:
+            #                 if fv not in vals:
+            #                     f.remove(fv)
+            #             for val in vals:
+            #                 if val not in f:
+            #                     f.append(val)
 
         if not fields:
             return {}

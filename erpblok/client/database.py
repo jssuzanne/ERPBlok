@@ -47,7 +47,8 @@ def get_database(request):
         'title': title,
         'css': get_static('global_css') + get_static('database_css'),
         'js': get_static('global_js') + get_static('database_js'),
-        'js_babel': get_static('global_js_babel') + get_static('database_js_babel'),
+        'js_babel': (get_static('global_js_babel') +
+                     get_static('database_js_babel')),
         'templates': get_templates_from('database_templates'),
     }
 
@@ -114,7 +115,8 @@ def get_databases(request):
 
 @Declarations.Pyramid.add_view('database-createdb')
 def post_create_database(request, database=None, login=None, password=None,
-                         db_manager_password=None, install_bloks=None, **kwargs):
+                         db_manager_password=None, install_bloks=None,
+                         **kwargs):
     """ Create a new database, and initialize it
 
     :param database: name of the database to create

@@ -18,7 +18,8 @@ class ERPBlokCore(Blok):
     def update(self, latest_version):
         super(ERPBlokCore, self).update(latest_version)
         self.import_file('xml', 'Model.Access.Group', 'data', 'groups.xml')
-        self.import_file('xml', 'Model.Web.Space.Category', 'data', 'spaces.category.xml')
+        self.import_file('xml', 'Model.Web.Space.Category',
+                         'data', 'spaces.category.xml')
         self.import_file('xml', 'Model.UI.Action', 'data', 'action_access.xml')
         self.import_file('xml', 'Model.UI.Action', 'data',
                          'action_configuration.xml')

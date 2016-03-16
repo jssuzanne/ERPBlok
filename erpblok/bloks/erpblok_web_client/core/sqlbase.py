@@ -43,7 +43,8 @@ class SqlBase:
 
         filters = []
         for column in columns:
-            filters.append(upper(getattr(cls, column)).ilike('%' + value + '%'))
+            filters.append(upper(getattr(cls, column)).ilike(
+                '%' + value + '%'))
 
         filters = or_(*filters)
         entries = cls.query().filter(filters).all()
