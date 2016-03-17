@@ -27,6 +27,7 @@
             </button>
             <div></div>
         </div>
+        <div id="erpblok-loader"></div>
         % for x in js:
             <script type="text/javascript" src="${x}" ></script>
         % endfor
@@ -34,6 +35,21 @@
             <script type="text/babel" src="${x}" ></script>
         % endfor
         <script type="text/babel">
+            var $body = $("body"),
+                loader_counter = 0;
+            $(document).on({
+                ajaxStart: function() {
+                    loader_counter += 1;
+                    setTimeout(function(){
+                        if (loader_counter)
+                            $body.addClass("loading");
+                    }, 3000);
+                },
+                ajaxStop: function() {
+                    loader_counter -= 1;
+                    if (!loader_counter) $body.removeClass("loading");
+                },
+            });
             ERPBlok.compile_react_classes();
             document.ERPBlokClient = AnyBlokJS.new('Client');
             document.ERPBlokClient.load();
