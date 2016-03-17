@@ -20,7 +20,7 @@ class Login:
     @classmethod
     def update_admin(cls, login, password):
         """ Change the login and password of the main administrator """
-        user = cls.registry.IO.Mapping.get('Model.Access.User',
+        user = cls.registry.IO.Mapping.get('Model.Web.User',
                                            'main_admin_user')
         user.login.login = login
         user.login.password = password

@@ -11,6 +11,7 @@ AnyBlok is released under the terms of the `AGPL v3`.
     :maxdepth: 2
 
     FRONT.rst
+    QUICK_START.rst
     CODE.rst
     BLOKS.rst
     CHANGES.rst
