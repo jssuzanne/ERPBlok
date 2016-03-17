@@ -34,22 +34,25 @@
         % for x in js_babel:
             <script type="text/babel" src="${x}" ></script>
         % endfor
-        <script type="text/babel">
+        <script type="text/javascript">
             var $body = $("body"),
-                loader_counter = 0;
+                loader_activity = false;
+
             $(document).on({
                 ajaxStart: function() {
-                    loader_counter += 1;
+                    loader_activity = true;
                     setTimeout(function(){
-                        if (loader_counter)
+                        if (loader_activity)
                             $body.addClass("loading");
-                    }, 3000);
+                    }, 1000);
                 },
                 ajaxStop: function() {
-                    loader_counter -= 1;
-                    if (!loader_counter) $body.removeClass("loading");
+                    loader_activity = false;
+                    $body.removeClass("loading");
                 },
             });
+        </script>
+        <script type="text/babel">
             ERPBlok.compile_react_classes();
             document.ERPBlokClient = AnyBlokJS.new('Client');
             document.ERPBlokClient.load();
