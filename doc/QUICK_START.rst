@@ -10,9 +10,17 @@ Build the environment and run the server
 
     pyvenv-3.5 erpblok-env
 
-2) Install erpblok::
+
+2) Install ERPBlok (not work yet, waiting the first release)::
 
     erpblok-env/bin/pip install erpblok
+
+
+2.2) Install ERPBlok from vcs::
+
+    hg clone ssh://hg@bitbucket.org/jssuzanne/erpblok
+    erpblok-env/bin/python erpblok/setup.py
+
 
 3) Choose the BDD
 
@@ -21,8 +29,10 @@ Build the environment and run the server
         In my case, I choose to use ``postgresql``.
         Read the `installation guides <https://wiki.postgresql.org/wiki/Detailed_installation_guides>`_
 
-::
-    erpblok-env/bin/pip install psycopg2
+
+    ::
+    
+        erpblok-env/bin/pip install psycopg2
 
 4) Write a logging configuration file. (example: mylogger.cfg)::
 
