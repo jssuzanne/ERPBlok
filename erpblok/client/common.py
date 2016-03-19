@@ -10,7 +10,16 @@ from sqlalchemy_utils.functions import (
 
 
 def list_databases():
-    """ return the name of the databases """
+    """ return the name of the databases found in the BDD
+
+    the result can be filtering by the Configuration entry ``db_filter``
+
+    ..warning::
+
+        For the moment only the ``prostgresql`` dialect is available
+
+    :rtype: list of the database's names
+    """
     url = Configuration.get_url()
     db_filter = Configuration.get('db_filter')
     text = None
@@ -33,7 +42,8 @@ def list_databases():
 def create_database(database):
     """ Create a new database, initialize it and return an AnyBlok registry
 
-    rtype: AnyBlok registry instance
+    :param: database's name
+    :rtype: AnyBlok registry instance
     """
     url = Configuration.get_url(db_name=database)
     if database_exists(url):
@@ -46,7 +56,10 @@ def create_database(database):
 
 
 def drop_database(database):
-    """ Close the registry instance of the database and drop the database"""
+    """ Close the registry instance of the database and drop the database
+
+    :param: database's name
+    """
     url = Configuration.get_url(db_name=database)
     if not database_exists(url):
         raise Exception("Database %r does not already exist")
@@ -60,13 +73,14 @@ def login_user(request, database, login, password, user_id):
     """ Log the user
 
     The informations of the user are saved in the request if the user is found
-    by is login and is password. The user founded are saved in the Environnemnt
+    by is login and is password.
 
     :param database: the database where the user want to be connected
     :param login: user login
     :param password: user password
     :type: boolean, True if the user is founed else False
     """
+    # SqlAlchemy-Utils give a Password object,
     request.session['database'] = database
     request.session['login'] = login
     request.session['password'] = password
@@ -83,10 +97,16 @@ def logout(request):
     request.session['user_id'] = ""
     request.session['state'] = "disconnected"
     request.session.save()
+    return True
 
 
 def format_static(blok, static_url):
-    """ Replace the attribute #BLOK by the real name of the blok """
+    """ Replace the attribute #BLOK by the real name of the blok
+
+    :param blok: the blok's name
+    :param static_url: the url to format
+    :rtype: str, formated url
+    """
     if static_url.startswith('#BLOK'):
         return '/' + blok + static_url[5:]
     else:
@@ -94,6 +114,11 @@ def format_static(blok, static_url):
 
 
 def get_static(static_type):
+    """ Get in the Blok definition the static data from the client
+
+    :param static: entry to read: css, js, ...
+    :rtype: list of str
+    """
     res = []
     for blok_name in BlokManager.ordered_bloks:
         blok = BlokManager.get(blok_name)
