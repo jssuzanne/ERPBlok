@@ -53,4 +53,3 @@ AnyBlok
 ~~~~~~~
 
 * Possibility to remove entity bind with IO.Mapping
-* Load anyblok.init entry point in the unittest

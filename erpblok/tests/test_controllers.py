@@ -1,16 +1,14 @@
 from anyblok_pyramid.tests.testcase import PyramidDBTestCase
 from anyblok.config import Configuration
-from anyblok import Declarations
-import erpblok.client.homepage  # noqa
 
 
-class TestHomepage(PyramidDBTestCase):
+class TestControllers(PyramidDBTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestHomepage, cls).setUpClass()
-        print(Declarations.Pyramid.routes)
-        print(Declarations.Pyramid.views)
+        import erpblok.client.homepage  # noqa
+        import erpblok.client.login  # noqa
+        super(TestControllers, cls).setUpClass()
 
     def test_1_get_homepage(self):
         self.init_registry(None)

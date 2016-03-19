@@ -1,7 +1,6 @@
 from anyblok.tests.testcase import DBTestCase
 from anyblok.config import Configuration
 from erpblok.client import common
-from anyblok import Declarations
 
 
 class MockSession(dict):
@@ -20,12 +19,6 @@ class MockRequest:
 
 
 class TestCommon(DBTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestCommon, cls).setUpClass()
-        print(Declarations.Pyramid.routes)
-        print(Declarations.Pyramid.views)
 
     def test_list_databases(self):
         self.init_registry(None)
