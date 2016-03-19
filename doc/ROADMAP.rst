@@ -45,3 +45,12 @@ Functionnality which need a sprint
 * Access Rules / Roles
 * View types,
 * Field widgets
+
+Waiting release or fix of
+-------------------------
+
+AnyBlok
+~~~~~~~
+
+* Possibility to remove entity bind with IO.Mapping
+* Load anyblok.init entry point in the unittest
