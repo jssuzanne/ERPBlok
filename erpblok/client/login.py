@@ -88,9 +88,13 @@ def post_login_connect(request, database=None, login=None, password=None):
 
 @Declarations.Pyramid.add_view('login-disconnect')
 def post_login_disconnect(request, database=None):
-    """ Logout the current user and do a redirect to the login page """
+    """ Logout the current user and do a redirect to the login page
+
+    """
     logout(request)
-    database = request.session.get('database')
+    if not database:
+        database = request.session.get('database')
+
     query = {}
     if database:
         query = {'database': database}
