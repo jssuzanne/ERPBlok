@@ -19,6 +19,14 @@ class Blok:
     logo = Function(fget='get_logo')
 
     def get_logo(self):
+        """ Return the logo define in blok description
+
+        ::
+
+            class MyBlok(Blok):
+                logo = 'path/to/the/logo/in/blok'
+
+        """
         blok = BlokManager.get(self.name)
 
         def _get_logo(blok_name, logo_path):
@@ -35,6 +43,11 @@ class Blok:
             return _get_logo('erpblok-blok-manager', 'static/image/none.png')
 
     def convert_rst2html(self, rst):
+        """Convert a rst to html
+
+        :param rst: rst source
+        :rtype: html souce
+        """
         output, _ = publish_programmatically(
             source_class=io.StringInput, source=rst, source_path=None,
             destination_class=io.StringOutput, destination=None,
@@ -46,23 +59,37 @@ class Blok:
         return html.tostring(html.fromstring(output).find('body'))
 
     def get_short_description(self):
+        """Overwrite the description to return a html"""
         res = super(Blok, self).get_short_description()
         return self.convert_rst2html(res)
 
+    def convert_path(self, res):
+        """Change the path of static image"""
+        if self.name == 'erpblok-blok-manager':
+            res = res.replace('../erpblok/bloks/blok_manager',
+                              join('..', self.name))
+
+        return res
+
     def get_long_description(self):
+        """Overwrite the description to return a html"""
         res = super(Blok, self).get_long_description()
+        res = self.convert_path(res)
         return self.convert_rst2html(res)
 
     # FIXME install, upgrade and uninstall must relod if they are view
     def install_blok(self):
+        """Hight level method to install one blok"""
         self.registry.upgrade(install=[self.name])
         return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     def upgrade_blok(self):
+        """Hight level method to upgrade one blok"""
         self.registry.upgrade(update=[self.name])
         return {'action': 'refresh', 'primary_keys': self.to_primary_keys()}
 
     def uninstall_blok(self):
+        """Hight level method to uninstall one blok"""
         self.registry.upgrade(uninstall=[self.name])
         if self.name == 'erpblok-blok-manager':
             return {'action': 'reload', 'keephash': False}
@@ -71,6 +98,7 @@ class Blok:
 
     @classmethod
     def reload_blokmanager(cls, *args, **kwargs):
+        """Reload all the  bloks with their code sources"""
         RegistryManager.clear()  # close all the registry
         BlokManager.reload()  # reload all the blok code
         # FIXME BlokManager.reload should close all the registry and

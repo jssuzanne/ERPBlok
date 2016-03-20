@@ -66,3 +66,6 @@ Blok erpblok-blok-manager
     :undoc-members:
     :show-inheritance:
     :noindex:
+
+.. include:: ../erpblok/bloks/blok_manager/README.rst
+.. include:: ../erpblok/bloks/blok_manager/CODE.rst
