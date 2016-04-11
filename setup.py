@@ -5,6 +5,8 @@ version = '0.0.1'
 requires = [
     'anyblok',
     'anyblok_pyramid',
+    'anyblok_pyramid_beaker',
+    'pyramid_rpc',
     'pyramid_mako',
     'lxml',
     'rst2html5',
@@ -22,11 +24,6 @@ ERPBlok = [
 ]
 
 anyblok_pyramid_includeme = [
-    'pyramid_beaker=anyblok_pyramid.pyramid_config:pyramid_beaker',
-    'pyramid_config=anyblok_pyramid.pyramid_config:pyramid_config',
-    'declare_static=anyblok_pyramid.pyramid_config:declare_static',
-    'http_config=anyblok_pyramid.pyramid_config:pyramid_http_config',
-    'jsonrpc_config=anyblok_pyramid.pyramid_config:pyramid_jsonrpc_config',
     'mako_and_static=erpblok.pyramid_config:add_mako_and_static',
     'declare_json_adapter=erpblok.pyramid_config:declare_json_data_adapter',
 ]

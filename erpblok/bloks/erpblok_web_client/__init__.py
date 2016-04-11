@@ -10,7 +10,6 @@ class ERPBlokWebClient(Blok):
     required = [
         'anyblok-core',
         'anyblok-io',
-        'pyramid',
     ]
 
     # Define the static for all pages
