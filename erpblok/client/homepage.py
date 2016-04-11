@@ -1,13 +1,10 @@
-from anyblok import Declarations
 from pyramid.httpexceptions import HTTPFound
 from .common import list_databases
 from anyblok.config import Configuration
+from pyramid.view import view_config
 
 
-Declarations.Pyramid.add_route('homepage', '/')
-
-
-@Declarations.Pyramid.add_view('homepage')
+@view_config(route_name='homepage')
 def get_homepage(request):
     """ Redirect the homepage to the good page
 

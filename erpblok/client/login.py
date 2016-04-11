@@ -1,22 +1,13 @@
-from anyblok import Declarations
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
 from .common import (list_databases, login_user, logout, get_static,
                      get_templates_from)
 from pyramid.httpexceptions import HTTPUnauthorized, HTTPFound
+from pyramid.view import view_config
 from pyramid.response import Response
 
 
-Declarations.Pyramid.add_route('login', '/login')
-Declarations.Pyramid.add_route('login-logo', '/login/logo')
-Declarations.Pyramid.add_route('login-databases', '/login/databases')
-Declarations.Pyramid.add_route('login-connect', '/login/connect',
-                               request_method='POST')
-Declarations.Pyramid.add_route('login-disconnect', '/login/disconnect',
-                               request_method='POST')
-
-
-@Declarations.Pyramid.add_view('login', renderer='erpblok:client.mak')
+@view_config(route_name='login', renderer='erpblok:client.mak')
 def get_login(request, database=None):
     """ Display the login page
 
@@ -32,7 +23,7 @@ def get_login(request, database=None):
     }
 
 
-@Declarations.Pyramid.add_view('login-logo')
+@view_config(route_name='login-logo')
 def get_login_logo(request):
     """ Return the logo for thelogin page """
     url_login_logo = Configuration.get('url_login_logo')
@@ -42,8 +33,7 @@ def get_login_logo(request):
     return HTTPFound(location="/static/login-logo.png")
 
 
-@Declarations.Pyramid.add_view('login-databases', request_method="GET",
-                               renderer="json")
+@view_config(route_name='login-databases', renderer="json")
 def get_databases(request):
     res = [
         {
@@ -68,15 +58,16 @@ def get_databases(request):
     return res
 
 
-@Declarations.Pyramid.add_view('login-connect')
-def post_login_connect(request, database=None, login=None, password=None):
+@view_config(route_name='login-connect')
+def post_login_connect(request):
     """ Log the user, if the login and password are right
 
-    :param database: the target database
-    :param login: the login to verify
-    :param password: the password to verify
     :rtype: redirection if login/password is right else HTTPUnauthorized
     """
+    params = dict(request.params)
+    database = params.get('database')
+    login = params.get('login')
+    password = params.get('password')
     registry = RegistryManager.get(database)
     user_id = registry.Web.Login.check_authentification(login, password)
     if user_id:
@@ -86,7 +77,7 @@ def post_login_connect(request, database=None, login=None, password=None):
     return HTTPUnauthorized()
 
 
-@Declarations.Pyramid.add_view('login-disconnect')
+@view_config(route_name='login-disconnect')
 def post_login_disconnect(request, database=None):
     """ Logout the current user and do a redirect to the login page
 

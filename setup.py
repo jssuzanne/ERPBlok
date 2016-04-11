@@ -26,6 +26,7 @@ ERPBlok = [
 anyblok_pyramid_includeme = [
     'mako_and_static=erpblok.pyramid_config:add_mako_and_static',
     'declare_json_adapter=erpblok.pyramid_config:declare_json_data_adapter',
+    'load_main_client=erpblok.client:load_client',
 ]
 
 anyblok_init = [

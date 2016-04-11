@@ -1,15 +1,12 @@
-from anyblok import Declarations
 from anyblok.config import Configuration
 from anyblok.registry import RegistryManager
+from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render_to_response
 from .common import logout
 
 
-Declarations.Pyramid.add_route('web-client', '/web/client')
-
-
-@Declarations.Pyramid.add_view('web-client')
+@view_config(route_name='web-client')
 def load_client(request):
     """ Return the client main page """
     database = request.session.get('database')
