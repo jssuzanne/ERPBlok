@@ -16,9 +16,10 @@ class TestControllers(PyramidDBTestCase):
         registry = self.init_registry(None)
         db_name = Configuration.get('db_name')
         registry.Web.Login.update_admin('login', 'password')
-        response = self.webserver.post('/login/connect', {'database': db_name,
-                                                          'login': 'login',
-                                                          'password': 'password'})
+        response = self.webserver.post(
+            '/login/connect', {'database': db_name,
+                               'login': 'login',
+                               'password': 'password'})
         self.assertEqual(response.status, '200 OK')
         response = self.webserver.get('/')
         self.assertEqual(response.status, '302 Found')
