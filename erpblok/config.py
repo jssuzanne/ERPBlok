@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from anyblok.config import Configuration
-from anyblok_pyramid import scripts  # noqa for update pyramid conf
+from anyblok_pyramid import config  # noqa for update pyramid conf
 
 
 Configuration.applications['pyramid']['configuration_groups'].append(

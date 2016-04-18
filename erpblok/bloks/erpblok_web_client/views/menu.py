@@ -1,16 +1,18 @@
-from anyblok import Declarations
 import pyramid.httpexceptions as exc
+from pyramid_rpc.jsonrpc import jsonrpc_method
+from pyramid.view import view_defaults
+from anyblok_pyramid import current_blok
 
 
-register = Declarations.register
-PyramidJsonRPC = Declarations.PyramidJsonRPC
-
-
-@register(PyramidJsonRPC)
+@view_defaults(installed_blok=current_blok())
 class SideMenu:
 
-    @PyramidJsonRPC.rpc_method()
-    def openMenu(self, menu=None, **kwargs):
+    def __init__(self, request):
+        self.request = request
+        self.registry = request.anyblok.registry
+
+    @jsonrpc_method(endpoint='client_space_menu')
+    def openMenu(self, menu=None):
         """ Return the main information for a specific menu in case of
         open the accordion menu, add active class one the rigth menu and
         the action or function to user"""
@@ -34,6 +36,3 @@ class SideMenu:
             return res
         except Exception as e:
             return exc.HTTPInternalServerError(str(e))
-
-
-PyramidJsonRPC.add_route(PyramidJsonRPC.SideMenu, '/client/space/menu')

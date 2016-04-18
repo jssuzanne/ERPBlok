@@ -1,6 +1,6 @@
-from anyblok import Declarations
 from anyblok.config import Configuration
 from anyblok.blok import BlokManager
+from pyramid.view import view_config
 from pyramid.httpexceptions import (HTTPForbidden,
                                     HTTPFound,
                                     HTTPNotFound,
@@ -8,18 +8,6 @@ from pyramid.httpexceptions import (HTTPForbidden,
 from pyramid.response import Response
 from .common import (list_databases, create_database, drop_database,
                      login_user, get_templates_from, get_static)
-
-
-Declarations.Pyramid.add_route('database', '/database/manager')
-Declarations.Pyramid.add_route('database-listdb', '/database/manager/list',
-                               request_method='POST')
-Declarations.Pyramid.add_route('database-menus', '/database/menus')
-Declarations.Pyramid.add_route('database-addons', '/database/addons')
-Declarations.Pyramid.add_route('database-selection', '/database/selection')
-Declarations.Pyramid.add_route('database-createdb', '/database/manager/create',
-                               request_method='POST')
-Declarations.Pyramid.add_route('database-dropdb', '/database/manager/drop',
-                               request_method='POST')
 
 
 def check_allow_database_manager():
@@ -37,7 +25,7 @@ def check_db_manager_password(password):
         raise HTTPUnauthorized()
 
 
-@Declarations.Pyramid.add_view('database', renderer='erpblok:client.mak')
+@view_config(route_name='database', renderer='erpblok:client.mak')
 def get_database(request):
     """ Return the main page of the database manager """
 
@@ -53,8 +41,7 @@ def get_database(request):
     }
 
 
-@Declarations.Pyramid.add_view('database-menus', request_method="GET",
-                               renderer="json")
+@view_config(route_name='database-menus', request_method="GET", renderer="json")
 def get_menus(request):
     res = [
         {
@@ -88,8 +75,7 @@ def get_menus(request):
     return res
 
 
-@Declarations.Pyramid.add_view('database-addons', request_method="GET",
-                               renderer="json")
+@view_config(route_name='database-addons', request_method="GET", renderer="json")
 def get_addons(request):
     res = []
     for blok_name in BlokManager.ordered_bloks:
@@ -102,8 +88,7 @@ def get_addons(request):
     return res
 
 
-@Declarations.Pyramid.add_view('database-selection', request_method="GET",
-                               renderer="json")
+@view_config(route_name='database-selection', request_method="GET", renderer="json")
 def get_databases(request):
     return {
         'id': 'database',
@@ -113,17 +98,18 @@ def get_databases(request):
     }
 
 
-@Declarations.Pyramid.add_view('database-createdb')
-def post_create_database(request, database=None, login=None, password=None,
-                         db_manager_password=None, install_bloks=None,
-                         **kwargs):
+@view_config(route_name='database-createdb')
+def post_create_database(request):
     """ Create a new database, and initialize it
 
-    :param database: name of the database to create
-    :param login: login wanted for the aministrator
-    :param password: password wanted for the administrator
     :rtype: Redirection to the client
     """
+    params = dict(request.params)
+    database = params.get('database')
+    login = params.get('login')
+    password = params.get('password')
+    db_manager_password = params.get('db_manager_password')
+    install_bloks = params.get('install_bloks')
     check_allow_database_manager()
     check_db_manager_password(db_manager_password)
     if database in list_databases():
@@ -143,20 +129,21 @@ def post_create_database(request, database=None, login=None, password=None,
     return Response(request.route_url('web-client'))
 
 
-@Declarations.Pyramid.add_view('database-dropdb')
+@view_config(route_name='database-dropdb')
 def post_drop_database(request, database=None, db_manager_password=None):
     """ Drop the database
 
-    :param database: database name to drop
     """
+    params = dict(request.params)
+    database = params.get('database')
+    db_manager_password = params.get('db_manager_password')
     check_allow_database_manager()
     check_db_manager_password(db_manager_password)
     drop_database(database)
     return HTTPFound(location=request.route_url('database'))
 
 
-@Declarations.Pyramid.add_view('database-listdb',
-                               renderer="erpblok:templates/database-list.mak")
+@view_config(route_name='database-listdb', renderer="erpblok:templates/database-list.mak")
 def post_list_database(request):
     """ Return the html of the select node with the list of the database """
     return {'databases': list_databases()}

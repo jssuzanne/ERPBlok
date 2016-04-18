@@ -1,22 +1,14 @@
-from anyblok import Declarations
 import pyramid.httpexceptions as exc
-
-register = Declarations.register
-PyramidHTTP = Declarations.PyramidHTTP
-
-
-PyramidHTTP.add_route('client_space_description',
-                      '/client/space/description',
-                      request_method='POST')
+from pyramid.view import view_config, view_defaults
+from anyblok_pyramid import current_blok
 
 
-PyramidHTTP.add_route('client_space_menus',
-                      '/client/space/menus',
-                      request_method='POST')
-
-
-@register(PyramidHTTP)
+@view_defaults(renderer='json', installed_blok=current_blok())
 class Space:
+
+    def __init__(self, request):
+        self.request = request
+        self.registry = request.anyblok.registry
 
     def define_menus_for(self, user, parents, menus):
         for menu in menus:
@@ -34,8 +26,10 @@ class Space:
 
             parents.append(val)
 
-    @PyramidHTTP.view(renderer='json')
-    def client_space_description(self, space=None):
+    @view_config(route_name='client_space_description')
+    def client_space_description(self):
+        params = dict(self.request.params)
+        space = params.get('space')
         user_id = self.request.session['user_id']
         user = self.registry.Web.User.query().get(user_id)
         _space = self.registry.Web.Space.query().get(space)
@@ -71,7 +65,7 @@ class Space:
 
         return res
 
-    @PyramidHTTP.view(renderer='json')
+    @view_config(route_name='client_space_menus')
     def client_space_menus(self):
         res = []
         user_id = self.request.session['user_id']

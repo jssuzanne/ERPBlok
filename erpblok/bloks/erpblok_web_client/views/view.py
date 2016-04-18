@@ -1,16 +1,18 @@
-from anyblok import Declarations
+from pyramid_rpc.jsonrpc import jsonrpc_method
+from pyramid.view import view_defaults
+from anyblok_pyramid import current_blok
 
 
-register = Declarations.register
-PyramidJsonRPC = Declarations.PyramidJsonRPC
-
-
-@register(PyramidJsonRPC)
+@view_defaults(installed_blok=current_blok())
 class View:
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
+    def __init__(self, request):
+        self.request = request
+        self.registry = request.anyblok.registry
+
+    @jsonrpc_method(endpoint='web_client_view')
     def get_entries(self, model=None, primary_keys=None, fields=None,
-                    comefromfield=False, **kwargs):
+                    comefromfield=False):
         Model = self.registry.get(model)
         entries = None
         if comefromfield:
@@ -24,8 +26,8 @@ class View:
 
         return entries.to_dict(*fields)
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
-    def get_entry(self, model=None, primary_keys=None, fields=None, **kwargs):
+    @jsonrpc_method(endpoint='web_client_view')
+    def get_entry(self, model=None, primary_keys=None, fields=None):
         Model = self.registry.get(model)
         entry = Model.from_primary_keys(**primary_keys)
         if entry is None or not fields:
@@ -33,8 +35,8 @@ class View:
 
         return entry.to_dict(*fields)
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
-    def new_entry(self, model=None, fields=None, **kwargs):
+    @jsonrpc_method(endpoint='web_client_view')
+    def new_entry(self, model=None, fields=None):
         if not fields:
             return {}
 
@@ -57,9 +59,9 @@ class View:
 
         return vals, x2M
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
+    @jsonrpc_method(endpoint='web_client_view')
     def set_entry(self, model=None, primary_keys=None, values=None,
-                  fields=None, **kwargs):
+                  fields=None):
         Model = self.registry.get(model)
         model = None
         if primary_keys:
@@ -98,8 +100,8 @@ class View:
 
         return model.to_dict(*fields)
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
-    def dummy_set_entry(self, model=None, values=None, fields=None, **kwargs):
+    @jsonrpc_method(endpoint='web_client_view')
+    def dummy_set_entry(self, model=None, values=None, fields=None):
         Model = self.registry.get(model)
         model = None
         if values:
@@ -127,8 +129,8 @@ class View:
 
         return model.to_dict(*fields)
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
-    def del_entries(self, model=None, primary_keys=None, **kwargs):
+    @jsonrpc_method(endpoint='web_client_view')
+    def del_entries(self, model=None, primary_keys=None):
         if not primary_keys:
             return False
 
@@ -138,9 +140,9 @@ class View:
 
         return True
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
+    @jsonrpc_method(endpoint='web_client_view')
     def call(self, model=None, primary_keys=None, method=None, params=None,
-             kwparams=None, **kwargs):
+             kwparams=None):
         if not primary_keys:
             return False
 
@@ -155,9 +157,9 @@ class View:
             *params, **kwparams)
         return res
 
-    @PyramidJsonRPC.rpc_method(request_method='POST')
+    @jsonrpc_method(endpoint='web_client_view')
     def call_classmethod(self, model=None, primary_keys=None, method=None,
-                         params=None, kwparams=None, **kwargs):
+                         params=None, kwparams=None):
         if params is None:
             params = tuple()
 
@@ -168,6 +170,3 @@ class View:
         res = getattr(Model, method)(
             primary_keys, *params, **kwparams)
         return res
-
-
-PyramidJsonRPC.add_route(PyramidJsonRPC.View, '/web/client/view')

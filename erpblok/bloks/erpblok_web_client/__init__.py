@@ -10,7 +10,6 @@ class ERPBlokWebClient(Blok):
     required = [
         'anyblok-core',
         'anyblok-io',
-        'pyramid',
     ]
 
     # Define the static for all pages
@@ -123,7 +122,6 @@ class ERPBlokWebClient(Blok):
         from . import access  # noqa
         from . import web  # noqa
         from . import ui  # noqa
-        from . import controllers  # noqa
 
     @classmethod
     def reload_declaration_module(cls, reload):
@@ -135,5 +133,16 @@ class ERPBlokWebClient(Blok):
         reload(web)
         from . import ui
         reload(ui)
-        from . import controllers
-        reload(controllers)
+
+    @classmethod
+    def pyramid_load_config(cls, config):
+        config.add_route('client_user_description', '/client/user/description')
+        config.add_route('client_user_menus', '/client/user/menus')
+        config.add_route('client_space_description',
+                         '/client/space/description')
+        config.add_route('client_space_menus', '/client/space/menus')
+        config.add_jsonrpc_endpoint('client_space_menu', '/client/space/menu')
+        config.add_jsonrpc_endpoint('web_client_action', '/web/client/action')
+        config.add_jsonrpc_endpoint('web_client_view', '/web/client/view')
+        config.add_jsonrpc_endpoint('web_client_field', '/web/client/field')
+        config.scan(cls.__module__ + '.views')

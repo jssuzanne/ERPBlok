@@ -30,3 +30,7 @@ def declare_json_data_adapter(config):
     json_renderer.add_adapter(bytes, bytes_adapter)
     config.add_renderer('json', json_renderer)
     config.add_renderer(DEFAULT_RENDERER, json_renderer)
+
+
+def pyramid_rpc(config):
+    config.include('pyramid_rpc.jsonrpc')
