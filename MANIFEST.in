@@ -1,5 +1,6 @@
 include doc/*.rst
 include erpblok/client.mak
+include erpblok/static/login-logo.png
 recursive-include erpblok/bloks */*.rst
 recursive-include erpblok/bloks */*.xml
 recursive-include erpblok/bloks */*/*.xml
