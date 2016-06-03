@@ -2,3 +2,5 @@ include doc/*.rst
 recursive-include erpblok/bloks */*.rst
 recursive-include erpblok/bloks */*.xml
 recursive-include erpblok/bloks */*/*.xml
+recursive-include erpblok/bloks */*.tmpl
+recursive-include erpblok/bloks */*/*.tmpl
