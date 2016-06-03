@@ -545,7 +545,7 @@
             }
         },
         render_ro: function () {
-            return (<span className="field-html" 
+            return (<span className="field-html"
                           dangerouslySetInnerHTML={{__html: this.state.value}} />)
         },
         render_rw: function () {

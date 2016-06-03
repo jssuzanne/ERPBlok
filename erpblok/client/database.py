@@ -130,7 +130,7 @@ def post_create_database(request):
 
 
 @view_config(route_name='database-dropdb')
-def post_drop_database(request, database=None, db_manager_password=None):
+def post_drop_database(request):
     """ Drop the database
 
     """
