@@ -5,3 +5,11 @@ recursive-include erpblok/bloks */*.xml
 recursive-include erpblok/bloks */*/*.xml
 recursive-include erpblok/bloks */*.tmpl
 recursive-include erpblok/bloks */*/*.tmpl
+recursive-include erpblok/bloks */*.js
+recursive-include erpblok/bloks */*/*.js
+recursive-include erpblok/bloks */*/*/*.js
+recursive-include erpblok/bloks */*/*/*/*.js
+recursive-include erpblok/bloks */*.css
+recursive-include erpblok/bloks */*/*.css
+recursive-include erpblok/bloks */*/*/*.css
+recursive-include erpblok/bloks */*/*/*/*.css
