@@ -483,7 +483,7 @@
 
     ERPBlok.declare_react_class('FieldText', 'Text')
     AnyBlokJS.register({classname: 'FieldText',
-                        extend: ['BaseField'],
+                        extend: ['FieldString'],
                         prototype: {
         handleChange: function (event) {
             var $el = $('#' + this.get_id()),
