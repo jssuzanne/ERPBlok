@@ -1,5 +1,6 @@
 from anyblok.blok import Blok, BlokManager
 from erpblok.client.template import Template
+from .pyramid import json_data_adapter
 
 
 class ERPBlokWebClient(Blok):
@@ -136,6 +137,7 @@ class ERPBlokWebClient(Blok):
 
     @classmethod
     def pyramid_load_config(cls, config):
+        json_data_adapter(config)
         config.add_route('client_user_description', '/client/user/description')
         config.add_route('client_user_menus', '/client/user/menus')
         config.add_route('client_space_description',
