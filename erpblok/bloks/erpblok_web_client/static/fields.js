@@ -527,13 +527,16 @@
         },
         componentDidUpdate: function() {
             if (!this.eltrumbowyg) {
-                this.eltrumbowyg = $('#' + this.get_id())
-                this.eltrumbowyg.trumbowyg({
-                    fullscreenable: false,
-                })
-                .on('tbwblur', this.handleBlur.bind(this));
+                var _eltrumbowyg = $('#' + this.get_id())
+                if (_eltrumbowyg.length != 0) {
+                    this.eltrumbowyg = _eltrumbowyg;
+                    this.eltrumbowyg.trumbowyg({
+                        fullscreenable: false,
+                    })
+                    .on('tbwblur', this.handleBlur.bind(this));
+                }
             }
-            this.eltrumbowyg.trumbowyg('html', this.state.value);
+            if (this.eltrumbowyg) this.eltrumbowyg.trumbowyg('html', this.state.value);
         },
         componentWillUnmount: function() {
             if (!this.eltrumbowyg.length) this.eltrumbowyg.trumbowyg('destroy');
@@ -545,6 +548,7 @@
             }
         },
         render_ro: function () {
+            if (this.eltrumbowyg) this.eltrumbowyg.trumbowyg('destroy');
             return (<span className="field-html"
                           dangerouslySetInnerHTML={{__html: this.state.value}} />)
         },
