@@ -559,4 +559,18 @@
                          style={this.get_style()} />)
         },
     }});
+
+    ERPBlok.declare_react_class('FieldDateTime', 'DateTime')
+    AnyBlokJS.register({classname: 'FieldDateTime',
+                        extend: ['FieldString'],
+                        prototype: {
+        handleChange: function (value) {
+            this.props.update_field(this.props.options.id, value.toISOString());
+        },
+        render_rw: function () {
+            return <Datetime  defaultValue={this.state.value}
+                              style={this.get_style()}
+                              onChange={this.handleChange.bind(this)} />
+        },
+    }});
 }) ();
