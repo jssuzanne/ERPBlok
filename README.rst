@@ -1,3 +1,16 @@
+
+.. image:: https://travis-ci.org/ERPBlok/ERPBlok.svg?branch=master
+    :target: https://travis-ci.org/ERPBlok/ERPBlok
+    :alt: Build status
+
+.. image:: https://coveralls.io/repos/github/ERPBlok/ERPBlok/badge.svg?branch=master
+    :target: https://coveralls.io/github/ERPBlok/ERPBlok?branch=master
+    :alt: Coverage
+
+.. .. image:: https://img.shields.io/pypi/v/ERPBlok.svg
+..    :target: https://pypi.python.org/pypi/ERPBlok/
+..    :alt: Version status
+   
 ERPBlok
 =======
 
