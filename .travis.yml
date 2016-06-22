@@ -33,7 +33,7 @@ script:
   - nosetests erpblok/tests -v -s --with-coverage --cover-package=erpblok
   - psql -c 'drop database travis_ci_test;' -U postgres
   - anyblok_createdb --install-all-bloks
-  - nosetests anyblok/bloks --with-anyblok-bloks -v -s --with-coverage --cover-package=erpblok erpblok/bloks/
+  - nosetests erpblok/bloks --with-anyblok-bloks -v -s --with-coverage --cover-package=erpblok
   
 after_success:
   coveralls
