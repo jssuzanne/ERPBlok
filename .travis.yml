@@ -19,6 +19,7 @@ install:
   - pip install coverage
   - pip install nose
   - pip install coveralls
+  - pip install WebTest
   - python setup.py develop
 
 env:
@@ -29,10 +30,10 @@ env:
 
 script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - nosetests erpblok/tests -v -s --with-coverage --cover-package=anyblok
+  - nosetests erpblok/tests -v -s --with-coverage --cover-package=erpblok
   - psql -c 'drop database travis_ci_test;' -U postgres
   - anyblok_createdb --install-all-bloks
-  - nosetests anyblok/bloks --with-anyblok-bloks -v -s --with-coverage --cover-package=anyblok erpblok/bloks/
+  - nosetests anyblok/bloks --with-anyblok-bloks -v -s --with-coverage --cover-package=erpblok erpblok/bloks/
   
 after_success:
   coveralls
