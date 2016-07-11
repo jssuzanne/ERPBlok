@@ -20,11 +20,11 @@ def list_databases():
 
     :rtype: list of the database's names
     """
-    url = Configuration.get_url()
+    url = Configuration.get('get_url')()
     db_filter = Configuration.get('db_filter')
     text = None
     if url.drivername in ('postgres', 'postgresql'):
-        url = Configuration.get_url(db_name='postgres')
+        url = Configuration.get('get_url')(db_name='postgres')
         text = "SELECT datname FROM pg_database"
 
         if db_filter:
@@ -45,7 +45,7 @@ def create_database(database):
     :param: database's name
     :rtype: AnyBlok registry instance
     """
-    url = Configuration.get_url(db_name=database)
+    url = Configuration.get('get_url')(db_name=database)
     if database_exists(url):
         raise Exception("Database %r already exist")
 
@@ -60,7 +60,7 @@ def drop_database(database):
 
     :param: database's name
     """
-    url = Configuration.get_url(db_name=database)
+    url = Configuration.get('get_url')(db_name=database)
     if not database_exists(url):
         raise Exception("Database %r does not already exist")
 
